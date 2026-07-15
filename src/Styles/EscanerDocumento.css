@@ -1,0 +1,744 @@
+.escaner-overlay{
+
+  position:fixed;
+  
+  inset:0;
+  
+  background:rgba(0,0,0,.55);
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  z-index:3000;
+  
+  backdrop-filter:blur(8px);
+  
+  }
+  
+  .escaner-panel{
+  
+  width:min(430px,92vw);
+  
+  background:white;
+  
+  border-radius:28px;
+  
+  padding:28px;
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  gap:18px;
+  
+  box-shadow:0 20px 60px rgba(0,0,0,.25);
+  
+  animation:aparece .25s ease;
+  
+  }
+  
+  @keyframes aparece{
+  
+  from{
+  
+  opacity:0;
+  
+  transform:translateY(40px);
+  
+  }
+  
+  to{
+  
+  opacity:1;
+  
+  transform:translateY(0);
+  
+  }
+  
+  }
+  
+  .escaner-header{
+  
+  text-align:center;
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  gap:10px;
+  
+  }
+  
+  .escaner-preview{
+
+  position: relative;
+  overflow: hidden;
+  
+  height:240px;
+  
+  border:2px dashed #9fb8a6;
+  
+  border-radius:20px;
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  gap:12px;
+  
+  background:#f7faf8;
+  
+  color:#5d6b63;
+  
+  }
+/*======================================
+BARRA DE BOTONES
+======================================*/
+
+.acciones-escaner{
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:30px;
+
+  margin-top:25px;
+
+  margin-bottom:10px;
+
+  width:100%;
+
+}
+
+/*======================================
+BOTÓN CANCELAR
+======================================*/
+
+.btn-cancelar-scan{
+
+  width:130px;
+
+  height:52px;
+
+  border:none;
+
+  border-radius:16px;
+
+  background:#ececec;
+
+  color:#444;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:8px;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  white-space:nowrap;
+
+}
+
+.btn-cancelar-scan:hover{
+
+  background:#dcdcdc;
+
+}
+
+.btn-cancelar-scan:hover{
+
+  background:#e6e6e6;
+
+  transform:translateY(-2px);
+
+}
+
+/*======================================
+BOTÓN CÁMARA
+======================================*/
+
+.btn-camara{
+
+  width:90px;
+
+  height:90px;
+
+  border-radius:50%;
+
+  border:none;
+
+  background:#1c9c46;
+
+  color:white;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  cursor:pointer;
+
+  box-shadow:0 10px 24px rgba(0,0,0,.28);
+
+  transition:.25s;
+
+}
+
+.btn-camara svg{
+
+  width:40px;
+
+  height:40px;
+
+}
+
+.btn-camara:hover{
+
+  transform:scale(1.08);
+
+}
+
+.btn-camara:active{
+
+  transform:scale(.94);
+
+}
+
+.btn-camara:hover{
+
+  transform:scale(1.08);
+
+}
+
+.btn-camara:active{
+
+  transform:scale(.95);
+
+}
+
+/*======================================
+BOTÓN FINALIZAR
+======================================*/
+
+.btn-finalizar{
+
+  width:130px;
+
+  height:52px;
+
+  border:none;
+
+  border-radius:16px;
+
+  background:#1c9c46;
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:700;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:8px;
+
+  cursor:pointer;
+
+  transition:.25s;
+
+  white-space:nowrap;
+
+}
+
+.btn-finalizar:hover{
+
+  background:#16803a;
+
+}
+
+.btn-finalizar:disabled{
+
+  opacity:.45;
+
+  cursor:not-allowed;
+
+}
+
+.btn-finalizar:hover{
+
+  background:#187531;
+
+  transform:translateY(-2px);
+
+}
+
+.btn-finalizar:disabled{
+
+  opacity:.45;
+
+  cursor:not-allowed;
+
+  transform:none;
+
+}
+
+/*======================================
+CONTADOR
+======================================*/
+
+.contador-paginas{
+
+  margin-top:18px;
+
+  margin-bottom:15px;
+
+  text-align:center;
+
+  font-size:16px;
+
+  font-weight:600;
+
+  color:#4b4b4b;
+
+}
+/*==================================
+GALERÍA
+==================================*/
+
+.galeria-paginas{
+
+  display:flex;
+
+  justify-content:flex-start;
+
+  align-items:flex-start;
+
+  gap:16px;
+
+  overflow-x:auto;
+
+  margin-top:20px;
+
+  padding-bottom:10px;
+
+}
+
+/*==================================
+TARJETA
+==================================*/
+
+.miniatura-pagina{
+
+  flex:0 0 120px;
+
+  width:120px;
+
+  background:white;
+
+  border-radius:18px;
+
+  padding:10px;
+
+  box-shadow:0 8px 18px rgba(0,0,0,.15);
+
+  text-align:center;
+
+}
+
+.miniatura-pagina:hover{
+
+  transform:translateY(-4px);
+
+}
+
+/*==================================
+IMAGEN
+==================================*/
+
+.miniatura-pagina img{
+
+  width:100%;
+
+  height:155px;
+
+  object-fit:cover;
+
+  border-radius:10px;
+
+  border:1px solid #ddd;
+
+}
+
+/*==================================
+TEXTO
+==================================*/
+
+.miniatura-pagina span{
+
+  display:block;
+
+  margin-top:8px;
+
+  font-size:14px;
+
+  font-weight:600;
+
+  color:#444;
+
+}
+
+/*==================================
+BOTÓN ELIMINAR
+==================================*/
+
+.btn-eliminar-miniatura{
+
+  width:36px;
+
+  height:36px;
+
+  margin-top:8px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:#ffebee;
+
+  color:#d32f2f;
+
+  cursor:pointer;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  margin-left:auto;
+
+  margin-right:auto;
+
+  transition:.25s;
+
+}
+
+.btn-eliminar-miniatura:hover{
+
+  background:#d32f2f;
+
+  color:white;
+
+}
+.marco-documento{
+
+  position:absolute;
+
+  inset:0;
+
+  pointer-events:none;
+
+}
+.esquina{
+
+  position:absolute;
+
+  width:38px;
+
+  height:38px;
+
+  border:4px solid #16c05b;
+
+}
+.tl{
+
+  top:18px;
+
+  left:18px;
+
+  border-right:none;
+
+  border-bottom:none;
+
+}
+.tr{
+
+  top:18px;
+
+  right:18px;
+
+  border-left:none;
+
+  border-bottom:none;
+
+}
+.bl{
+
+  bottom:18px;
+
+  left:18px;
+
+  border-right:none;
+
+  border-top:none;
+
+}
+.br{
+
+  bottom:18px;
+
+  right:18px;
+
+  border-left:none;
+
+  border-top:none;
+
+}
+.escaner-preview{
+
+  position:relative;
+
+}
+
+.overlay-deteccion{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+
+  height:100%;
+
+  pointer-events:none;
+
+}
+.overlay-canvas{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+
+  height:100%;
+
+  pointer-events:none;
+
+}
+.acciones-miniatura{
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:8px;
+
+  margin-top:8px;
+
+}
+
+.btn-rotar-miniatura{
+
+  width:34px;
+
+  height:34px;
+
+  border:none;
+
+  border-radius:50%;
+
+  cursor:pointer;
+
+  background:white;
+
+  color:#333;
+
+  font-size:18px;
+
+  transition:.2s;
+
+}
+
+.btn-rotar-miniatura:hover{
+
+  transform:scale(1.08);
+
+}
+
+.btn-eliminar-miniatura{
+
+  width:34px;
+
+  height:34px;
+
+}
+.btn-mover-miniatura{
+
+  width:34px;
+
+  height:34px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:#ffffff;
+
+  cursor:pointer;
+
+  transition:.2s;
+
+  font-weight:bold;
+
+}
+
+.btn-mover-miniatura:hover{
+
+  transform:scale(1.08);
+
+}
+
+.btn-mover-miniatura:disabled{
+
+  opacity:.35;
+
+  cursor:not-allowed;
+
+}
+
+.selector-filtro{
+
+  display:flex;
+
+  justify-content:center;
+
+  gap:8px;
+
+  margin:16px 0;
+
+  flex-wrap:wrap;
+
+}
+
+.selector-filtro button{
+
+  border:none;
+
+  padding:8px 14px;
+
+  border-radius:18px;
+
+  cursor:pointer;
+
+  background:#ececec;
+
+  transition:.2s;
+
+  font-size:13px;
+
+  font-weight:600;
+
+}
+
+.selector-filtro button.activo{
+
+  background:#16a34a;
+
+  color:white;
+
+}
+.editor-overlay{
+
+  position:fixed;
+
+  inset:0;
+
+  background:rgba(0,0,0,.85);
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  z-index:9999;
+
+}
+
+.btn-recortar-miniatura{
+
+  width:34px;
+
+  height:34px;
+
+  border:none;
+
+  border-radius:50%;
+
+  cursor:pointer;
+
+  background:#2563eb;
+
+  color:white;
+
+}
+.editor-contenedor{
+
+  position:relative;
+
+  display:inline-block;
+
+  max-width:90vw;
+
+  max-height:75vh;
+
+}
+
+.canvas-imagen{
+
+  display:block;
+
+  max-width:100%;
+
+  max-height:75vh;
+
+}
+
+.canvas-overlay{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+
+  height:100%;
+
+  cursor:crosshair;
+
+}

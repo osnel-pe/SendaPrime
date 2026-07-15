@@ -1,0 +1,207 @@
+/* =====================================================
+   NEURI UI V2
+   Estilo Premium iOS
+===================================================== */
+
+:root{
+
+  --green-dark:#0D6C39;
+  --green:#1E8E4A;
+  --green-light:#59C96E;
+
+  --gold:#D7B857;
+
+  --white:#FFFFFF;
+
+}
+
+/* ==========================================
+   FONDO
+========================================== */
+
+.app-background{
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:-10;
+
+  background-position:center;
+
+  background-repeat:no-repeat;
+
+  background-size:cover;
+
+}
+
+/* ==========================================
+APP
+========================================== */
+
+.app,
+
+.app,
+.ps-app{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:100%;
+
+    min-height:100vh;
+
+    padding:10px 15px 40px;
+
+    box-sizing:border-box;
+
+}
+
+/* ==========================================
+TARJETA PRINCIPAL
+========================================== */
+
+.main-card{
+
+    width:100%;
+
+    max-width:430px;
+
+    padding:26px;
+
+    border-radius:34px;
+
+    background:
+
+    rgba(255,255,255,.80);
+
+    backdrop-filter:
+
+    blur(24px);
+
+    -webkit-backdrop-filter:
+
+    blur(24px);
+
+    border:
+
+    1px solid
+
+    rgba(255,255,255,.35);
+
+    box-shadow:
+
+    0 30px 80px
+
+    rgba(0,0,0,.16);
+
+    animation:fade .45s ease;
+
+}
+
+/* ==========================================
+HEADER
+========================================== */
+
+.page-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+    margin-bottom:28px;
+
+}
+
+.page-icon{
+
+    width:82px;
+
+    height:82px;
+
+    border-radius:26px;
+
+    background:
+
+    linear-gradient(
+
+    145deg,
+
+    #65D07A,
+
+    #1C9348
+
+    );
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    box-shadow:
+
+    0 18px 45px
+
+    rgba(23,124,56,.35);
+
+}
+
+.page-header h1{
+
+    font-size:34px;
+
+    font-weight:800;
+
+    color:#164B2F;
+
+    margin:0;
+
+    letter-spacing:-1px;
+
+}
+
+.page-header p{
+
+    margin-top:4px;
+
+    color:#6E7F74;
+
+    font-size:16px;
+
+}
+
+/* ==========================================
+ANIMACIÓN
+========================================== */
+
+@keyframes fade{
+
+    from{
+
+        opacity:0;
+
+        transform:
+
+        translateY(20px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+
+        translateY(0);
+
+    }
+
+}

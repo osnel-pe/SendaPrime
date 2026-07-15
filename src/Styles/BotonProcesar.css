@@ -1,0 +1,80 @@
+.btn-procesar{
+
+  width:100%;
+  
+  border:none;
+  
+  border-radius:18px;
+  
+  padding:18px;
+  
+  background:linear-gradient(
+  135deg,
+  #2E8B57,
+  #49B66B
+  );
+  
+  color:white;
+  
+  font-size:17px;
+  
+  font-weight:700;
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  gap:12px;
+  
+  cursor:pointer;
+  
+  transition:.25s;
+  
+  box-shadow:0 10px 24px rgba(46,139,87,.28);
+  
+  }
+  
+  .btn-procesar:hover{
+  
+  transform:translateY(-3px);
+  
+  box-shadow:0 14px 28px rgba(46,139,87,.35);
+  
+  }
+  
+  .btn-procesar:active{
+  
+  transform:scale(.98);
+  
+  }
+  .btn-procesar:disabled{
+
+    opacity:.8;
+    
+    cursor:not-allowed;
+    
+    }
+    
+    .spin{
+    
+    animation:girar 1s linear infinite;
+    
+    }
+    
+    @keyframes girar{
+    
+    from{
+    
+    transform:rotate(0deg);
+    
+    }
+    
+    to{
+    
+    transform:rotate(360deg);
+    
+    }
+    
+    }

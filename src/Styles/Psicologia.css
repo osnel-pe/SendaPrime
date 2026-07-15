@@ -1,0 +1,106 @@
+/*==================================
+CONTENEDOR PRINCIPAL
+==================================*/
+
+.ps-container{
+
+  width:100%;
+
+  max-width:430px;
+
+  padding:18px 18px 24px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  height:100vh;
+
+  gap:10px;
+
+  box-sizing:border-box;
+
+}
+/*==================================
+BOTÓN CERRAR SESIÓN
+==================================*/
+
+.logout-container{
+
+  width:100%;
+
+  display:flex;
+
+  justify-content:center;
+
+  margin-top:18px;
+
+  margin-bottom:25px;
+
+}
+
+.logout-btn{
+
+  width:100%;
+
+  max-width:340px;
+
+  height:58px;
+
+  border-radius:28px;
+
+  border:1px solid rgba(255,255,255,.25);
+
+  background:
+
+  rgba(255,255,255,.12);
+
+  backdrop-filter:blur(20px);
+
+  -webkit-backdrop-filter:blur(20px);
+
+  color:white;
+
+  font-size:18px;
+
+  font-weight:700;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:12px;
+
+  cursor:pointer;
+
+  transition:.30s;
+
+  box-shadow:
+
+  0 15px 35px rgba(0,0,0,.20),
+
+  inset 0 1px 1px rgba(255,255,255,.30);
+
+}
+
+.logout-btn:hover{
+
+  transform:translateY(-3px);
+
+  background:rgba(255,255,255,.18);
+
+}
+
+.logout-btn:active{
+
+  transform:scale(.97);
+
+}
+
+.logout-icon{
+
+  font-size:22px;
+
+}

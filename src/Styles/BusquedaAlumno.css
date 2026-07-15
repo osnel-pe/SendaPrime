@@ -1,0 +1,51 @@
+.buscar{
+
+  margin-top:12px;
+  
+  }
+  
+  .buscar-input{
+  
+  display:flex;
+  
+  align-items:center;
+  
+  gap:12px;
+  
+  background:white;
+  
+  padding:16px 18px;
+  
+  border-radius:18px;
+  
+  box-shadow:0 8px 22px rgba(0,0,0,.08);
+  
+  }
+  
+  .buscar-input svg{
+  
+  color:#2E8B57;
+  
+  }
+  
+  .buscar-input input{
+  
+  border:none;
+  
+  outline:none;
+  
+  font-size:16px;
+  
+  width:100%;
+  
+  background:transparent;
+  
+  color:#20342A;
+  
+  }
+  
+  .buscar-input input::placeholder{
+  
+  color:#8A9990;
+  
+  }

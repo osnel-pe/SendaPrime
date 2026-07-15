@@ -1,0 +1,22 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter',Arial,sans-serif;
+}
+
+body{
+  background:linear-gradient(135deg,#0F5FEA,#3D8BFF);
+}
+
+#root{
+  min-height:100vh;
+}
+
+.screen{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:24px;
+}

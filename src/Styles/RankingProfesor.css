@@ -1,0 +1,856 @@
+@import "./AppLayout.css";
+
+/*==========================
+  CONTENEDOR PRINCIPAL
+===========================*/
+
+.ranking-profesor-card{
+
+width:100%;
+max-width:760px;
+
+background:rgba(255,255,255,.84);
+
+backdrop-filter:blur(18px);
+
+border-radius:34px;
+
+padding:34px;
+
+box-shadow:
+
+0 20px 55px rgba(0,0,0,.16);
+
+}
+
+
+/*==========================
+  HEADER
+===========================*/
+
+.ranking-header{
+
+display:flex;
+
+align-items:center;
+
+gap:18px;
+
+margin-bottom:28px;
+
+}
+
+.ranking-icon{
+
+width:72px;
+height:72px;
+
+border-radius:22px;
+
+background:linear-gradient(
+135deg,
+#2E7D32,
+#43A047
+);
+
+display:flex;
+
+justify-content:center;
+align-items:center;
+
+color:white;
+
+font-size:30px;
+
+box-shadow:
+
+0 14px 30px rgba(46,125,50,.25);
+
+}
+
+.ranking-header h1{
+
+margin:0;
+
+font-size:34px;
+
+font-weight:800;
+
+color:#184D2D;
+
+}
+
+.ranking-header p{
+
+margin-top:4px;
+
+font-size:16px;
+
+color:#708090;
+
+}
+
+
+/*==========================
+  BOTONES DE GRADO
+===========================*/
+
+.ranking-tabs{
+
+display:flex;
+
+justify-content:center;
+
+gap:16px;
+
+margin-bottom:35px;
+
+}
+
+.ranking-tabs button{
+
+border:none;
+
+padding:13px 28px;
+
+border-radius:28px;
+
+font-size:16px;
+
+font-weight:700;
+
+cursor:pointer;
+
+background:#EDF6EE;
+
+color:#2E7D32;
+
+transition:.30s;
+
+}
+
+.ranking-tabs button:hover{
+
+transform:translateY(-2px);
+
+}
+
+.ranking-tabs button.active{
+
+background:linear-gradient(
+135deg,
+#2E7D32,
+#43A047
+);
+
+color:white;
+
+box-shadow:
+
+0 12px 24px rgba(46,125,50,.25);
+
+}
+
+
+/*==========================
+  PODIO
+===========================*/
+
+.podium{
+
+display:flex;
+
+align-items:flex-end;
+
+justify-content:center;
+
+gap:18px;
+
+margin-bottom:38px;
+
+padding-top:18px;
+
+}
+
+.podium-box{
+
+width:175px;
+
+border-radius:28px;
+
+background:white;
+
+padding:20px 18px;
+
+text-align:center;
+
+position:relative;
+
+transition:.30s;
+
+box-shadow:
+
+0 15px 35px rgba(0,0,0,.10);
+
+}
+
+.podium-box:hover{
+
+transform:translateY(-5px);
+
+}
+
+.first{
+
+order:2;
+
+transform:translateY(-26px);
+
+}
+
+.second{
+
+order:1;
+
+}
+
+.third{
+
+order:3;
+
+}
+
+.first:hover{
+
+transform:translateY(-32px);
+
+}
+/*==========================
+  AVATARES
+===========================*/
+
+.avatar{
+
+  width:72px;
+  height:72px;
+  
+  margin:auto;
+  
+  border-radius:50%;
+  
+  display:flex;
+  
+  justify-content:center;
+  align-items:center;
+  
+  font-size:24px;
+  
+  font-weight:800;
+  
+  color:white;
+  
+  margin-bottom:12px;
+  
+  box-shadow:
+  0 8px 20px rgba(0,0,0,.18);
+  
+  }
+  
+  .gold{
+  
+  background:linear-gradient(
+  135deg,
+  #FFD54F,
+  #F9A825
+  );
+  
+  }
+  
+  .silver{
+  
+  background:linear-gradient(
+  135deg,
+  #ECEFF1,
+  #B0BEC5
+  );
+  
+  color:#455A64;
+  
+  }
+  
+  .bronze{
+  
+  background:linear-gradient(
+  135deg,
+  #D7A86E,
+  #B87333
+  );
+  
+  }
+  
+  
+  /*==========================
+    MEDALLAS
+  ===========================*/
+  
+  .medal{
+  
+  font-size:28px;
+  
+  margin-bottom:8px;
+  
+  }
+  
+  .podium-box h3{
+  
+  margin:0;
+  
+  font-size:18px;
+  
+  font-weight:800;
+  
+  color:#214F34;
+  
+  white-space:nowrap;
+  
+  overflow:hidden;
+  
+  text-overflow:ellipsis;
+  
+  }
+  
+  .podium-box small{
+  
+  display:block;
+  
+  margin-top:4px;
+  
+  font-size:14px;
+  
+  color:#667085;
+  
+  font-weight:600;
+  
+  }
+  
+  .podium-box span{
+  
+  display:block;
+  
+  margin-top:6px;
+  
+  font-size:13px;
+  
+  font-weight:700;
+  
+  color:#2E7D32;
+  
+  }
+  
+  
+  /*==========================
+    MATHCOINS
+  ===========================*/
+  
+  .coins{
+  
+  margin-top:14px;
+  
+  display:inline-flex;
+  
+  align-items:center;
+  
+  gap:8px;
+  
+  padding:8px 16px;
+  
+  border-radius:30px;
+  
+  background:linear-gradient(
+  135deg,
+  #FFF8E1,
+  #FFE082
+  );
+  
+  color:#B8860B;
+  
+  font-size:17px;
+  
+  font-weight:800;
+  
+  box-shadow:
+  0 8px 18px rgba(255,193,7,.22);
+  
+  }
+  
+  
+  /*==========================
+    ESCALONES DEL PODIO
+  ===========================*/
+  
+  .step{
+  
+  margin-top:18px;
+  
+  height:62px;
+  
+  border-radius:18px 18px 0 0;
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  font-size:28px;
+  
+  font-weight:900;
+  
+  color:white;
+  
+  }
+  
+  .gold-step{
+  
+  height:92px;
+  
+  background:linear-gradient(
+  180deg,
+  #FFD54F,
+  #F9A825
+  );
+  
+  }
+  
+  .silver-step{
+  
+  height:72px;
+  
+  background:linear-gradient(
+  180deg,
+  #ECEFF1,
+  #B0BEC5
+  );
+  
+  color:#455A64;
+  
+  }
+  
+  .bronze-step{
+  
+  height:56px;
+  
+  background:linear-gradient(
+  180deg,
+  #D7A86E,
+  #B87333
+  );
+  
+  }
+  
+  
+  /*==========================
+    LISTA DEL 4° AL 10°
+  ===========================*/
+  
+  .ranking-list{
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  gap:14px;
+  
+  margin-top:10px;
+  
+  }
+  
+  .ranking-row{
+  
+  display:grid;
+  
+  grid-template-columns:
+  
+  48px
+  
+  56px
+  
+  1fr
+  
+  110px;
+  
+  align-items:center;
+  
+  gap:14px;
+  
+  padding:14px 18px;
+  
+  background:white;
+  
+  border-radius:20px;
+  
+  box-shadow:
+  0 8px 22px rgba(0,0,0,.08);
+  
+  transition:.25s;
+  
+  }
+  
+  .ranking-row:hover{
+  
+  transform:translateY(-3px);
+  
+  box-shadow:
+  0 14px 30px rgba(0,0,0,.12);
+  
+  }
+  
+  .rank-number{
+  
+  width:38px;
+  height:38px;
+  
+  border-radius:50%;
+  
+  background:#EDF7EE;
+  
+  display:flex;
+  
+  justify-content:center;
+  align-items:center;
+  
+  font-size:18px;
+  
+  font-weight:800;
+  
+  color:#2E7D32;
+  
+  }
+/*==========================
+  AVATAR DE LA LISTA
+===========================*/
+
+.rank-avatar{
+
+  width:52px;
+  height:52px;
+  
+  border-radius:50%;
+  
+  background:linear-gradient(
+  135deg,
+  #2E7D32,
+  #43A047
+  );
+  
+  display:flex;
+  
+  justify-content:center;
+  align-items:center;
+  
+  font-size:18px;
+  
+  font-weight:800;
+  
+  color:white;
+  
+  box-shadow:
+  0 8px 18px rgba(46,125,50,.20);
+  
+  }
+  
+  
+  /*==========================
+    INFORMACIÓN
+  ===========================*/
+  
+  .rank-info{
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  gap:3px;
+  
+  overflow:hidden;
+  
+  }
+  
+  .rank-info strong{
+  
+  font-size:17px;
+  
+  font-weight:800;
+  
+  color:#214F34;
+  
+  white-space:nowrap;
+  
+  overflow:hidden;
+  
+  text-overflow:ellipsis;
+  
+  }
+  
+  .rank-info small{
+  
+  font-size:14px;
+  
+  color:#7A8794;
+  
+  font-weight:600;
+  
+  }
+  
+  .rank-coins{
+  
+  display:flex;
+  
+  justify-content:flex-end;
+  
+  align-items:center;
+  
+  gap:8px;
+  
+  font-size:18px;
+  
+  font-weight:800;
+  
+  color:#C79200;
+  
+  }
+  
+  
+  /*==========================
+    BOTÓN REGRESAR
+  ===========================*/
+  
+  .btn-back{
+  
+  margin-top:28px;
+  
+  width:100%;
+  
+  height:58px;
+  
+  border:none;
+  
+  border-radius:18px;
+  
+  background:linear-gradient(
+  135deg,
+  #2E7D32,
+  #43A047
+  );
+  
+  color:white;
+  
+  font-size:18px;
+  
+  font-weight:700;
+  
+  cursor:pointer;
+  
+  transition:.30s;
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  gap:10px;
+  
+  box-shadow:
+  0 15px 30px rgba(46,125,50,.22);
+  
+  }
+  
+  .btn-back:hover{
+  
+  transform:translateY(-3px);
+  
+  box-shadow:
+  0 20px 40px rgba(46,125,50,.30);
+  
+  }
+  
+  
+  /*==========================
+    ANIMACIONES
+  ===========================*/
+  
+  .podium-box{
+  
+  animation:fadeUp .45s ease;
+  
+  }
+  
+  .ranking-row{
+  
+  animation:fadeLeft .45s ease;
+  
+  }
+  
+  @keyframes fadeUp{
+  
+  from{
+  
+  opacity:0;
+  
+  transform:translateY(35px);
+  
+  }
+  
+  to{
+  
+  opacity:1;
+  
+  transform:translateY(0);
+  
+  }
+  
+  }
+  
+  @keyframes fadeLeft{
+  
+  from{
+  
+  opacity:0;
+  
+  transform:translateX(-25px);
+  
+  }
+  
+  to{
+  
+  opacity:1;
+  
+  transform:translateX(0);
+  
+  }
+  
+  }
+  
+  
+  /*==========================
+    RESPONSIVE
+  ===========================*/
+  
+  @media(max-width:760px){
+  
+  .ranking-profesor-card{
+  
+  padding:24px;
+  
+  }
+  
+  .ranking-header{
+  
+  flex-direction:column;
+  
+  text-align:center;
+  
+  }
+  
+  .ranking-tabs{
+  
+  flex-direction:column;
+  
+  }
+  
+  .podium{
+  
+  gap:10px;
+  
+  }
+  
+  .podium-box{
+  
+  width:120px;
+  
+  padding:16px 10px;
+  
+  }
+  
+  .avatar{
+  
+  width:56px;
+  height:56px;
+  
+  font-size:18px;
+  
+  }
+  
+  .podium-box h3{
+  
+  font-size:15px;
+  
+  }
+  
+  .podium-box small{
+  
+  font-size:12px;
+  
+  }
+  
+  .coins{
+  
+  font-size:15px;
+  
+  padding:6px 12px;
+  
+  }
+  
+  .step{
+  
+  font-size:22px;
+  
+  }
+  
+  .ranking-row{
+  
+  grid-template-columns:
+  
+  38px
+  
+  46px
+  
+  1fr
+  
+  80px;
+  
+  padding:12px;
+  
+  gap:10px;
+  
+  }
+  
+  .rank-avatar{
+  
+  width:42px;
+  height:42px;
+  
+  font-size:15px;
+  
+  }
+  
+  .rank-info strong{
+  
+  font-size:15px;
+  
+  }
+  
+  .rank-info small{
+  
+  font-size:12px;
+  
+  }
+  
+  .rank-coins{
+  
+  font-size:15px;
+  
+  }
+  
+  }

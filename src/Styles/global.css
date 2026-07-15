@@ -1,0 +1,70 @@
+*{
+
+  margin:0;
+  
+  padding:0;
+  
+  box-sizing:border-box;
+  
+  font-family:
+  
+  "Segoe UI",
+  
+  sans-serif;
+  
+  }
+  
+  body{
+  
+  background:var(--background);
+  
+  color:var(--text);
+  
+  }
+  
+  button{
+  
+  font-family:inherit;
+  
+  }
+  
+  input{
+  
+  font-family:inherit;
+  
+  }
+  
+  img{
+  
+  max-width:100%;
+  
+  display:block;
+  
+  }
+*{
+
+transition:
+
+background .30s,
+
+box-shadow .30s,
+
+transform .25s,
+
+opacity .25s,
+
+border .25s;
+
+}
+
+body{
+
+font-family:
+
+"SF Pro Display",
+
+Inter,
+
+sans-serif;
+
+}

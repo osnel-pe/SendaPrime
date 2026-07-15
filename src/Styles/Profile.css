@@ -1,0 +1,609 @@
+@import "./AppLayout.css";
+
+/*==================================================
+                CONTENEDOR
+==================================================*/
+
+.profile-card{
+display:flex;
+flex-direction:column;
+gap:14px;
+padding:26px;
+}
+
+/*==================================================
+                HEADER
+==================================================*/
+
+.profile-header{
+
+display:flex;
+align-items:center;
+gap:16px;
+
+padding-bottom:14px;
+
+border-bottom:1px solid rgba(0,0,0,.06);
+
+}
+
+.page-icon{
+
+width:72px;
+height:72px;
+
+border-radius:22px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:30px;
+
+background:linear-gradient(145deg,#2E7D32,#4CAF50);
+
+color:white;
+
+box-shadow:
+0 12px 30px rgba(46,125,50,.30);
+
+flex-shrink:0;
+
+}
+
+.profile-info{
+
+flex:1;
+
+}
+
+.profile-info h1{
+
+font-size:29px;
+font-weight:800;
+color:#20352B;
+
+line-height:1.1;
+
+}
+
+.profile-info p{
+
+margin-top:2px;
+
+font-size:17px;
+
+color:#6C7A89;
+
+}
+
+.profile-info span{
+
+display:inline-block;
+
+margin-top:8px;
+
+padding:6px 14px;
+
+background:#EAF7EC;
+
+color:#2E7D32;
+
+border-radius:30px;
+
+font-weight:700;
+
+font-size:14px;
+
+}
+
+/*==================================================
+                TARJETA SALDO
+==================================================*/
+
+.wallet-card{
+
+position:relative;
+
+overflow:hidden;
+
+padding:18px 22px;
+
+border-radius:24px;
+
+background:linear-gradient(
+135deg,
+#2E8B57,
+#4CAF50
+);
+
+color:white;
+
+box-shadow:
+0 18px 35px rgba(46,125,50,.28);
+
+animation:pulseWallet 3.5s infinite;
+
+}
+
+.wallet-card::before{
+
+content:"";
+
+position:absolute;
+
+top:-60%;
+
+left:-30%;
+
+width:40%;
+
+height:220%;
+
+background:linear-gradient(
+
+90deg,
+
+transparent,
+
+rgba(255,255,255,.35),
+
+transparent
+
+);
+
+transform:rotate(25deg);
+
+animation:walletShine 5s infinite;
+
+}
+
+.wallet-title{
+
+display:flex;
+align-items:center;
+gap:10px;
+
+font-size:18px;
+font-weight:700;
+
+opacity:.95;
+
+}
+
+.wallet-title svg{
+
+font-size:22px;
+
+color:#FFE082;
+
+animation:coinSpin 2.5s linear infinite;
+
+}
+
+.wallet-card h1{
+
+margin-top:8px;
+
+font-size:48px;
+
+font-weight:900;
+
+letter-spacing:1px;
+
+}
+
+.wallet-card p{
+
+margin-top:3px;
+
+font-size:15px;
+
+opacity:.9;
+
+}
+
+/*==================================================
+                NIVEL
+==================================================*/
+
+.level-box{
+
+background:white;
+
+padding:14px 16px;
+
+border-radius:20px;
+
+box-shadow:
+0 8px 22px rgba(0,0,0,.06);
+
+}
+
+.level-header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+margin-bottom:10px;
+
+font-weight:700;
+
+color:#35583D;
+
+}
+
+.level-header div{
+
+display:flex;
+align-items:center;
+
+}
+
+.level-header svg{
+
+color:#FFC107;
+
+}
+
+/*==================================================
+                TITULOS
+==================================================*/
+
+.section-title{
+
+    display:flex;
+    align-items:center;
+    gap:8px;
+    
+    font-size:22px;
+    font-weight:700;
+    
+    margin-top:8px;
+    margin-bottom:6px;
+    
+    }
+
+.section-title svg{
+
+font-size:17px;
+
+}
+
+.section-title.danger{
+
+color:#D84339;
+margin-top:10px;
+
+}
+
+/*==================================================
+                BOTONES COINS
+==================================================*/
+
+.coins-grid{
+
+    display:grid;
+    
+    grid-template-columns:repeat(5,1fr);
+    
+    gap:10px;
+    
+    margin-top:2px;
+    margin-bottom:6px;
+    
+    }
+
+.coins-grid button{
+
+        height:52px;
+        
+        border:none;
+        
+        border-radius:16px;
+        
+        font-size:20px;
+        
+        font-weight:700;
+        
+        transition:.25s;
+        
+        cursor:pointer;
+        
+background:linear-gradient(
+135deg,
+#43A047,
+#66BB6A
+);
+
+box-shadow:
+0 8px 20px rgba(46,125,50,.22);
+
+}
+
+.coins-grid button:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+0 15px 26px rgba(46,125,50,.28);
+
+}
+
+.coins-grid button:active{
+
+transform:scale(.95);
+
+}
+
+.coins-grid.danger button{
+
+background:linear-gradient(
+135deg,
+#E53935,
+#EF5350
+);
+
+box-shadow:
+0 8px 20px rgba(220,53,69,.22);
+
+}
+
+.coins-grid.danger button:hover{
+
+box-shadow:
+0 15px 26px rgba(220,53,69,.28);
+
+}
+
+/*==================================================
+                BOTON REGRESAR
+==================================================*/
+
+.btn-primary.full{
+
+    margin-top:4px;
+
+    height:52px;
+
+border:none;
+
+border-radius:18px;
+
+background:linear-gradient(
+135deg,
+#2E7D32,
+#43A047
+);
+
+color:white;
+
+font-size:18px;
+
+font-weight:700;
+
+cursor:pointer;
+
+transition:.25s;
+
+display:flex;
+justify-content:center;
+align-items:center;
+gap:8px;
+
+box-shadow:
+0 12px 25px rgba(46,125,50,.22);
+
+}
+
+.btn-primary.full:hover{
+
+transform:translateY(-3px);
+
+}
+
+/*==================================================
+                ANIMACIONES
+==================================================*/
+
+@keyframes walletShine{
+
+0%{
+
+left:-60%;
+
+}
+
+30%{
+
+left:140%;
+
+}
+
+100%{
+
+left:140%;
+
+}
+
+}
+
+@keyframes pulseWallet{
+
+0%{
+
+transform:scale(1);
+
+}
+
+50%{
+
+transform:scale(1.01);
+
+}
+
+100%{
+
+transform:scale(1);
+
+}
+
+}
+
+@keyframes coinSpin{
+
+0%{
+
+transform:rotateY(0deg);
+
+}
+
+100%{
+
+transform:rotateY(360deg);
+
+}
+
+}
+
+/*==================================================
+                EFECTO SUMAR / RESTAR
+==================================================*/
+
+.wallet-card.gain{
+
+animation:gainFlash .5s ease;
+
+}
+
+.wallet-card.loss{
+
+animation:lossFlash .5s ease;
+
+}
+
+@keyframes gainFlash{
+
+0%{
+
+transform:scale(1);
+
+}
+
+40%{
+
+transform:scale(1.04);
+
+box-shadow:0 0 35px rgba(76,175,80,.45);
+
+}
+
+100%{
+
+transform:scale(1);
+
+}
+
+}
+
+@keyframes lossFlash{
+
+0%{
+
+transform:scale(1);
+
+}
+
+40%{
+
+transform:scale(.97);
+
+box-shadow:0 0 35px rgba(244,67,54,.45);
+
+}
+
+100%{
+
+transform:scale(1);
+
+}
+
+}
+
+/*==================================================
+                RESPONSIVE
+==================================================*/
+
+@media(max-width:480px){
+
+.profile-card{
+
+padding:20px;
+
+gap:12px;
+
+}
+
+.page-icon{
+
+width:62px;
+height:62px;
+
+font-size:25px;
+
+}
+
+.profile-info h1{
+
+font-size:24px;
+
+}
+
+.profile-info p{
+
+font-size:15px;
+
+}
+
+.wallet-card{
+
+padding:18px;
+
+}
+
+.wallet-card h1{
+
+font-size:40px;
+
+}
+
+.coins-grid{
+
+grid-template-columns:repeat(5,1fr);
+
+gap:6px;
+
+}
+
+.coins-grid button{
+
+height:48px;
+
+font-size:15px;
+
+}
+
+.section-title{
+
+font-size:17px;
+
+}
+
+.btn-primary.full{
+
+height:54px;
+
+}
+
+}

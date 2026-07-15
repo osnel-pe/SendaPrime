@@ -1,0 +1,79 @@
+.indicadores-grid{
+
+  display:grid;
+  
+  grid-template-columns:repeat(2,1fr);
+  
+  gap:14px;
+  
+  margin-bottom:22px;
+  
+  }
+  
+  .indicador-card{
+  
+  display:flex;
+  
+  align-items:center;
+  
+  gap:12px;
+  
+  padding:16px;
+  
+  background:#F8FBF9;
+  
+  border-radius:18px;
+  
+  border:1px solid #E8EFEA;
+  
+  transition:.25s;
+  
+  }
+  
+  .indicador-card:hover{
+  
+  transform:translateY(-3px);
+  
+  box-shadow:0 10px 22px rgba(0,0,0,.08);
+  
+  }
+  
+  .indicador-icono{
+  
+  width:42px;
+  
+  height:42px;
+  
+  border-radius:12px;
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  color:white;
+  
+  flex-shrink:0;
+  
+  }
+  
+  .indicador-card h4{
+  
+  margin:0;
+  
+  font-size:18px;
+  
+  color:#203A2D;
+  
+  }
+  
+  .indicador-card p{
+  
+  margin:3px 0 0;
+  
+  font-size:13px;
+  
+  color:#708278;
+  
+  }

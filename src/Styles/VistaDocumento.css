@@ -1,0 +1,111 @@
+.vista-documento{
+
+  background:white;
+  
+  padding:22px;
+  
+  border-radius:24px;
+  
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  gap:18px;
+  
+  }
+  
+  .vista-documento h3{
+  
+  margin:0;
+  
+  font-size:18px;
+  
+  color:#214234;
+  
+  }
+  
+  .preview-card{
+  
+  display:flex;
+  
+  align-items:center;
+  
+  gap:18px;
+  
+  background:#F7F9F8;
+  
+  padding:18px;
+  
+  border-radius:18px;
+  
+  }
+  
+  .preview-miniatura{
+  
+  width:80px;
+  
+  height:100px;
+  
+  border-radius:14px;
+  
+  background:white;
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  
+  }
+  
+  .preview-miniatura svg{
+  
+  color:#2E8B57;
+  
+  }
+  
+  .preview-info{
+  
+  flex:1;
+  
+  }
+  
+  .preview-info h4{
+  
+  margin:0;
+  
+  font-size:17px;
+  
+  color:#214234;
+  
+  }
+  
+  .preview-info p{
+  
+  margin:8px 0;
+  
+  color:#7A8781;
+  
+  font-size:14px;
+  
+  }
+  
+  .estado{
+  
+  display:flex;
+  
+  align-items:center;
+  
+  gap:8px;
+  
+  font-size:14px;
+  
+  font-weight:600;
+  
+  color:#F39C12;
+  
+  }

@@ -1,0 +1,611 @@
+/* ===========================
+   FONDO
+=========================== */
+
+.home-screen{
+
+  min-height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  padding:35px;
+
+  position:relative;
+
+  z-index:2;
+
+}
+
+.app-background{
+
+  position:fixed;
+
+  inset:0;
+
+  overflow:hidden;
+
+  z-index:-10;
+
+  background:linear-gradient(
+      145deg,
+      #0E5C39 0%,
+      #1F6E43 45%,
+      #2E8B57 100%
+  );
+
+}
+
+.bg-wave1{
+
+  position:absolute;
+
+  width:130%;
+
+  height:320px;
+
+  background:#2F8F5B;
+
+  top:-120px;
+
+  left:-15%;
+
+  border-radius:0 0 50% 50%;
+
+  transform:rotate(-4deg);
+
+  opacity:.85;
+
+}
+.bg-wave2{
+
+  position:absolute;
+
+  width:130%;
+
+  height:350px;
+
+  background:#49A96E;
+
+  bottom:-120px;
+
+  left:-15%;
+
+  border-radius:50% 50% 0 0;
+
+  transform:rotate(4deg);
+
+  opacity:.75;
+
+}
+.bg-heart{
+
+  position:absolute;
+
+  width:420px;
+
+  height:420px;
+
+  left:50%;
+
+  top:40px;
+
+  transform:translateX(-50%);
+
+  opacity:.06;
+
+}
+
+.bg-light{
+
+  position:absolute;
+
+  width:800px;
+
+  height:800px;
+
+  background:radial-gradient(circle,
+  rgba(255,255,255,.25) 0%,
+  rgba(255,255,255,0) 70%);
+
+  top:-300px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+}
+.bg-heart{
+
+  position:absolute;
+
+  width:420px;
+
+  height:420px;
+
+  left:50%;
+
+  top:40px;
+
+  transform:translateX(-50%);
+
+  opacity:.06;
+
+}
+.bg-heart::before,
+.bg-heart::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:180px;
+
+    height:290px;
+
+    border:16px solid white;
+
+    border-bottom:none;
+
+    border-radius:180px 180px 0 0;
+
+}
+.bg-heart::before{
+
+  left:58px;
+
+  transform:rotate(-45deg);
+
+  transform-origin:bottom left;
+
+}
+.bg-heart::after{
+
+  right:58px;
+
+  transform:rotate(45deg);
+
+  transform-origin:bottom right;
+
+}
+
+/* ===========================
+ TARJETA
+=========================== */
+
+.home-card{
+
+  width:100%;
+
+  max-width:460px;
+
+  background:rgba(255,255,255,.72);
+
+  border-radius:42px;
+
+  padding:45px 34px;
+
+  box-shadow:
+
+  0 25px 60px rgba(0,0,0,.18);
+
+  backdrop-filter:blur(22px);
+  -webkit-backdrop-filter:blur(22px);
+
+  animation:fadeIn .8s ease;
+
+}
+
+/* ===========================
+ LOGO
+=========================== */
+
+.logo-container{
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+}
+  
+  .home-logo{
+
+    width:270px;
+
+    display:block;
+
+    margin:auto;
+
+    filter:
+
+        drop-shadow(0 20px 35px rgba(0,0,0,.20));
+
+    transition:.35s;
+
+}
+
+.home-logo:hover{
+
+    transform:scale(1.04);
+
+}
+
+/* ===========================
+ TITULOS
+=========================== */
+
+.home-title{
+
+  text-align:center;
+
+  font-size:46px;
+
+  font-weight:800;
+
+  color:#3A3A3A;
+
+  letter-spacing:-1px;
+
+}
+
+.home-title span{
+
+  color:#C7A44A;
+
+}
+
+.home-subtitle{
+
+  text-align:center;
+
+  color:#777;
+
+  margin-top:10px;
+
+  margin-bottom:35px;
+
+  font-size:18px;
+
+}
+/* ===========================
+   BOTONES
+=========================== */
+
+.menu-button{
+
+  width:100%;
+
+  height:82px;
+
+  border:none;
+
+  border-radius:24px;
+
+  background:rgba(255,255,255,.88);
+
+  backdrop-filter:blur(12px);
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  padding:0 24px;
+
+  margin-bottom:16px;
+
+  cursor:pointer;
+
+  transition:.30s;
+
+  box-shadow:
+
+      0 12px 28px rgba(0,0,0,.08);
+
+}
+
+.menu-button:hover{
+
+  transform:translateY(-5px);
+
+  box-shadow:
+
+      0 20px 40px rgba(0,0,0,.18);
+
+}
+
+.menu-button.profesor{
+
+  background:linear-gradient(
+
+      135deg,
+
+      #14532D,
+
+      #2E8B57
+
+  );
+
+  color:white;
+
+}
+
+.menu-left{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:18px;
+
+}
+
+.menu-icon{
+
+  width:54px;
+
+  height:54px;
+
+  border-radius:18px;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  font-size:22px;
+
+  background:#EAF7EE;
+
+  color:#14532D;
+
+  flex-shrink:0;
+
+}
+.menu-button.profesor .menu-icon{
+
+  background:rgba(255,255,255,.18);
+
+  color:white;
+
+}
+
+.menu-text{
+
+  font-size:20px;
+
+  font-weight:700;
+
+  letter-spacing:.3px;
+
+}
+
+.menu-arrow{
+
+  font-size:20px;
+
+  opacity:.55;
+
+  transition:.3s;
+
+}
+.menu-button:hover .menu-arrow{
+
+  transform:translateX(6px);
+
+  opacity:1;
+
+}
+/* ===========================
+   FOOTER
+=========================== */
+
+.home-footer{
+
+  margin-top:28px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+  opacity:.75;
+
+}
+
+.home-footer hr{
+
+  flex:1;
+
+  border:none;
+
+  border-top:1px solid #E8E8E8;
+
+}
+
+.home-footer span{
+
+  color:#999;
+
+  font-size:14px;
+
+}
+
+/* ===========================
+ ANIMACION
+=========================== */
+
+@keyframes fadeIn{
+
+  from{
+
+      opacity:0;
+
+      transform:translateY(30px);
+
+  }
+
+  to{
+
+      opacity:1;
+
+      transform:translateY(0);
+
+  }
+
+}
+.menu-button.profesor .menu-icon{
+
+  background:rgba(255,255,255,.18);
+
+  color:white;
+
+}
+.menu-subtext{
+
+  font-size:13px;
+
+  margin-top:4px;
+
+  color:#7B8794;
+
+}
+
+.menu-button.profesor .menu-subtext{
+
+  color:rgba(255,255,255,.80);
+
+}
+
+.menu-button.profesor{
+
+  overflow:hidden;
+  
+  position:relative;
+  
+  }
+  
+  .menu-button.profesor::before{
+  
+  content:"";
+  
+  position:absolute;
+  
+  top:0;
+  
+  left:-120%;
+  
+  width:70%;
+  
+  height:100%;
+  
+  background:linear-gradient(
+  
+  90deg,
+  
+  transparent,
+  
+  rgba(255,255,255,.28),
+  
+  transparent
+  
+  );
+  
+  transform:skewX(-25deg);
+  
+  animation:shine 4s infinite;
+  
+  }
+  
+  @keyframes shine{
+  
+  0%{
+  
+  left:-120%;
+  
+  }
+  
+  25%{
+  
+  left:140%;
+  
+  }
+  
+  100%{
+  
+  left:140%;
+  
+  }
+  
+  }
+
+  .bg-icon{
+
+    position:absolute;
+
+    color:white;
+
+    opacity:.10;
+
+}
+.icon-book{
+
+  top:120px;
+
+  left:35px;
+
+  font-size:55px;
+
+}
+.icon-cap{
+
+  top:70px;
+
+  right:45px;
+
+  font-size:70px;
+
+}
+.icon-calculator{
+
+  bottom:250px;
+
+  right:40px;
+
+  font-size:55px;
+
+}
+.icon-pencil{
+
+  bottom:110px;
+
+  left:35px;
+
+  font-size:70px;
+
+}
+.icon-world{
+
+  bottom:50px;
+
+  right:65px;
+
+  font-size:65px;
+
+}
+.icon-heart{
+
+  top:260px;
+
+  right:90px;
+
+  font-size:42px;
+
+}

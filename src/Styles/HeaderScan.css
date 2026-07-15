@@ -1,0 +1,87 @@
+.scan-header{
+
+  display:flex;
+  
+  align-items:center;
+  
+  justify-content:space-between;
+  
+  margin-bottom:10px;
+  
+  }
+  
+  .scan-header h1{
+  
+  margin:0;
+  
+  font-size:27px;
+  
+  color:#214234;
+  
+  font-weight:700;
+  
+  }
+  
+  .scan-header p{
+  
+  margin-top:4px;
+  
+  font-size:14px;
+  
+  color:#73857A;
+  
+  }
+  
+  .scan-volver{
+  
+  width:46px;
+  
+  height:46px;
+  
+  border:none;
+  
+  border-radius:14px;
+  
+  background:white;
+  
+  display:flex;
+  
+  align-items:center;
+  
+  justify-content:center;
+  
+  cursor:pointer;
+  
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
+  
+  transition:.25s;
+  
+  }
+  
+  .scan-volver:hover{
+  
+  transform:translateY(-2px);
+  
+  }
+  
+  .scan-logo{
+  
+  width:54px;
+  
+  height:54px;
+  
+  border-radius:18px;
+  
+  background:linear-gradient(135deg,#2E8B57,#57C884);
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  color:white;
+  
+  box-shadow:0 10px 24px rgba(46,139,87,.25);
+  
+  }

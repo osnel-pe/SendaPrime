@@ -1,0 +1,69 @@
+.barra-proceso{
+
+  background:white;
+  
+  padding:22px;
+  
+  border-radius:24px;
+  
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  gap:14px;
+  
+  }
+  
+  .barra-header{
+  
+  display:flex;
+  
+  justify-content:space-between;
+  
+  font-size:15px;
+  
+  font-weight:600;
+  
+  color:#214234;
+  
+  }
+  
+  .barra{
+  
+  width:100%;
+  
+  height:10px;
+  
+  background:#E6ECE8;
+  
+  border-radius:20px;
+  
+  overflow:hidden;
+  
+  }
+  
+  .barra-fill{
+  
+  height:100%;
+  
+  background:linear-gradient(
+  90deg,
+  #2E8B57,
+  #61D389
+  );
+  
+  transition:.4s;
+  
+  }
+  
+  .barra-proceso p{
+  
+  margin:0;
+  
+  font-size:14px;
+  
+  color:#71857B;
+  
+  }

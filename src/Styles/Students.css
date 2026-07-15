@@ -1,0 +1,572 @@
+@import "./AppLayout.css";
+
+/*=========================================
+            TARJETA PRINCIPAL
+==========================================*/
+
+.students-card{
+
+display:flex;
+flex-direction:column;
+
+gap:18px;
+
+padding:28px;
+
+}
+
+/*=========================================
+              HEADER
+==========================================*/
+
+.students-header{
+
+display:flex;
+align-items:center;
+
+gap:18px;
+
+padding-bottom:18px;
+
+border-bottom:1px solid rgba(0,0,0,.06);
+
+}
+
+.header-icon{
+
+width:72px;
+height:72px;
+
+border-radius:22px;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+font-size:30px;
+color:white;
+
+background:linear-gradient(
+135deg,
+#2E7D32,
+#4CAF50
+);
+
+box-shadow:
+
+0 15px 28px rgba(46,125,50,.25);
+
+flex-shrink:0;
+
+}
+
+.header-info{
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+
+}
+
+.header-info h1{
+
+font-size:36px;
+
+font-weight:800;
+
+color:#26323F;
+
+line-height:1.1;
+
+margin:0;
+
+}
+
+.header-info p{
+
+margin-top:5px;
+
+font-size:16px;
+
+color:#6B7280;
+
+}
+
+/*=========================================
+             LISTA
+==========================================*/
+
+.students-list{
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+margin-top:8px;
+
+}
+
+/*=========================================
+           TARJETA ALUMNO
+==========================================*/
+
+.student-card{
+
+display:grid;
+
+grid-template-columns:
+
+58px
+
+1fr
+
+90px;
+
+align-items:center;
+
+gap:14px;
+
+padding:14px 16px;
+
+border-radius:22px;
+
+background:white;
+
+cursor:pointer;
+
+transition:.25s;
+
+box-shadow:
+
+0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.student-card:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+
+0 16px 35px rgba(0,0,0,.14);
+
+}
+
+/*=========================================
+             AVATAR
+==========================================*/
+
+.student-avatar{
+
+width:54px;
+height:54px;
+
+border-radius:50%;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+background:linear-gradient(
+135deg,
+#43A047,
+#2E7D32
+);
+
+color:white;
+
+font-size:22px;
+
+box-shadow:
+
+0 8px 20px rgba(46,125,50,.25);
+
+}
+
+/*=========================================
+            DATOS
+==========================================*/
+
+.student-data{
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+min-width:0;
+
+}
+
+.student-data h3{
+
+margin:0;
+
+font-size:24px;
+
+font-weight:700;
+
+color:#2E3A47;
+
+white-space:nowrap;
+
+overflow:hidden;
+
+text-overflow:ellipsis;
+
+}
+
+.student-data span{
+
+margin-top:4px;
+
+font-size:16px;
+
+color:#718096;
+
+}
+
+/*=========================================
+           MATHCOINS
+==========================================*/
+
+.student-coins{
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+gap:8px;
+
+height:46px;
+
+border-radius:25px;
+
+background:linear-gradient(
+
+135deg,
+
+#FFF7D8,
+
+#FFE082
+
+);
+
+color:#C69200;
+
+font-size:20px;
+
+font-weight:800;
+
+box-shadow:
+
+0 10px 20px rgba(255,193,7,.22);
+
+}
+
+.student-coins svg{
+
+font-size:19px;
+
+}
+
+/*=========================================
+            GRUPOS
+==========================================*/
+
+.groups-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:18px;
+
+margin-top:12px;
+
+}
+
+.group-button{
+
+border:none;
+
+border-radius:24px;
+
+padding:24px 18px;
+
+cursor:pointer;
+
+background:white;
+
+transition:.25s;
+
+box-shadow:
+
+0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.group-button:hover{
+
+transform:translateY(-4px);
+
+box-shadow:
+
+0 18px 35px rgba(0,0,0,.14);
+
+}
+
+.group-icon{
+
+  width:64px;
+  height:64px;
+  
+  margin:auto;
+  margin-bottom:16px;
+  
+  border-radius:20px;
+  
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  
+  font-size:28px;
+  
+  color:#FFF9E6;
+  
+  background:linear-gradient(
+  145deg,
+  #2E7D32 0%,
+  #43A047 45%,
+  #8BC34A 65%,
+  #D4AF37 100%
+  );
+  
+  border:2px solid rgba(255,215,0,.35);
+  
+  box-shadow:
+  0 10px 24px rgba(46,125,50,.22),
+  0 0 18px rgba(212,175,55,.30);
+  
+  transition:.30s;
+  
+  position:relative;
+  
+  overflow:hidden;
+  
+  }
+
+.group-icon::before{
+
+content:"";
+
+position:absolute;
+
+top:-70%;
+left:-45%;
+
+width:45%;
+height:220%;
+
+background:rgba(255,255,255,.35);
+
+transform:rotate(25deg);
+
+transition:.6s;
+
+}
+
+.group-button:hover .group-icon::before{
+
+left:120%;
+
+}
+
+.group-button:hover .group-icon{
+
+transform:scale(1.08) rotate(-4deg);
+
+box-shadow:
+0 15px 30px rgba(46,125,50,.28),
+0 0 22px rgba(255,193,7,.45);
+
+}
+
+.group-button h3{
+
+font-size:21px;
+
+font-weight:700;
+
+color:#35523C;
+
+}
+
+/*=========================================
+           BOTÓN
+==========================================*/
+
+.btn-back{
+
+margin-top:18px;
+
+height:54px;
+
+border:none;
+
+border-radius:18px;
+
+cursor:pointer;
+
+font-size:18px;
+
+font-weight:700;
+
+color:white;
+
+background:linear-gradient(
+
+135deg,
+
+#2E7D32,
+
+#43A047
+
+);
+
+transition:.25s;
+
+box-shadow:
+
+0 14px 28px rgba(46,125,50,.24);
+
+}
+
+.btn-back:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+
+0 18px 34px rgba(46,125,50,.30);
+
+}
+
+/*=========================================
+            SCROLL
+==========================================*/
+
+.students-list{
+
+max-height:540px;
+
+overflow-y:auto;
+
+padding-right:6px;
+
+}
+
+.students-list::-webkit-scrollbar{
+
+width:8px;
+
+}
+
+.students-list::-webkit-scrollbar-thumb{
+
+background:#BFD9C1;
+
+border-radius:10px;
+
+}
+
+.students-list::-webkit-scrollbar-track{
+
+background:transparent;
+
+}
+
+/*=========================================
+            RESPONSIVE
+==========================================*/
+
+@media(max-width:480px){
+
+.students-card{
+
+padding:22px;
+
+}
+
+.header-icon{
+
+width:64px;
+height:64px;
+
+font-size:26px;
+
+}
+
+.header-info h1{
+
+font-size:30px;
+
+}
+
+.student-card{
+
+grid-template-columns:
+
+52px
+
+1fr
+
+82px;
+
+padding:12px;
+
+gap:12px;
+
+}
+
+.student-avatar{
+
+width:48px;
+height:48px;
+
+font-size:20px;
+
+}
+
+.student-data h3{
+
+font-size:20px;
+
+}
+
+.student-data span{
+
+font-size:15px;
+
+}
+
+.student-coins{
+
+height:42px;
+
+font-size:18px;
+
+}
+
+.group-button{
+
+padding:20px 14px;
+
+}
+
+}

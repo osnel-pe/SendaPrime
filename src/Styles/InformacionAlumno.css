@@ -1,0 +1,65 @@
+.info-alumno{
+
+  display:grid;
+  
+  grid-template-columns:1fr 1fr;
+  
+  gap:18px;
+  
+  }
+  
+  .info-item{
+  
+  display:flex;
+  
+  align-items:flex-start;
+  
+  gap:12px;
+  
+  padding:16px;
+  
+  border-radius:16px;
+  
+  background:#F8FBF9;
+  
+  border:1px solid #E6EFE8;
+  
+  transition:.25s;
+  
+  }
+  
+  .info-item:hover{
+  
+  transform:translateY(-2px);
+  
+  box-shadow:0 8px 18px rgba(0,0,0,.08);
+  
+  }
+  
+  .info-item svg{
+  
+  color:#2E8B57;
+  
+  margin-top:3px;
+  
+  }
+  
+  .info-item h4{
+  
+  margin:0;
+  
+  font-size:14px;
+  
+  color:#2D4B3A;
+  
+  }
+  
+  .info-item p{
+  
+  margin:4px 0 0;
+  
+  font-size:13px;
+  
+  color:#708279;
+  
+  }

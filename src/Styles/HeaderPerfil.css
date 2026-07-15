@@ -1,0 +1,55 @@
+.perfil-header{
+
+  display:flex;
+  
+  align-items:center;
+  
+  gap:15px;
+  
+  margin-bottom:18px;
+  
+  }
+  
+  .volver{
+  
+  width:48px;
+  
+  height:48px;
+  
+  border:none;
+  
+  border-radius:14px;
+  
+  background:white;
+  
+  display:flex;
+  
+  align-items:center;
+  
+  justify-content:center;
+  
+  cursor:pointer;
+  
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  
+  }
+  
+  .perfil-header h1{
+  
+  margin:0;
+  
+  font-size:24px;
+  
+  color:#1E3A2F;
+  
+  }
+  
+  .perfil-header p{
+  
+  margin-top:4px;
+  
+  font-size:14px;
+  
+  color:#6D7A73;
+  
+  }

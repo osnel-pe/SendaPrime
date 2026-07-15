@@ -1,0 +1,148 @@
+:root{
+
+  --green-dark:#14532D;
+  --green:#1F6E43;
+  --green-light:#3D9C66;
+
+  --gold:#C9A227;
+
+  --text:#243424;
+
+  --card:rgba(255,255,255,.78);
+
+  --shadow:
+      0 20px 60px rgba(0,0,0,.15);
+
+}
+/* =========================
+   FONDO GENERAL
+========================= */
+
+body{
+
+  margin:0;
+
+  background:linear-gradient(
+      145deg,
+      #0E5C39 0%,
+      #1F6E43 50%,
+      #2E8B57 100%
+  );
+
+  overflow-x:hidden;
+
+}
+.app-background{
+
+  position:fixed;
+
+  inset:0;
+
+  overflow:hidden;
+
+  z-index:-20;
+
+}
+.bg-wave1{
+
+  position:absolute;
+
+  width:140%;
+
+  height:330px;
+
+  background:#2F8F5B;
+
+  top:-140px;
+
+  left:-20%;
+
+  border-radius:0 0 50% 50%;
+
+  transform:rotate(-4deg);
+
+  opacity:.85;
+
+}
+.bg-wave2{
+
+  position:absolute;
+
+  width:140%;
+
+  height:360px;
+
+  background:#49A96E;
+
+  bottom:-140px;
+
+  left:-20%;
+
+  border-radius:50% 50% 0 0;
+
+  transform:rotate(4deg);
+
+  opacity:.75;
+
+}
+.bg-light{
+
+  position:absolute;
+
+  width:900px;
+
+  height:900px;
+
+  left:50%;
+
+  top:-250px;
+
+  transform:translateX(-50%);
+
+  background:radial-gradient(
+
+      circle,
+
+      rgba(255,255,255,.22),
+
+      transparent 70%
+
+  );
+
+}
+.screen{
+
+  min-height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  padding:25px;
+
+}
+.main-card{
+
+  width:100%;
+
+  max-width:430px;
+
+  background:rgba(255,255,255,.78);
+
+  backdrop-filter:blur(18px);
+
+  -webkit-backdrop-filter:blur(18px);
+
+  border-radius:34px;
+
+  padding:34px;
+
+  box-shadow:
+
+      0 25px 60px rgba(0,0,0,.18);
+
+  border:1px solid rgba(255,255,255,.35);
+
+}

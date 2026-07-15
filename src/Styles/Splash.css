@@ -1,0 +1,218 @@
+@import "./AppLayout.css";
+
+/*=========================================
+            PANTALLA
+=========================================*/
+
+.splash-screen{
+
+position:fixed;
+
+inset:0;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+overflow:hidden;
+
+z-index:99999;
+
+}
+
+/*=========================================
+            CONTENIDO
+=========================================*/
+
+.splash-content{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+z-index:5;
+
+color:white;
+
+}
+
+/*=========================================
+            LOGO
+=========================================*/
+
+.splash-logo{
+
+width:120px;
+
+height:120px;
+
+border-radius:34px;
+
+background:linear-gradient(135deg,#FFD54F,#F4B400);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:58px;
+
+color:white;
+
+box-shadow:
+
+0 25px 55px rgba(244,180,0,.45);
+
+margin-bottom:28px;
+
+}
+
+/*=========================================
+            TITULO
+=========================================*/
+
+.splash-content h1{
+
+font-size:52px;
+
+font-weight:800;
+
+letter-spacing:.5px;
+
+margin-bottom:8px;
+
+}
+
+/*=========================================
+            SUBTITULO
+=========================================*/
+
+.splash-content p{
+
+font-size:20px;
+
+opacity:.93;
+
+margin-bottom:45px;
+
+}
+
+/*=========================================
+            LOADING
+=========================================*/
+
+.loading{
+
+width:270px;
+
+height:10px;
+
+border-radius:30px;
+
+background:rgba(255,255,255,.20);
+
+overflow:hidden;
+
+margin-bottom:18px;
+
+}
+
+.loading-bar{
+
+height:100%;
+
+width:0%;
+
+border-radius:30px;
+
+background:linear-gradient(90deg,#FFD54F,#FFF176,#FFD54F);
+
+animation:loading 2s linear forwards;
+
+}
+
+.splash-content span{
+
+font-size:18px;
+
+font-weight:600;
+
+opacity:.92;
+
+}
+
+/*=========================================
+            ANIMACION
+=========================================*/
+
+@keyframes loading{
+
+0%{
+
+width:0%;
+
+}
+
+100%{
+
+width:100%;
+
+}
+
+}
+
+/*=========================================
+            RESPONSIVE
+=========================================*/
+
+@media(max-width:480px){
+
+.splash-logo{
+
+width:96px;
+
+height:96px;
+
+font-size:46px;
+
+}
+
+.splash-content h1{
+
+font-size:40px;
+
+}
+
+.splash-content p{
+
+font-size:17px;
+
+margin-bottom:34px;
+
+}
+
+.loading{
+
+width:210px;
+
+}
+
+}
+.logo-image{
+
+  width:120px;
+  
+  height:120px;
+  
+  object-fit:contain;
+  
+  display:block;
+  
+  filter:drop-shadow(0 10px 25px rgba(0,0,0,.25));
+  
+  }

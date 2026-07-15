@@ -1,0 +1,343 @@
+/*=========================================
+SCROLL
+=========================================*/
+
+.perfil-scroll{
+
+  flex:1;
+  overflow-y:auto;
+  padding-top:8px;
+  padding-bottom:35px;
+
+}
+
+/*=========================================
+RESUMEN DEL ALUMNO
+=========================================*/
+
+.perfil-resumen{
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+
+  margin-bottom:22px;
+
+}
+
+.perfil-avatar{
+
+  width:90px;
+  height:90px;
+
+  border-radius:50%;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:linear-gradient(
+      135deg,
+      #1E8E4A,
+      #15663A
+  );
+
+  color:white;
+
+  box-shadow:
+  0 12px 30px rgba(0,0,0,.30);
+
+  margin-bottom:14px;
+
+}
+
+.perfil-resumen h2{
+
+  margin:0;
+
+  font-size:25px;
+
+  font-weight:700;
+
+  color:white;
+
+  text-align:center;
+
+}
+
+.perfil-resumen p{
+
+  margin-top:8px;
+
+  color:rgba(255,255,255,.78);
+
+  font-size:15px;
+
+}
+
+/*=========================================
+TARJETAS
+=========================================*/
+
+.perfil-alumno-card{
+
+  width:100%;
+  
+  box-sizing:border-box;
+  
+  background:linear-gradient(
+  135deg,
+  rgba(255,255,255,.82),
+  rgba(236,255,245,.55)
+  );
+  
+  backdrop-filter:blur(25px);
+  
+  border-radius:24px;
+  
+  padding:22px;
+  
+  margin-bottom:18px;
+  
+  border:1px solid rgba(255,255,255,.25);
+  
+  box-shadow:
+  0 12px 35px rgba(0,0,0,.18);
+  
+  }
+
+.perfil-alumno-card h3{
+
+  margin-top:0;
+  margin-bottom:18px;
+
+  color:#245236;
+
+  font-size:20px;
+
+}
+
+/*=========================================
+DATOS
+=========================================*/
+
+.dato{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  padding:12px 0;
+
+  border-bottom:1px solid rgba(0,0,0,.08);
+
+}
+
+.dato:last-child{
+
+  border-bottom:none;
+
+}
+
+.dato span{
+
+  color:#658072;
+
+  font-size:14px;
+
+}
+
+.dato strong{
+
+  color:#214735;
+
+  font-size:15px;
+
+  font-weight:700;
+
+  text-align:right;
+
+  max-width:60%;
+
+}
+/*==========================
+EXPEDIENTE
+==========================*/
+
+.section-title{
+
+  margin:0 0 20px 0;
+
+  color:#245236;
+
+  font-size:24px;
+
+  font-weight:700;
+
+}
+
+.expediente-info-row{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:18px;
+
+  margin-bottom:22px;
+
+}
+
+.expediente-icon{
+
+  width:84px;
+
+  height:84px;
+
+  border-radius:22px;
+
+  background:linear-gradient(
+      135deg,
+      #23954E,
+      #17723D
+  );
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  color:white;
+
+  flex-shrink:0;
+
+}
+
+.expediente-info{
+
+  flex:1;
+
+}
+
+.expediente-info h4{
+
+  margin:0;
+
+  color:#214735;
+
+  font-size:24px;
+
+  font-weight:700;
+
+}
+
+.expediente-info p{
+
+  margin-top:8px;
+
+  color:#6A756E;
+
+  font-size:16px;
+
+  line-height:1.4;
+
+}
+
+.btn-escanear{
+
+  width:100%;
+
+  height:58px;
+
+  border:none;
+
+  border-radius:18px;
+
+  background:linear-gradient(
+      135deg,
+      #23954E,
+      #17723D
+  );
+
+  color:white;
+
+  display:flex;
+
+  justify-content:center;
+
+  align-items:center;
+
+  gap:10px;
+
+  font-size:17px;
+
+  font-weight:700;
+
+  cursor:pointer;
+}
+.modal-opciones{
+
+  position:fixed;
+  
+  top:0;
+  left:0;
+  
+  width:100%;
+  height:100%;
+  
+  background:rgba(0,0,0,.45);
+  
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  z-index:9999;
+  
+  }
+  
+  .modal-contenido{
+  
+  background:white;
+  
+  padding:25px;
+  
+  border-radius:20px;
+  
+  width:320px;
+  
+  display:flex;
+  
+  flex-direction:column;
+  
+  gap:15px;
+  
+  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  
+  animation:aparecer .25s;
+  
+  }
+  
+  @keyframes aparecer{
+  
+  from{
+  
+  transform:scale(.9);
+  
+  opacity:0;
+  
+  }
+  
+  to{
+  
+  transform:scale(1);
+  
+  opacity:1;
+  
+  }
+  
+  }

@@ -1,0 +1,61 @@
+:root{
+
+  --verde:#1C8B4B;
+  
+  --verde2:#45B56D;
+  
+  --verde3:#6FD38B;
+  
+  --dorado:#D7B94C;
+  
+  --glass:rgba(255,255,255,.72);
+  
+  --glass2:rgba(255,255,255,.55);
+  
+  --sombra:
+  
+  0 12px 45px rgba(0,0,0,.10),
+  
+  0 4px 18px rgba(30,80,50,.08);
+  
+  --blur:20px;
+  
+  --radio:30px;
+  
+  }
+  
+  .glass{
+  
+  background:var(--glass);
+  
+  backdrop-filter:blur(var(--blur));
+  
+  -webkit-backdrop-filter:blur(var(--blur));
+  
+  border:1px solid rgba(255,255,255,.45);
+  
+  box-shadow:var(--sombra);
+  
+  border-radius:var(--radio);
+  
+  }
+  /*=====================================
+TARJETA GLASS
+=====================================*/
+
+.glass-card{
+
+  background:rgba(18,48,31,.52);
+
+  backdrop-filter:blur(22px);
+
+  -webkit-backdrop-filter:blur(22px);
+
+  border:1px solid rgba(255,255,255,.12);
+
+  box-shadow:
+      0 12px 35px rgba(0,0,0,.28);
+
+  border-radius:28px;
+
+}

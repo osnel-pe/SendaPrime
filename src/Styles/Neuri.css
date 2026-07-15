@@ -1,0 +1,25 @@
+.neuri-container{
+
+  display:flex;
+  
+  justify-content:center;
+  
+  align-items:center;
+  
+  width:72px;
+  
+  height:72px;
+  
+  }
+  
+  .neuri{
+  
+  width:64px;
+  
+  height:auto;
+  
+  user-select:none;
+  
+  pointer-events:none;
+  
+  }
