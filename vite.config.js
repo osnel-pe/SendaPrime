@@ -37,6 +37,19 @@ export default defineConfig({
         orientation: "portrait",
 
         start_url: "/",
+        share_target: {
+          action: "/share",
+          method: "POST",
+          enctype: "multipart/form-data",
+          params: {
+            files: [
+              {
+                name: "pdf",
+                accept: ["application/pdf"]
+              }
+            ]
+          }
+        },
 
         icons: [
 
