@@ -3,20 +3,25 @@ import "../Styles/Psicologia.css";
 import "../Styles/PerfilAlumnoPsico.css";
 
 import {
+
     ArrowLeft,
     House,
     UserRound,
+    FolderOpen,
     FileText,
-    ScanLine
+    Upload,
+    Trash2,
+    Eye
+
 } from "lucide-react";
 
 import { useRef, useState, useEffect } from "react";
 
+import ExpedienteCard from "../components/Psicologia/ExpedienteCard";
+
 import { supabase } from "../services/supabase";
 
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
-
-import EscanerDocumento from "../components/EscanerDocumento";
 
 export default function PerfilAlumnoPsico({
 
@@ -33,10 +38,6 @@ export default function PerfilAlumnoPsico({
 }) {
 
     const inputArchivo = useRef(null);
-
-    const [mostrarEscaner, setMostrarEscaner] = useState(false);
-
-    const [mostrarMenu, setMostrarMenu] = useState(false);
 
     const [confirmandoEliminar, setConfirmandoEliminar] = useState(false);
 
@@ -108,9 +109,9 @@ export default function PerfilAlumnoPsico({
 
     const abrirSelector = () => {
 
-        setMostrarMenu(true);
-    
-    };
+    inputArchivo.current.click();
+
+};
 
     //==============================
     // SUBIR PDF
@@ -126,9 +127,29 @@ export default function PerfilAlumnoPsico({
 
         try {
 
+            //==============================
+            // ELIMINAR EXPEDIENTE ANTERIOR
+            //==============================
+
+            if (datosAlumno.expediente_pdf) {
+
+                const { error } = await supabase.storage
+
+                    .from("expedientes")
+
+                    .remove([datosAlumno.expediente_pdf]);
+
+                if (error) {
+
+                    console.error(error);
+
+                }
+
+            }
+
             const nombreArchivo =
 
-                `${datosAlumno.id}-${Date.now()}.pdf`;
+            `${datosAlumno.grupo}/${datosAlumno.id}/FichaGeneral.pdf`;
 
             //---------------------------------------
             // SUBIR AL STORAGE
@@ -242,12 +263,21 @@ export default function PerfilAlumnoPsico({
 
     const eliminarExpediente = async () => {
 
+        console.log("Eliminar presionado");
         if (!datosAlumno.expediente_pdf) return;
     
         const confirmar = window.confirm(
-            "¿Deseas eliminar el expediente?"
+
+        `¿Deseas eliminar la ficha general de
+
+        ${datosAlumno.nombre}
+
+        ${datosAlumno.apellido_paterno}?
+
+        Esta acción no se puede deshacer.`
+
         );
-    
+
         if (!confirmar) return;
     
         // 1. Eliminar del Storage
@@ -296,7 +326,7 @@ export default function PerfilAlumnoPsico({
             )
         );
     
-        alert("Expediente eliminado correctamente.");
+        alert("Documento eliminado.");
 
         setConfirmandoEliminar(false);
     
@@ -308,110 +338,22 @@ export default function PerfilAlumnoPsico({
 
     const verPDF = () => {
 
-        const {
+    if (!datosAlumno.expediente_pdf) return;
 
-            data
+    const { data } = supabase.storage
+        .from("expedientes")
+        .getPublicUrl(datosAlumno.expediente_pdf);
 
-        } = supabase.storage
-
-            .from("expedientes")
-
-            .getPublicUrl(datosAlumno.expediente_pdf);
-
-        window.open(data.publicUrl, "_blank");
-    };
-
+    const enlace = document.createElement("a");
+    enlace.href = data.publicUrl;
+    enlace.target = "_blank";
+    enlace.rel = "noopener noreferrer";
+    enlace.click();
+};
     //=====================================
 // GUARDAR PDF GENERADO POR EL ESCÁNER
 //=====================================
 
-const guardarPDFEscaneado = async (pdfBlob) => {
-
-    setMostrarEscaner(false);
-
-    setCargando(true);
-
-    try {
-
-        const nombreArchivo =
-            `${datosAlumno.id}-${Date.now()}.pdf`;
-
-        // Subir al Storage
-        const { error: errorStorage } =
-            await supabase.storage
-                .from("expedientes")
-                .upload(nombreArchivo, pdfBlob);
-
-        if (errorStorage) {
-
-            alert(errorStorage.message);
-
-            setCargando(false);
-
-            return;
-
-        }
-
-        // Actualizar tabla alumnos
-        const { data, error } =
-            await supabase
-                .from("alumnos")
-                .update({
-
-                    expediente_pdf: nombreArchivo
-
-                })
-                .eq("id", datosAlumno.id)
-                .select()
-                .single();
-
-        if (error) {
-
-            alert(error.message);
-
-            setCargando(false);
-
-            return;
-
-        }
-
-        // Actualizar estados
-
-        setDatosAlumno(data);
-
-        setAlumnoSeleccionado(data);
-
-        setStudents(
-
-            students.map(a =>
-
-                a.id === data.id
-
-                    ? data
-
-                    : a
-
-            )
-
-        );
-
-        alert("Expediente guardado correctamente.");
-
-    }
-
-    catch(err){
-
-        console.error(err);
-
-    }
-
-    finally{
-
-        setCargando(false);
-
-    }
-
-};
     return (
 
         <>
@@ -476,148 +418,19 @@ const guardarPDFEscaneado = async (pdfBlob) => {
                             </p>
 
                         </div>
+                        
 
-                        <div className="perfil-alumno-card">
+                        <ExpedienteCard
 
-                            <h3 className="section-title">
-                                Expediente
-                            </h3>
+                            tieneExpediente={!!datosAlumno.expediente_pdf}
 
-                            <div className="expediente-info-row">
+                            onOpen={verPDF}
 
-                                <div className="expediente-icon">
-                                    <FileText size={42}/>
-                                </div>
+                            onUpload={abrirSelector}
 
-                                <div className="expediente-info">
+                            onDelete={eliminarExpediente}
 
-                                    <h4>
-                                        Ficha General
-                                    </h4>
-
-                                    {
-
-                                        datosAlumno.expediente_pdf ? (
-
-                                            <>
-
-                                                <p>
-
-                                                    ✅ Expediente registrado
-
-                                                </p>
-
-                                                <div
-                                                    style={{
-                                                        display:"flex",
-                                                        gap:"10px",
-                                                        marginTop:"10px",
-                                                        flexWrap:"wrap"
-                                                    }}
-                                                >
-
-                                                    <button
-                                                        className="btn-escanear"
-                                                        onClick={verPDF}
-                                                    >
-                                                        Ver PDF
-                                                    </button>
-
-                                                    <button
-                                        className="btn-back"
-                                        style={{
-                                            backgroundColor: confirmandoEliminar ? "#d32f2f" : "",
-                                            color: confirmandoEliminar ? "white" : ""
-                                        }}
-                                        onClick={() => {
-
-                                            if (!confirmandoEliminar) {
-
-                                                setConfirmandoEliminar(true);
-
-                                                return;
-
-                                            }
-
-                                            eliminarExpediente();
-
-                                        }}
-                                    >
-
-                                        {
-
-                                            confirmandoEliminar
-
-                                                ? "Confirmar eliminación"
-
-                                                : "Eliminar"
-
-                                        }
-
-                                    </button>
-
-                                                </div>
-
-                                            </>
-
-                                        ) : (
-
-                                            <p>
-
-                                                No existe un expediente registrado.
-
-                                            </p>
-
-                                        )
-
-                                    }
-
-                                </div>
-
-                            </div>
-
-                            <button
-
-                                className="btn-escanear"
-                                onClick={abrirSelector}
-
-                                disabled={cargando}
-
-                            >
-
-                                <ScanLine size={28}/>
-
-                                <span>
-
-                                    {
-
-                                        cargando
-
-                                            ? "Guardando..."
-
-                                            : "Escanear ficha"
-
-                                    }
-
-                                </span>
-
-                            </button>
-
-                            <input
-
-                                ref={inputArchivo}
-
-                                type="file"
-
-                                accept="application/pdf"
-
-                                style={{display:"none"}}
-
-                                onChange={subirExpediente}
-
-                            />
-                            
-                           </div>
+                        />
 
                         <div className="perfil-alumno-card">
 
@@ -657,87 +470,15 @@ const guardarPDFEscaneado = async (pdfBlob) => {
 
             </div>
             {
-                mostrarMenu && (
-
-                <div className="modal-opciones">
-
-                    <div className="modal-contenido">
-
-                        <h3>Ficha General</h3>
-
-                        <button
-
-                            className="btn-escanear"
-
-                            onClick={() => {
-
-                                setMostrarMenu(false);
-
-                                inputArchivo.current.click();
-
-                            }}
-
-                        >
-
-                            Subir PDF
-
-                        </button>
-
-                        <button
-
-                            className="btn-escanear"
-
-                            onClick={() => {
-
-                                setMostrarMenu(false);
-                            
-                                setMostrarEscaner(true);
-                            
-                            }}
-
-                        >
-
-                            Escanear documento
-
-                        </button>
-
-                        <button
-
-                            className="btn-back"
-
-                            onClick={() => setMostrarMenu(false)}
-
-                        >
-
-                            Cancelar
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                )
-                }
-                {
-
-                    mostrarEscaner && (
-
-                        <EscanerDocumento
-
-                        onCancelar={() =>
-                    
-                            setMostrarEscaner(false)
-                    
-                        }
-                    
-                        onImagenCapturada={guardarPDFEscaneado}
-                    
-                    />
-
-                    )
-
-                    }
+        
+        }
+            <input
+                type="file"
+                accept="application/pdf"
+                ref={inputArchivo}
+                style={{ display: "none" }}
+                onChange={subirExpediente}
+            />
         </>
 
     );

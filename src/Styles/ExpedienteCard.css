@@ -1,0 +1,239 @@
+.expediente-card{
+
+    margin-top:22px;
+
+    background:linear-gradient(
+        135deg,
+        rgba(255,255,255,.78),
+        rgba(227,236,232,.78)
+    );
+
+    backdrop-filter:blur(18px);
+
+    border-radius:28px;
+
+    padding:18px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+}
+
+.expediente-header{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:#205437;
+
+    margin-bottom:5px;
+
+}
+
+.expediente-header h3{
+
+    margin:0;
+
+    font-size:21px;
+
+    font-weight:700;
+
+}
+
+.expediente-documento{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:8px 4px;
+
+}
+
+.expediente-info{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    cursor:pointer;
+
+    flex:1;
+
+}
+
+.expediente-documento:hover{
+
+    background:rgba(47,128,237,.08);
+
+}
+
+.expediente-nombre{
+
+    color:#2F80ED;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    text-decoration:underline;
+
+    transition:.2s;
+
+}
+
+.expediente-descripcion{
+
+    margin-top:4px;
+
+    color:#777;
+
+    font-size:14px;
+
+}
+
+.expediente-botones{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:10px;
+
+}
+
+.btn-reemplazar,
+.btn-eliminar,
+.btn-subir-expediente{
+
+    flex:1;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:14px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:8px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+.btn-reemplazar{
+
+    background:#1F6B3A;
+
+    color:white;
+
+}
+
+.btn-eliminar{
+
+    background:#D84343;
+
+    color:white;
+
+}
+
+.btn-subir-expediente{
+
+    margin-top:12px;
+
+    background:#1F6B3A;
+
+    color:white;
+
+    width:100%;
+
+}
+
+.expediente-vacio{
+
+    color:#666;
+
+    margin-bottom:18px;
+
+}
+
+.expediente-acciones{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.icon-btn{
+
+    width:34px;
+
+    height:34px;
+
+    border:none;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.icon-btn:hover{
+
+    transform:scale(1.08);
+
+}
+
+.icon-btn.replace{
+
+    background:rgba(31,107,58,.12);
+
+    color:#1F6B3A;
+
+}
+
+.icon-btn.replace:hover{
+
+    background:rgba(31,107,58,.20);
+
+}
+
+.icon-btn.delete{
+
+    background:rgba(216,67,67,.12);
+
+    color:#D84343;
+
+}
+
+.icon-btn.delete:hover{
+
+    background:rgba(216,67,67,.20);
+
+}

@@ -341,3 +341,26 @@ EXPEDIENTE
   }
   
   }
+  .link-documento{
+
+    color:#1976D2;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    text-decoration:underline;
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.link-documento:hover{
+
+    color:#0D47A1;
+
+}
