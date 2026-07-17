@@ -35,6 +35,7 @@ import {
     dejarDeEscucharArchivoCompartido
 
 } from "./share/ShareEvents";
+import { guardarArchivo } from "./share/ShareStorage";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -179,6 +180,28 @@ function App() {
         );
 
     };
+
+}, []);
+
+useEffect(() => {
+
+    if (!navigator.serviceWorker) return;
+
+    navigator.serviceWorker.addEventListener("message", (event) => {
+
+        console.log("Mensaje recibido del SW:");
+
+        console.log(event.data);
+
+        if (event.data.type === "SHARED_PDF") {
+
+            guardarArchivo(event.data.file);
+
+            setPantalla("recibirExpediente");
+
+        }
+
+    });
 
 }, []);
 
