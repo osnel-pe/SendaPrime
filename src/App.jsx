@@ -148,6 +148,24 @@ function App() {
   
   }, []);
 
+  useEffect(() => {
+
+    if (!("launchQueue" in window)) return;
+
+    window.launchQueue.setConsumer(async (launchParams) => {
+
+        if (!launchParams.files.length) return;
+
+        const file = await launchParams.files[0].getFile();
+
+        window.archivoCompartido = file;
+
+        setPantalla("recibirExpediente");
+
+    });
+
+}, []);
+
   const agregarMathCoins = async (id, cantidad) => {
     const alumno = students.find((a) => a.id === id);
 
@@ -241,23 +259,23 @@ function App() {
   switch (pantalla) {
     case "loginAlumno":
 
-contenido = (
+      contenido = (
 
-<LoginAlumno
+      <LoginAlumno
 
-students={students}
+      students={students}
 
-seleccionarAlumno={setAlumnoSeleccionado}
+      seleccionarAlumno={setAlumnoSeleccionado}
 
-cambiarPantalla={setPantalla}
+      cambiarPantalla={setPantalla}
 
-setTipoUsuario={setTipoUsuario}
+      setTipoUsuario={setTipoUsuario}
 
-/>
+      />
 
-);
+      );
 
-break;
+      break;
 
     case 'loginProfesor':
       contenido = <LoginProfesor cambiarPantalla={setPantalla}
@@ -294,7 +312,25 @@ break;
         );
 
         break;
+        case "recibirExpediente":
 
+    contenido = (
+
+        <RecibirExpediente
+
+            students={students}
+
+            cambiarPantalla={setPantalla}
+
+            setAlumnoSeleccionado={setAlumnoSeleccionado}
+
+            setStudents={setStudents}
+
+        />
+
+    );
+
+    break;
     case 'student':
       contenido = <Student cambiarPantalla={setPantalla} />;
 
