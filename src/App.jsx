@@ -44,7 +44,7 @@ function App() {
     return localStorage.getItem('pantalla') || 'home';
   });
   const [alumnoSeleccionado, setAlumnoSeleccionado] = useState(() => {
-    const guardado = localStorage.getItem('alumnoSeleccionado');
+  const guardado = localStorage.getItem('alumnoSeleccionado');
 
     return guardado ? JSON.parse(guardado) : null;
   });
@@ -453,25 +453,29 @@ useEffect(() => {
             );
 
             break;
+            
             case "grupoPsicologia":
 
-              contenido=(
+            contenido=(
 
-              <GrupoPsicologia
+            <GrupoPsicologia
 
-              students={students}
+                students={students}
 
-              grupoSeleccionado={grupoSeleccionado}
+                setStudents={setStudents}
 
-              cambiarPantalla={setPantalla}
+                grupoSeleccionado={grupoSeleccionado}
 
-              seleccionarAlumno={setAlumnoSeleccionado}
+                cambiarPantalla={setPantalla}
 
-              />
+                seleccionarAlumno={setAlumnoSeleccionado}
 
-              );
+            />
 
-              break;
+            );
+
+            break;
+
           case "perfilAlumnoPsico":
 
           contenido=(

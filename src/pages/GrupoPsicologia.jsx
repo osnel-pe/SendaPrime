@@ -20,7 +20,7 @@ export default function GrupoPsicologia({
 
     students,
     
-    setstudents,
+    setStudents,
 
     grupoSeleccionado,
 
@@ -72,7 +72,13 @@ console.log("Alumnos del grupo:", alumnosGrupo.length);
 
   : alumnosFiltrados;
 
-  const guardarSeguimientoGrupo = async(datos)=>{
+    const guardarSeguimientoGrupo = async(datos)=>{
+
+        console.log("Entró");
+        console.log(datos);
+        alert("Entró a guardar");
+
+    // resto del código...
 
       const alumnosActualizados = [];
 
