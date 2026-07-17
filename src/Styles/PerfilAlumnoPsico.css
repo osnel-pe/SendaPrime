@@ -5,76 +5,130 @@ SCROLL
 .perfil-scroll{
 
   flex:1;
+
   overflow-y:auto;
-  padding-top:8px;
-  padding-bottom:35px;
+
+  padding-top:0;
+
+  padding-bottom:24px;
 
 }
-
 /*=========================================
 RESUMEN DEL ALUMNO
 =========================================*/
 
 .perfil-resumen{
 
-  display:flex;
-  flex-direction:column;
-  align-items:center;
+    display:flex;
 
-  margin-bottom:22px;
+    align-items:center;
+
+    gap:12px;
+
+    margin-top:-2px;
+
+    margin-bottom:14px;
+
+    padding:0;
 
 }
 
 .perfil-avatar{
 
-  width:90px;
-  height:90px;
+    width:52px;
 
-  border-radius:50%;
+    height:52px;
 
-  display:flex;
-  justify-content:center;
-  align-items:center;
+    border-radius:50%;
 
-  background:linear-gradient(
-      135deg,
-      #1E8E4A,
-      #15663A
-  );
+    display:flex;
 
-  color:white;
+    justify-content:center;
 
-  box-shadow:
-  0 12px 30px rgba(0,0,0,.30);
+    align-items:center;
 
-  margin-bottom:14px;
+    background:linear-gradient(
+        135deg,
+        #1E8E4A,
+        #15663A
+    );
 
-}
+    color:white;
 
-.perfil-resumen h2{
+    flex-shrink:0;
 
-  margin:0;
-
-  font-size:25px;
-
-  font-weight:700;
-
-  color:white;
-
-  text-align:center;
+    box-shadow:
+    0 6px 18px rgba(0,0,0,.22);
 
 }
 
-.perfil-resumen p{
+.perfil-datos{
 
-  margin-top:8px;
+    flex:1;
 
-  color:rgba(255,255,255,.78);
-
-  font-size:15px;
+    min-width:0;
 
 }
 
+.perfil-datos h2{
+
+    margin:0;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    line-height:1.05;
+
+}
+
+.perfil-datos .nombre{
+
+    font-size:21px;
+
+    font-weight:700;
+
+}
+
+.perfil-datos .apellidos{
+
+    margin-top:2px;
+
+    font-size:18px;
+
+    font-weight:600;
+
+    opacity:.92;
+
+}
+
+.perfil-datos h2 span{
+
+    display:block;
+
+}
+
+.perfil-datos h2 span:last-child{
+
+    font-size:18px;
+
+    font-weight:600;
+
+    opacity:.92;
+
+}
+
+.perfil-datos p{
+
+    margin-top:2px;
+
+    color:rgba(255,255,255,.72);
+
+    font-size:13px;
+
+}
 /*=========================================
 TARJETAS
 =========================================*/
@@ -278,6 +332,7 @@ EXPEDIENTE
 
   cursor:pointer;
 }
+
 .modal-opciones{
 
   position:fixed;

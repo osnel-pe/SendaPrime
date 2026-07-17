@@ -381,7 +381,7 @@ export default function PerfilAlumnoPsico({
                             </button>
 
                             <h1>
-                                Perfil del alumno
+                                Perfil
                             </h1>
 
                             <button
@@ -400,22 +400,40 @@ export default function PerfilAlumnoPsico({
                         <div className="perfil-resumen">
 
                             <div className="perfil-avatar">
-                                <UserRound size={38}/>
+                                <UserRound size={24}/>
                             </div>
 
-                            <h2>
+                            <div className="perfil-datos">
 
-                                {datosAlumno.nombre} {datosAlumno.apellido_paterno} {datosAlumno.apellido_materno}
+                                <h2>
 
-                            </h2>
+                                    <span className="nombre">
 
-                            <p>
+                                        {datosAlumno.nombre}
 
-                                {datosAlumno.grupo} • {datosAlumno.sexo==="M"
-                                    ? "Masculino"
-                                    : "Femenino"}
+                                    </span>
 
-                            </p>
+                                    <span className="apellidos">
+
+                                        {datosAlumno.apellido_paterno}
+
+                                        {" "}
+
+                                        {datosAlumno.apellido_materno}
+
+                                    </span>
+
+                                </h2>
+
+                                <p>
+
+                                    {datosAlumno.grupo} • {datosAlumno.sexo === "M"
+                                        ? "Masculino"
+                                        : "Femenino"}
+
+                                </p>
+
+                            </div>
 
                         </div>
                         
