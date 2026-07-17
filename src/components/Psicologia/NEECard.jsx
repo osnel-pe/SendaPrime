@@ -121,15 +121,7 @@ export default function NEECard({
 
         </p>
 
-        <button
-            className="nee-add-mini"
-            onClick={onAgregar}
-        >
-
-            +
-
-        </button>
-
+        
     </div>
 }   
 

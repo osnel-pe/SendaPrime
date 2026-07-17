@@ -1,0 +1,103 @@
+.citas-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.citas-title{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.citas-add{
+
+    width:34px;
+
+    height:34px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#1E8E4A;
+
+    color:white;
+
+    cursor:pointer;
+
+    font-size:22px;
+
+}
+
+.cita-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:flex-start;
+
+    padding:14px 0;
+
+    border-top:1px solid rgba(0,0,0,.08);
+
+}
+
+.cita-info{
+
+    flex:1;
+
+}
+
+.cita-info strong{
+
+    color:#214735;
+
+}
+
+.cita-info div{
+
+    margin-top:4px;
+
+    color:#1E8E4A;
+
+    font-weight:600;
+
+}
+
+.cita-info p{
+
+    margin-top:6px;
+
+    color:#5F6F65;
+
+}
+
+.cita-acciones{
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+.cita-acciones button{
+
+    border:none;
+
+    background:none;
+
+    cursor:pointer;
+
+}

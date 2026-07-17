@@ -27,7 +27,7 @@ import NEECard from "../components/Psicologia/NEECard";
 
 import ModalNEE from "../components/ModalNEE";
 
-//import { Trash2 } from "lucide-react";
+import CitasCard from "../components/Psicologia/CitasCard";
 
 export default function PerfilAlumnoPsico({
 
@@ -59,6 +59,10 @@ export default function PerfilAlumnoPsico({
 
     const [indiceEliminarNEE, setIndiceEliminarNEE] = useState(null);
    
+    const [modalCita,setModalCita]=useState(false);
+
+    const [indiceCita,setIndiceCita]=useState(null);
+
     //==============================
     // CARGAR ALUMNO DESDE SUPABASE
     //==============================
@@ -413,6 +417,54 @@ const guardarNEE = async (datos)=>{
 
 };
 
+const guardarCita = async(datos)=>{
+
+    const lista=[...(datosAlumno.citas || [])];
+
+    if(indiceCita===null){
+
+        lista.unshift(datos);
+
+    }else{
+
+        lista[indiceCita]=datos;
+
+    }
+
+    const {error}=await supabase
+
+        .from("alumnos")
+
+        .update({
+
+            citas:lista
+
+        })
+
+        .eq("id",datosAlumno.id);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    setDatosAlumno({
+
+        ...datosAlumno,
+
+        citas:lista
+
+    });
+
+    setIndiceCita(null);
+
+    setModalCita(false);
+
+};
+
 const eliminarNEE = async(index)=>{
 
     console.log("Índice:", index);
@@ -573,21 +625,29 @@ const eliminarNEE = async(index)=>{
                                 }}
                             />
 
-                        <div className="perfil-alumno-card">
+                            <CitasCard
 
-                            <h3>
+                                citas={datosAlumno.citas}
 
-                                Citas psicológicas
+                                onAgregar={()=>{
 
-                            </h3>
+                                    setIndiceCita(null);
 
-                            <p>
+                                    setModalCita(true);
 
-                                Sin citas registradas.
+                                }}
 
-                            </p>
+                                onEditar={(index)=>{
 
-                        </div>
+                                    setIndiceCita(index);
+
+                                    setModalCita(true);
+
+                                }}
+
+                                onEliminar={()=>{}}
+
+                            />
 
                     </div>
 
