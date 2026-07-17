@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Search,
   ChevronRight,
+  Plus,
   House
   } from "lucide-react";
 
@@ -12,10 +13,14 @@ import "../Styles/AppLayout.css";
 import "../Styles/Psicologia.css";
 
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
+import ModalSeguimientoGrupo from "../components/Psicologia/ModalSeguimientoGrupo";
+import { supabase } from "../services/supabase";
 
 export default function GrupoPsicologia({
 
     students,
+    
+    setstudents,
 
     grupoSeleccionado,
 
@@ -37,6 +42,8 @@ console.log("Alumnos del grupo:", alumnosGrupo.length);
   
   const [busqueda,setBusqueda]=useState("");
 
+  const [modalGrupo,setModalGrupo]=useState(false);
+
   const normalizar = (texto = "") =>
     String(texto)
         .normalize("NFD")
@@ -56,6 +63,7 @@ console.log("Alumnos del grupo:", alumnosGrupo.length);
       return nombre.includes(textoBusqueda);
   
   });
+
   const alumnosMostrar =
 
   busqueda.trim() === ""
@@ -64,6 +72,61 @@ console.log("Alumnos del grupo:", alumnosGrupo.length);
 
   : alumnosFiltrados;
 
+  const guardarSeguimientoGrupo = async(datos)=>{
+
+      const alumnosActualizados = [];
+
+      for(const alumno of students.filter(
+          a=>a.grupo===grupoSeleccionado
+      )){
+
+          const historial = [...(alumno.citas || [])];
+
+          historial.unshift({
+
+              ...datos,
+
+              tipo:"grupal"
+
+          });
+
+          const { error } = await supabase
+
+              .from("alumnos")
+
+              .update({
+
+                  citas: historial
+
+              })
+
+              .eq("id", alumno.id);
+
+          if(error){
+
+              alert(error.message);
+
+              return;
+
+          }
+
+          alumnosActualizados.push({
+
+              ...alumno,
+
+              citas: historial
+
+          });
+
+      }
+
+      setStudents(alumnosActualizados);
+
+      setModalGrupo(false);
+
+      alert("Seguimiento grupal registrado.");
+
+  };
 
 return(
 
@@ -138,6 +201,21 @@ return(
                 />
 
             </div>
+
+            <div className="grupo-toolbar">
+
+                <button
+                    className="btn-seguimiento-grupal"
+                    onClick={()=>setModalGrupo(true)}
+                >
+
+                    <Plus size={18}/>
+
+                    Seguimiento
+
+                </button>
+
+            </div>
           </div>
             <div className="lista-alumnos">
 
@@ -203,8 +281,17 @@ return(
 
           </div>
           
-
        </div>
+
+        <ModalSeguimientoGrupo
+
+            abierto={modalGrupo}
+
+            cerrar={()=>setModalGrupo(false)}
+
+            guardar={guardarSeguimientoGrupo}
+
+        />
 
     </>
 

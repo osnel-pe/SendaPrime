@@ -1,0 +1,93 @@
+.modal-cita{
+
+    width:350px;
+
+    padding:20px;
+
+}
+
+.modal-cita input,
+.modal-cita select,
+.modal-cita textarea{
+
+    width:100%;
+
+    padding:11px 13px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#F4F7F5;
+
+    box-sizing:border-box;
+
+    font-size:15px;
+
+}
+
+.modal-cita textarea{
+
+    resize:none;
+
+}
+
+.modal-botones{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:20px;
+
+}
+
+.btn-guardar{
+
+    flex:1;
+
+    border:none;
+
+    border-radius:16px;
+
+    height:50px;
+
+    color:white;
+
+    background:linear-gradient(135deg,#23954E,#17723D);
+
+}
+
+.btn-cancelar{
+
+    flex:1;
+
+    border:none;
+
+    border-radius:16px;
+
+    height:50px;
+
+}
+
+.campo-label{
+
+    display:block;
+
+    margin-top:10px;
+
+    margin-bottom:3px;
+
+    color:#214735;
+
+    font-size:14px;
+
+    font-weight:700;
+
+}
+
+.modal-cita textarea{
+
+    margin-top:0;
+
+}

@@ -39,65 +39,186 @@
     font-size:22px;
 
 }
+.timeline-item{
 
-.cita-item{
+    position:relative;
 
     display:flex;
 
-    justify-content:space-between;
+    gap:18px;
 
-    align-items:flex-start;
-
-    padding:14px 0;
-
-    border-top:1px solid rgba(0,0,0,.08);
+    padding:0 0 22px 0;
 
 }
 
-.cita-info{
+.timeline-dot{
+
+    width:14px;
+
+    height:14px;
+
+    border-radius:50%;
+
+    background:#23954E;
+
+    margin-top:8px;
+
+    flex-shrink:0;
+
+}
+
+.timeline-line{
+
+    position:absolute;
+
+    left:6px;
+
+    top:22px;
+
+    width:2px;
+
+    bottom:-8px;
+
+    background:#D6E7DB;
+
+}
+
+.timeline-item:last-child .timeline-line{
+
+    display:none;
+
+}
+
+.timeline-content{
 
     flex:1;
 
 }
 
-.cita-info strong{
+.timeline-fecha{
+
+    font-weight:700;
 
     color:#214735;
 
-}
-
-.cita-info div{
-
-    margin-top:4px;
-
-    color:#1E8E4A;
-
-    font-weight:600;
+    font-size:15px;
 
 }
 
-.cita-info p{
+.timeline-tipo{
 
     margin-top:6px;
 
-    color:#5F6F65;
+    color:#23954E;
+
+    font-weight:700;
 
 }
 
-.cita-acciones{
+.timeline-motivo{
 
-    display:flex;
+    margin-top:6px;
 
-    gap:8px;
+    color:#65756B;
+
+    line-height:1.45;
 
 }
 
-.cita-acciones button{
+.timeline-ver{
+
+    margin-top:10px;
 
     border:none;
 
     background:none;
 
+    color:#23954E;
+
+    font-weight:700;
+
     cursor:pointer;
+
+    padding:0;
+
+}
+
+.timeline-footer{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:10px;
+
+}
+
+.timeline-delete{
+
+    width:30px;
+
+    height:30px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:#FDECEC;
+
+    color:#D84A4A;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.timeline-delete:hover{
+
+    transform:scale(1.08);
+
+    background:#F8DADA;
+
+}
+
+.timeline-tipo{
+
+display:inline-flex;
+
+align-items:center;
+
+padding:5px 12px;
+
+border-radius:999px;
+
+font-size:12px;
+
+font-weight:700;
+
+margin:8px 0;
+
+}
+
+.timeline-tipo.grupal{
+
+background:#DFF6E8;
+
+color:#16753D;
+
+}
+
+.timeline-tipo.individual{
+
+background:#E6F0FF;
+
+color:#1565C0;
 
 }

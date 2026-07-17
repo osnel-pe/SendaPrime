@@ -6,6 +6,8 @@ import {
 
     Plus,
 
+    Eye,
+
     Pencil,
 
     Trash2
@@ -80,53 +82,91 @@ export default function CitasCard({
 
                         key={index}
 
-                        className="cita-item"
+                        className="timeline-item"
 
                     >
 
-                        <div className="cita-info">
+                        <div className="timeline-dot"/>
 
-                            <strong>
+                        <div className="timeline-line"/>
 
-                                {cita.fecha}
+                        <div className="timeline-content">
 
-                            </strong>
+                            <div className="timeline-fecha">
 
-                            <div>
+                                {new Date(cita.fecha).toLocaleDateString(
 
-                                {cita.tipo}
+                                    "es-MX",
+
+                                    {
+
+                                        day:"numeric",
+
+                                        month:"short",
+
+                                        year:"numeric"
+
+                                    }
+
+                                )}
 
                             </div>
 
-                            <p>
-
-                                {cita.motivo}
-
-                            </p>
-
-                        </div>
-
-                        <div className="cita-acciones">
-
-                            <button
-
-                                onClick={()=>onEditar(index)}
-
+                            <div
+                                className={
+                                    cita.tipo === "grupal"
+                                        ? "timeline-tipo grupal"
+                                        : "timeline-tipo individual"
+                                }
                             >
 
-                                <Pencil size={17}/>
+                                {
+                                    cita.tipo === "grupal"
+                                        ? "👥 Seguimiento grupal"
+                                        : "👤 Atención individual"
+                                }
 
-                            </button>
+                            </div>
 
-                            <button
+                            <div className="timeline-motivo">
 
-                                onClick={()=>onEliminar(index)}
+                                {
+                                    cita.tipo === "grupal"
 
-                            >
+                                        ? cita.tema
 
-                                <Trash2 size={17}/>
+                                        : cita.motivo
+                                }
 
-                            </button>
+                            </div>
+
+                            <div className="timeline-footer">
+
+                                <button
+
+                                    className="timeline-ver"
+
+                                    onClick={()=>onEditar(index)}
+
+                                >
+
+                                    Ver detalles
+
+                                </button>
+
+                                <button
+
+                                    className="timeline-delete"
+
+                                    onClick={()=>onEliminar(index)}
+
+                                >
+
+                                    <Trash2 size={14}/>
+
+                                </button>
+
+                            </div>
 
                         </div>
 

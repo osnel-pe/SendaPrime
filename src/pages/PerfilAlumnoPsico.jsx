@@ -29,6 +29,8 @@ import ModalNEE from "../components/ModalNEE";
 
 import CitasCard from "../components/Psicologia/CitasCard";
 
+import ModalCita from "../components/Psicologia/ModalCita";
+
 export default function PerfilAlumnoPsico({
 
     alumno,
@@ -62,6 +64,10 @@ export default function PerfilAlumnoPsico({
     const [modalCita,setModalCita]=useState(false);
 
     const [indiceCita,setIndiceCita]=useState(null);
+
+    const [mostrarEliminarCita,setMostrarEliminarCita]=useState(false);
+
+    const [indiceEliminarCita,setIndiceEliminarCita]=useState(null);
 
     //==============================
     // CARGAR ALUMNO DESDE SUPABASE
@@ -506,6 +512,42 @@ const eliminarNEE = async(index)=>{
     });
 
 };
+
+const eliminarCita = async(index)=>{
+
+    const lista=[...(datosAlumno.citas || [])];
+
+    lista.splice(index,1);
+
+    const {error}=await supabase
+
+        .from("alumnos")
+
+        .update({
+
+            citas:lista
+
+        })
+
+        .eq("id",datosAlumno.id);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    setDatosAlumno({
+
+        ...datosAlumno,
+
+        citas:lista
+
+    });
+
+};
     //=====================================
 // GUARDAR PDF GENERADO POR EL ESCÁNER
 //=====================================
@@ -645,7 +687,13 @@ const eliminarNEE = async(index)=>{
 
                                 }}
 
-                                onEliminar={()=>{}}
+                                onEliminar={(index)=>{
+
+                                    setIndiceEliminarCita(index);
+
+                                    setMostrarEliminarCita(true);
+
+                                }}
 
                             />
 
@@ -688,6 +736,32 @@ const eliminarNEE = async(index)=>{
                 }
 
                 guardar={guardarNEE}
+
+            />
+
+            <ModalCita
+
+                abierto={modalCita}
+
+                cerrar={()=>{
+
+                    setIndiceCita(null);
+
+                    setModalCita(false);
+
+                }}
+
+                guardar={guardarCita}
+
+                citaActual={
+
+                    indiceCita!==null
+
+                    ? datosAlumno.citas[indiceCita]
+
+                    : null
+
+                }
 
             />
 
@@ -757,6 +831,71 @@ const eliminarNEE = async(index)=>{
 
                 )
 
+                }
+                {
+                    mostrarEliminarCita && (
+
+                        <div className="modal-opciones">
+
+                            <div className="modal-contenido eliminar-modal">
+
+                                <div className="eliminar-icono">
+
+                                    <Trash2 size={34}/>
+
+                                </div>
+
+                                <h2>
+
+                                    Eliminar seguimiento
+
+                                </h2>
+
+                                <p>
+
+                                    Esta acción eliminará permanentemente este seguimiento.
+
+                                </p>
+
+                                <div className="eliminar-botones">
+
+                                    <button
+
+                                        className="btn-cancelar"
+
+                                        onClick={()=>setMostrarEliminarCita(false)}
+
+                                    >
+
+                                        Cancelar
+
+                                    </button>
+
+                                    <button
+
+                                        className="btn-eliminar"
+
+                                        onClick={()=>{
+
+                                            eliminarCita(indiceEliminarCita);
+
+                                            setMostrarEliminarCita(false);
+
+                                        }}
+
+                                    >
+
+                                        Eliminar
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    )
                 }
         </>
 

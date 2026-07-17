@@ -302,3 +302,49 @@ HEADER FIJO
   background:transparent;
 
 }
+.grupo-toolbar{
+
+display:flex;
+
+justify-content: center;
+
+margin:5px 0 5px;
+
+}
+.btn-seguimiento-grupal{
+
+display:flex;
+
+align-items:center;
+
+gap:8px;
+
+padding:11px 18px;
+
+border:none;
+
+border-radius:18px;
+
+background:linear-gradient(
+135deg,
+#23954E,
+#17723D
+);
+
+color:white;
+
+font-weight:700;
+
+cursor:pointer;
+
+box-shadow:
+0 10px 24px rgba(0,0,0,.20);
+
+transition:.25s;
+
+}
+.btn-seguimiento-grupal:hover{
+
+transform:translateY(-2px);
+
+}
