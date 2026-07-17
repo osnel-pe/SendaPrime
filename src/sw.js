@@ -39,16 +39,13 @@ async function handleShare(event) {
 
     if (archivo) {
 
-        const clientList = await self.clients.matchAll({
+    const cliente = await self.clients.openWindow("/");
 
-            type: "window",
-            includeUncontrolled: true
+    if (cliente) {
 
-        });
+        setTimeout(() => {
 
-        for (const client of clientList) {
-
-            client.postMessage({
+            cliente.postMessage({
 
                 type: "SHARED_PDF",
 
@@ -56,11 +53,11 @@ async function handleShare(event) {
 
             });
 
-            client.focus();
-
-        }
+        }, 800);
 
     }
+
+}
 
     return Response.redirect("/", 303);
 

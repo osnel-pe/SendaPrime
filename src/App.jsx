@@ -185,9 +185,7 @@ function App() {
 
 useEffect(() => {
 
-    if (!navigator.serviceWorker) return;
-
-    navigator.serviceWorker.addEventListener("message", (event) => {
+    navigator.serviceWorker.onmessage = (event) => {
 
         console.log(event.data);
         alert("React recibió mensaje");
@@ -200,7 +198,7 @@ useEffect(() => {
 
         }
 
-    });
+    };
 
 }, []);
 
