@@ -23,6 +23,12 @@ import { supabase } from "../services/supabase";
 
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
 
+import NEECard from "../components/Psicologia/NEECard";
+
+import ModalNEE from "../components/ModalNEE";
+
+//import { Trash2 } from "lucide-react";
+
 export default function PerfilAlumnoPsico({
 
     alumno,
@@ -45,6 +51,14 @@ export default function PerfilAlumnoPsico({
 
     const [cargando, setCargando] = useState(false);
 
+    const [modalNEE,setModalNEE]=useState(false);
+
+    const [indiceNEE, setIndiceNEE] = useState(null);
+    
+    const [mostrarEliminarNEE, setMostrarEliminarNEE] = useState(false);
+
+    const [indiceEliminarNEE, setIndiceEliminarNEE] = useState(null);
+   
     //==============================
     // CARGAR ALUMNO DESDE SUPABASE
     //==============================
@@ -350,6 +364,96 @@ export default function PerfilAlumnoPsico({
     enlace.rel = "noopener noreferrer";
     enlace.click();
 };
+
+const guardarNEE = async (datos)=>{
+
+    const lista = [...(datosAlumno.nee || [])];
+
+    if(indiceNEE===null){
+
+        lista.push(datos);
+
+    }else{
+
+        lista[indiceNEE]=datos;
+
+    }
+
+    const {error}=await supabase
+
+        .from("alumnos")
+
+        .update({
+
+            nee:lista
+
+        })
+
+        .eq("id",datosAlumno.id);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    setDatosAlumno({
+
+        ...datosAlumno,
+
+        nee:lista
+
+    });
+
+    setIndiceNEE(null);
+
+    setModalNEE(false);
+
+};
+
+const eliminarNEE = async(index)=>{
+
+    console.log("Índice:", index);
+
+    console.log("NEE:", datosAlumno.nee);
+
+    const lista=[...(datosAlumno.nee || [])];
+
+    lista.splice(index,1);
+    console.log("Lista después:", lista);
+
+    const {error}=await supabase
+
+        .from("alumnos")
+
+        .update({
+
+            nee:lista
+
+        })
+        .eq("id", datosAlumno.id);
+
+        console.log(error);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    setDatosAlumno({
+
+        ...datosAlumno,
+
+        nee:lista
+
+    });
+
+};
     //=====================================
 // GUARDAR PDF GENERADO POR EL ESCÁNER
 //=====================================
@@ -450,21 +554,24 @@ export default function PerfilAlumnoPsico({
 
                         />
 
-                        <div className="perfil-alumno-card">
+                            <NEECard
+                                nee={datosAlumno.nee}
+                                onAgregar={() => setModalNEE(true)}
+                                onEditar={(index)=>{
 
-                            <h3>
+                                    setIndiceNEE(index);
 
-                                NEE
+                                    setModalNEE(true);
 
-                            </h3>
+                                }}
+                                onEliminar={(index)=>{
 
-                            <p>
+                                    setIndiceEliminarNEE(index);
 
-                                Sin información registrada.
+                                    setMostrarEliminarNEE(true);
 
-                            </p>
-
-                        </div>
+                                }}
+                            />
 
                         <div className="perfil-alumno-card">
 
@@ -497,6 +604,100 @@ export default function PerfilAlumnoPsico({
                 style={{ display: "none" }}
                 onChange={subirExpediente}
             />
+
+            <ModalNEE
+
+                abierto={modalNEE}
+
+                cerrar={()=>{
+
+                    setIndiceNEE(null);
+
+                    setModalNEE(false);
+
+                }}
+
+                neeActual={
+
+                    indiceNEE !== null
+
+                        ? datosAlumno.nee[indiceNEE]
+
+                        : null
+
+                }
+
+                guardar={guardarNEE}
+
+            />
+
+            {
+
+                mostrarEliminarNEE && (
+
+                <div className="modal-opciones">
+               
+               <div className="modal-contenido eliminar-modal">
+
+                    <div className="eliminar-icono">
+
+                        <Trash2 size={34}/>
+
+                    </div>
+
+                    <h2>
+
+                        Eliminar NEE
+
+                    </h2>
+
+                    <p>
+
+                        Esta acción eliminará permanentemente esta necesidad educativa.
+
+                    </p>
+
+                    <div className="eliminar-botones">
+
+                        <button
+
+                            className="btn-cancelar"
+
+                            onClick={()=>setMostrarEliminarNEE(false)}
+
+                        >
+
+                            Cancelar
+
+                        </button>
+
+                        <button
+
+                            className="btn-eliminar"
+
+                            onClick={()=>{
+
+                                eliminarNEE(indiceEliminarNEE);
+
+                                setMostrarEliminarNEE(false);
+
+                            }}
+
+                        >
+
+                            Eliminar
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+                </div>
+
+                )
+
+                }
         </>
 
     );

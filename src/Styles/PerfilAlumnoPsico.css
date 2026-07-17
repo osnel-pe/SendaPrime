@@ -151,7 +151,7 @@ TARJETAS
   
   padding:22px;
   
-  margin-bottom:18px;
+  margin-bottom:26px;
   
   border:1px solid rgba(255,255,255,.25);
   
@@ -417,5 +417,169 @@ EXPEDIENTE
 .link-documento:hover{
 
     color:#0D47A1;
+
+}
+
+/*=============================
+MODAL ELIMINAR
+=============================*/
+
+.eliminar-modal{
+
+    width:320px;
+
+    border-radius:28px;
+
+    background:
+
+    linear-gradient(
+        145deg,
+        rgba(255,255,255,.96),
+        rgba(238,255,245,.92)
+    );
+
+    text-align:center;
+
+    padding:28px 24px;
+
+}
+
+.eliminar-icono{
+
+    width:74px;
+
+    height:74px;
+
+    margin:0 auto 18px;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #FF6B6B,
+        #D32F2F
+    );
+
+    box-shadow:
+
+    0 12px 30px rgba(211,47,47,.30);
+
+}
+
+.eliminar-modal h2{
+
+    margin:0;
+
+    color:#214735;
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+
+.eliminar-modal p{
+
+    margin:14px 0 28px;
+
+    color:#61746A;
+
+    font-size:16px;
+
+    line-height:1.5;
+
+}
+
+.eliminar-botones{
+
+    display:flex;
+
+    gap:14px;
+
+}
+
+.btn-cancelar{
+
+    flex:1;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:16px;
+
+    background:#EEF3F0;
+
+    color:#2D5240;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.btn-cancelar:hover{
+
+    transform:translateY(-2px);
+
+    background:#E3ECE6;
+
+}
+
+.btn-eliminar{
+
+    flex:1;
+
+    height:50px;
+
+    border:none;
+
+    border-radius:16px;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    background:
+
+    linear-gradient(
+        135deg,
+        #F44336,
+        #C62828
+    );
+
+    box-shadow:
+
+    0 10px 22px rgba(244,67,54,.28);
+
+}
+
+.btn-eliminar:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+
+    0 14px 28px rgba(244,67,54,.35);
 
 }
