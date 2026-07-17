@@ -30,6 +30,12 @@ async function handleShare(event) {
     const formData = await event.request.formData();
 
     const archivo = formData.get("pdf");
+    
+    console.log("Enviando archivo a React...");
+
+    console.log("SW recibió:");
+
+    console.log(archivo);
 
     if (archivo) {
 

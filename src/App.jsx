@@ -189,9 +189,8 @@ useEffect(() => {
 
     navigator.serviceWorker.addEventListener("message", (event) => {
 
-        console.log("Mensaje recibido del SW:");
-
         console.log(event.data);
+        alert("React recibió mensaje");
 
         if (event.data.type === "SHARED_PDF") {
 
