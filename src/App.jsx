@@ -27,6 +27,14 @@ import { motion } from "framer-motion";
 import PerfilesPsicologia from "./pages/PerfilesPsicologia";
 import GrupoPsicologia from "./pages/GrupoPsicologia";
 import PerfilAlumnoPsico from "./pages/PerfilAlumnoPsico";
+import { iniciarShareManager } from "./share/ShareManager";
+import {
+
+    escucharArchivoCompartido,
+
+    dejarDeEscucharArchivoCompartido
+
+} from "./share/ShareEvents";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -150,19 +158,27 @@ function App() {
 
   useEffect(() => {
 
-    if (!("launchQueue" in window)) return;
+    iniciarShareManager();
 
-    window.launchQueue.setConsumer(async (launchParams) => {
+    const expedienteRecibido = () => {
 
-        if (!launchParams.files.length) return;
-
-        const file = await launchParams.files[0].getFile();
-
-        window.archivoCompartido = file;
+        console.log("Expediente recibido.");
 
         setPantalla("recibirExpediente");
 
-    });
+    };
+
+    escucharArchivoCompartido(expedienteRecibido);
+
+    return () => {
+
+        dejarDeEscucharArchivoCompartido(
+
+            expedienteRecibido
+
+        );
+
+    };
 
 }, []);
 
