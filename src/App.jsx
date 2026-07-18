@@ -36,6 +36,8 @@ import {
 
 } from "./share/ShareEvents";
 import { guardarArchivo } from "./share/ShareStorage";
+import CitasProgramadas from "./pages/CitasProgramadas";
+import NEE from "./pages/NEE";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -72,6 +74,38 @@ function App() {
   const [toastMensaje, setToastMensaje] = useState('');
   const [toastTipo, setToastTipo] = useState('success');
 
+  const cargarAlumnos = async()=>{
+
+    try{
+
+        const {data,error}=await supabase
+        .from("alumnos")
+        .select("*")
+        .order("grupo")
+        .order("apellido_paterno");
+
+        if(error) throw error;
+
+        setStudents(data);
+
+    }catch(error){
+
+        console.error(error);
+
+    }finally{
+
+        setLoading(false);
+
+    }
+
+};
+
+useEffect(()=>{
+
+    cargarAlumnos();
+
+},[]);
+
   useEffect(() => {
     localStorage.setItem('pantalla', pantalla);
   }, [pantalla]);
@@ -101,30 +135,6 @@ function App() {
     }
   }, [alumnoSeleccionado]);
 
-  useEffect(() => {
-    async function cargarAlumnos() {
-      try {
-        const { data, error } = await supabase
-          .from('alumnos')
-          .select('*')
-          .order('grupo')
-          .order('apellido_paterno');
-
-          console.table(data);
-          console.log(data);
-
-        if (error) throw error;
-
-        setStudents(data);
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    cargarAlumnos();
-  }, []);
   useEffect(() => {
 
     const timer = setTimeout(() => {
@@ -425,15 +435,19 @@ useEffect(() => {
 
           <Psicologia
 
-          cerrarSesion={cerrarSesion}
+              cerrarSesion={cerrarSesion}
 
-          cambiarPantalla={setPantalla}
+              cambiarPantalla={setPantalla}
+
+              students={students}
+
+              setAlumnoSeleccionado={setAlumnoSeleccionado}
 
           />
 
           );
 
-          break;
+        break;
           case "perfilPsicopedagogico":
 
             contenido=(
@@ -492,6 +506,26 @@ useEffect(() => {
 
           break;
 
+          case "nee":
+
+          contenido=(
+
+          <NEE
+
+          students={students}
+          setStudents={setStudents}
+          cargarAlumnos={cargarAlumnos}
+
+          seleccionarAlumno={setAlumnoSeleccionado}
+
+          cambiarPantalla={setPantalla}
+
+          />
+
+          );
+
+          break;
+
           case "scanPsicologia":
 
           contenido=(
@@ -506,41 +540,59 @@ useEffect(() => {
 
           break;
 
-      case "panelAlumno":
+          case "panelAlumno":
 
-contenido = (
+            contenido = (
 
-<PanelAlumno
+            <PanelAlumno
 
-alumno={alumnoSeleccionado}
+            alumno={alumnoSeleccionado}
 
-students={students}
+            students={students}
 
-cambiarPantalla={setPantalla}
+            cambiarPantalla={setPantalla}
 
-cerrarSesion={cerrarSesion}
+            cerrarSesion={cerrarSesion}
 
-/>
+            />
 
-);
-break;
-case "rankingAlumno":
+            );
+            break;
+            case "rankingAlumno":
 
-contenido=(
+            contenido=(
 
-<RankingAlumno
+            <RankingAlumno
 
-alumno={alumnoSeleccionado}
+            alumno={alumnoSeleccionado}
 
-students={students}
+            students={students}
 
-cambiarPantalla={setPantalla}
+            cambiarPantalla={setPantalla}
 
-/>
+            />
 
-);
+            );
 
-break;
+            break;
+
+            case "agenda":
+
+              contenido=(
+
+              <CitasProgramadas
+
+                  cambiarPantalla={setPantalla}
+
+                  students={students || []}
+
+                  setStudents={setStudents}
+
+              />
+
+              );
+
+              break;
 
     default:
       contenido = <Home cambiarPantalla={setPantalla} />;

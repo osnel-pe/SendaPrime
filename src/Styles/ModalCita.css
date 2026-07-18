@@ -91,3 +91,61 @@
     margin-top:0;
 
 }
+
+.buscador-alumno{
+    position:relative;
+    width:100%;
+}
+
+.lista-alumnos-modal{
+
+    top:100%;
+
+    left:0;
+
+    right:0;
+
+    margin-top:6px;
+
+    max-height:220px;
+
+    overflow-y:auto;
+
+    background:white;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+
+    z-index:999999;
+}
+
+.buscador-alumno input{
+
+width:100%;
+
+}
+
+
+
+.item-alumno-modal{
+
+padding:12px 14px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.item-alumno-modal:hover{
+
+background:#EAF8F0;
+
+}
+
+.item-alumno-modal small{
+
+color:#6d6d6d;
+
+}

@@ -24,7 +24,7 @@ const accesos = [
         {
         titulo:"Citas",
         icono:CalendarDays,
-        pantalla:"citasPsicologia"
+        pantalla:"agenda"
         },
         
         {
@@ -34,7 +34,7 @@ const accesos = [
         },
         
         {
-        titulo: "Files",
+        titulo: "Notas",
         icono: FolderOpen
         },
 ];

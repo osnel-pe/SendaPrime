@@ -377,7 +377,7 @@ export default function PerfilAlumnoPsico({
 
 const guardarNEE = async (datos)=>{
 
-    const lista = [...(datosAlumno.nee || [])];
+    const lista = [...(datosAlumno?.nee || [])];
 
     if(indiceNEE===null){
 
@@ -475,9 +475,9 @@ const eliminarNEE = async(index)=>{
 
     console.log("Índice:", index);
 
-    console.log("NEE:", datosAlumno.nee);
+    console.log("NEE:", datosAlumno?.nee);
 
-    const lista=[...(datosAlumno.nee || [])];
+    const lista=[...(datosAlumno?.nee || [])];
 
     lista.splice(index,1);
     console.log("Lista después:", lista);
@@ -551,7 +551,10 @@ const eliminarCita = async(index)=>{
     //=====================================
 // GUARDAR PDF GENERADO POR EL ESCÁNER
 //=====================================
-
+console.log("DATOS ALUMNO");
+console.log(datosAlumno);
+console.log("NEE");
+console.log(datosAlumno?.nee);
     return (
 
         <>
@@ -649,7 +652,7 @@ const eliminarCita = async(index)=>{
                         />
 
                             <NEECard
-                                nee={datosAlumno.nee}
+                                nee={datosAlumno?.nee}
                                 onAgregar={() => setModalNEE(true)}
                                 onEditar={(index)=>{
 
@@ -669,7 +672,7 @@ const eliminarCita = async(index)=>{
 
                             <CitasCard
 
-                                citas={datosAlumno.citas}
+                                citas={datosAlumno.citas || []}
 
                                 onAgregar={()=>{
 
@@ -729,7 +732,7 @@ const eliminarCita = async(index)=>{
 
                     indiceNEE !== null
 
-                        ? datosAlumno.nee[indiceNEE]
+                        ? datosAlumno?.nee[indiceNEE]
 
                         : null
 

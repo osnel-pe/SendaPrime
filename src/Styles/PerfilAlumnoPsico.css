@@ -135,30 +135,33 @@ TARJETAS
 
 .perfil-alumno-card{
 
-  width:100%;
-  
-  box-sizing:border-box;
-  
-  background:linear-gradient(
-  135deg,
-  rgba(255,255,255,.82),
-  rgba(236,255,245,.55)
-  );
-  
-  backdrop-filter:blur(25px);
-  
-  border-radius:24px;
-  
-  padding:22px;
-  
-  margin-bottom:26px;
-  
-  border:1px solid rgba(255,255,255,.25);
-  
-  box-shadow:
-  0 12px 35px rgba(0,0,0,.18);
-  
-  }
+width:100%;
+box-sizing:border-box;
+
+padding:20px;
+
+margin-bottom:18px;
+
+border-radius:26px;
+
+background:
+linear-gradient(
+135deg,
+rgba(255,255,255,.85),
+rgba(238,255,245,.65)
+);
+
+backdrop-filter:blur(22px);
+
+border:1px solid rgba(255,255,255,.22);
+
+box-shadow:
+0 12px 25px rgba(0,0,0,.15);
+
+height:auto;
+min-height:unset;
+
+}
 
 .perfil-alumno-card h3{
 
@@ -335,25 +338,18 @@ EXPEDIENTE
 
 .modal-opciones{
 
-  position:fixed;
-  
-  top:0;
-  left:0;
-  
-  width:100%;
-  height:100%;
-  
-  background:rgba(0,0,0,.45);
-  
-  display:flex;
-  
-  justify-content:center;
-  
-  align-items:center;
-  
-  z-index:9999;
-  
-  }
+position:fixed;
+inset:0;
+
+background:rgba(0,0,0,.45);
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+z-index:99999;
+
+}
   
   .modal-contenido{
   
@@ -370,6 +366,10 @@ EXPEDIENTE
   flex-direction:column;
   
   gap:15px;
+
+  position:relative;
+
+   z-index:100000;
   
   box-shadow:0 10px 30px rgba(0,0,0,.25);
   

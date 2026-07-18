@@ -6,7 +6,6 @@ import "../Styles/Psicologia.css";
 import "../Styles/HeaderPsico.css";
 import "../Styles/FrasePsico.css";
 import "../Styles/AccesosRapidos.css";
-import "../Styles/ScanBanner.css";
 
 import HeaderPsico from "../components/Psicologia/HeaderPsico";
 import FrasePsico from "../components/Psicologia/FrasePsico";
@@ -14,17 +13,19 @@ import AccesosRapidos from "../components/Psicologia/AccesosRapidos";
 import CitasHoy from "../components/Psicologia/CitasHoy";
 
 // ESTE ES EL COMPONENTE DEL BANNER
-import ScanBanner from "../components/Psicologia/ScanBanner";
-
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
 
 export default function Psicologia({
 
     cerrarSesion,
 
-    cambiarPantalla
+    cambiarPantalla,
 
-}) {
+    students,
+
+    setAlumnoSeleccionado
+
+}){
 
     return (
 
@@ -54,11 +55,15 @@ export default function Psicologia({
                         cambiarPantalla={cambiarPantalla}
                     />
                     
-                    <ScanBanner
-                        cambiarPantalla={cambiarPantalla}
-                    />
+                    <CitasHoy
 
-                    <CitasHoy/>
+                        cambiarPantalla={cambiarPantalla}
+
+                        students={students}
+
+                        seleccionarAlumno={setAlumnoSeleccionado}
+
+                    />
             
 
                     <div className="logout-container">

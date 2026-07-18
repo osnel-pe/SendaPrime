@@ -92,25 +92,28 @@ export default function CitasCard({
 
                         <div className="timeline-content">
 
-                            <div className="timeline-fecha">
+                       <div className="timeline-fecha">
 
-                                {new Date(cita.fecha).toLocaleDateString(
+                                {
+                                    cita.fecha
+                                    ?
 
+                                    new Date(cita.fecha+"T12:00:00").toLocaleDateString(
                                     "es-MX",
-
                                     {
-
-                                        day:"numeric",
-
-                                        month:"short",
-
-                                        year:"numeric"
-
+                                    day:"numeric",
+                                    month:"long",
+                                    year:"numeric"
                                     }
+                                    )
 
-                                )}
+                                    :
 
-                            </div>
+                                    "Sin fecha"
+
+                                }
+
+                                </div>
 
                             <div
                                 className={

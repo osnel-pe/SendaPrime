@@ -1,34 +1,172 @@
 import { motion } from "framer-motion";
-import { CalendarDays, Plus, Clock } from "lucide-react";
+import { CalendarDays, Clock, Plus } from "lucide-react";
+import { useEffect,useState } from "react";
+import { supabase } from "../../services/supabase";
+import { Circle, CircleCheckBig } from "lucide-react";
 
 import "../../Styles/CitasHoy.css";
 
-const citas = [
+import ModalNuevaCita from "./ModalNuevaCita";
 
-{
-    hora:"09:00",
-    alumno:"Juan Pérez López",
-    grupo:"2° B",
-    motivo:"Entrevista inicial"
-},
+export default function CitasHoy({
 
-{
-    hora:"11:30",
-    alumno:"María García Ruiz",
-    grupo:"1° A",
-    motivo:"Seguimiento"
-},
+cambiarPantalla,
 
-{
-    hora:"13:00",
-    alumno:"Luis Hernández",
-    grupo:"2° A",
-    motivo:"Orientación"
-}
+students,
 
-];
+seleccionarAlumno
 
-export default function CitasHoy(){
+}){
+
+    const [citas,setCitas]=useState([]);
+
+    const [modalNuevaCita,setModalNuevaCita]=useState(false);
+
+    const eliminarCitasVencidas = async()=>{
+
+        const hoy=new Date().toISOString().slice(0,10);
+
+        await supabase
+
+        .from("citas_programadas")
+
+        .delete()
+
+        .lt("fecha", hoy);
+
+    };
+
+    const cargarCitasHoy=async()=>{
+
+    const hoy=new Date().toISOString().slice(0,10);
+
+    const {data,error}=await supabase
+
+    .from("citas_programadas")
+
+    .select(`
+
+    *,
+
+    alumnos(
+
+    nombre,
+
+    apellido_paterno,
+
+    apellido_materno,
+
+    grupo
+
+    )
+
+    `)
+
+    .eq("fecha",hoy)
+
+    .order("hora",{ascending:true});
+
+    if(error){
+
+    console.log(error);
+
+    return;
+
+    }
+
+    setCitas(data);
+
+    };
+
+    useEffect(()=>{
+
+    cargarCitasHoy();
+
+    },[]);
+
+    useEffect(()=>{
+
+        const iniciar=async()=>{
+
+            await eliminarCitasVencidas();
+
+            await cargarCitasHoy();
+
+        };
+
+        iniciar();
+
+    },[]);
+
+    const guardarNuevaCita=async(datos)=>{
+
+        const {error}=await supabase
+
+        .from("citas_programadas")
+
+        .insert({
+
+            ...datos,
+
+            cumplida:false
+
+        })
+
+        if(error){
+
+        alert(error.message);
+
+        return;
+
+        }
+
+        setModalNuevaCita(false);
+
+        cargarCitasHoy();
+
+    };
+
+    const abrirAlumno=(id)=>{
+
+    const alumno=students.find(
+
+    a=>a.id===id
+
+    );
+
+    if(!alumno) return;
+
+    seleccionarAlumno(alumno);
+
+    cambiarPantalla("perfilAlumnoPsico");
+
+    };
+
+    const cambiarEstado = async(cita)=>{
+
+        const { error } = await supabase
+
+        .from("citas_programadas")
+
+        .update({
+
+            cumplida: !cita.cumplida
+
+        })
+
+        .eq("id", cita.id);
+
+        if(error){
+
+            alert(error.message);
+
+            return;
+
+        }
+
+        cargarCitasHoy();
+
+    };
 
 return(
 
@@ -44,6 +182,18 @@ transition={{duration:.4}}
 
 >
 
+    <ModalNuevaCita
+
+    abierto={modalNuevaCita}
+
+    cerrar={()=>setModalNuevaCita(false)}
+
+    guardar={guardarNuevaCita}
+
+    students={students}
+
+    />
+
 <div className="citas-header">
 
 <div className="titulo">
@@ -54,9 +204,17 @@ transition={{duration:.4}}
 
 </div>
 
-<button className="ver-todas">
+<button
 
-Ver todas
+className="agenda-add-mini"
+
+onClick={()=>setModalNuevaCita(true)}
+
+>
+
+<Plus size={17}/>
+
+ Nueva
 
 </button>
 
@@ -66,31 +224,96 @@ Ver todas
 
 {
 
+citas.length===0?
+
+(
+
+<div className="sin-citas">
+
+No hay citas programadas para hoy.
+
+</div>
+
+)
+
+:
+
 citas.map((cita,index)=>(
 
 <div
 
 key={index}
 
-className="cita"
+className={`cita ${cita.cumplida ? "realizada" : ""}`}
+
+onClick={()=>abrirAlumno(cita.alumno_id)}
 
 >
+   <button
+
+        className="check-cita"
+
+        onClick={(e)=>{
+
+        e.stopPropagation();
+
+        cambiarEstado(cita);
+
+        }}
+
+        >
+
+        {
+
+        cita.cumplida
+
+        ?
+
+        <CircleCheckBig size={24}/>
+
+        :
+
+        <Circle size={24}/>
+
+        }
+
+    </button>
 
 <div className="hora">
 
 <Clock size={16}/>
 
-<span>{cita.hora}</span>
+<span>
+
+{cita.hora.slice(0,5)}
+
+</span>
 
 </div>
 
 <div className="info">
 
-<h4>{cita.alumno}</h4>
+<h4>
+
+{cita.alumnos?.nombre}
+
+{" "}
+
+{cita.alumnos?.apellido_paterno}
+
+{" "}
+
+{cita.alumnos?.apellido_materno}
+
+</h4>
 
 <p>
 
-{cita.grupo} • {cita.motivo}
+{cita.alumnos?.grupo}
+
+•
+
+{cita.tipo}
 
 </p>
 
@@ -103,14 +326,6 @@ className="cita"
 }
 
 </div>
-
-<button className="btn-cita">
-
-<Plus size={18}/>
-
-Nueva cita
-
-</button>
 
 </motion.section>
 

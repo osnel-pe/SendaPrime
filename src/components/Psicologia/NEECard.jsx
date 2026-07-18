@@ -28,11 +28,11 @@ export default function NEECard({
 
     return(
 
-        <div className="nee-card">
+        <div className="nee-perfil-card">
 
-            <div className="nee-header">
+            <div className="nee-perfil-header">
 
-                <div className="nee-title">
+                <div className="nee-perfil-title">
 
                     <Puzzle size={22}/>
 
@@ -58,26 +58,26 @@ export default function NEECard({
 
         <div
             key={index}
-            className="nee-item"
+            className="nee-perfil-item"
         >
 
             <div
-                className="nee-info"
+                className="nee-perfil-info"
             >
 
-                <div className="nee-nombre">
+                <div className="nee-perfil-nombre">
 
                     {item.diagnostico}
 
                 </div>
 
-                <div className="nee-descripcion">
+                <div className="nee-perfil-descripcion">
 
                     {item.nivel}
 
                 </div>
 
-                <div className="nee-descripcion">
+                <div className="nee-perfil-descripcion">
 
                     {item.observaciones}
 
@@ -113,7 +113,7 @@ export default function NEECard({
 
     :
 
-    <div className="nee-vacio">
+    <div className="nee-perfil-vacio">
 
         <p>
 
