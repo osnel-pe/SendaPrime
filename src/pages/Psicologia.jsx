@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { LogOut } from "lucide-react";
+import { useState } from "react";
 
 import "../Styles/AppLayout.css";
 import "../Styles/Psicologia.css";
@@ -26,6 +27,8 @@ export default function Psicologia({
     setAlumnoSeleccionado
 
 }){
+
+    const [mostrarConfirmarCerrar, setMostrarConfirmarCerrar] = useState(false);
 
     return (
 
@@ -69,14 +72,11 @@ export default function Psicologia({
                     <div className="logout-container">
 
                         <button
-                            className="logout-btn"
-                            onClick={cerrarSesion}
+                            className="cerrar-sesion-btn"
+                            onClick={() => setMostrarConfirmarCerrar(true)}
                         >
-
                             <LogOut size={20}/>
-
                             Cerrar sesión
-
                         </button>
 
                     </div>
@@ -84,6 +84,78 @@ export default function Psicologia({
                 </motion.div>
 
             </div>
+
+            {
+
+                mostrarConfirmarCerrar && (
+
+                    <div className="modal-opciones">
+
+                        <div className="modal-contenido cerrar-sesion-modal">
+
+                            <div className="cerrar-sesion-icono">
+
+                                <LogOut size={34}/>
+
+                            </div>
+
+                            <h2>
+
+                                ¿Cerrar sesión?
+
+                            </h2>
+
+                            <p>
+
+                                ¿Estás seguro de que deseas cerrar tu sesión?
+
+                            </p>
+
+                            <div className="modal-botones">
+
+                                <button
+
+                                    className="btn-cancelar"
+
+                                    onClick={() =>
+
+                                        setMostrarConfirmarCerrar(false)
+
+                                    }
+
+                                >
+
+                                    Cancelar
+
+                                </button>
+
+                                <button
+
+                                    className="btn-confirmar-cerrar"
+
+                                    onClick={() => {
+
+                                        setMostrarConfirmarCerrar(false);
+
+                                        cerrarSesion();
+
+                                    }}
+
+                                >
+
+                                    Cerrar sesión
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                )
+
+            }
 
         </>
 

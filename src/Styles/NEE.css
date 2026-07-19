@@ -4,11 +4,11 @@ display:flex;
 
 flex-direction:column;
 
-gap:14px;
+gap:8px;
 
-margin-top:18px;
+margin-top:6px;
 
-padding-bottom:25px;
+padding-bottom:18px;
 
 overflow-y:auto;
 
@@ -22,11 +22,13 @@ display:flex;
 
 align-items:center;
 
-gap:16px;
+gap:12px;
 
-padding:16px;
+padding:8px 12px;
 
-border-radius:24px;
+border-radius:20px;
+
+min-height:62px;
 
 background:
 
@@ -60,9 +62,9 @@ transform:translateY(-3px);
 
 .nee-avatar{
 
-width:58px;
+width:40px;
 
-height:58px;
+height:40px;
 
 border-radius:50%;
 
@@ -76,7 +78,7 @@ justify-content:center;
 
 align-items:center;
 
-font-size:22px;
+font-size:18px;
 
 font-weight:700;
 
@@ -94,7 +96,7 @@ flex:1;
 
 margin:0;
 
-font-size:17px;
+font-size:14px;
 
 color:#214A34;
 
@@ -102,13 +104,13 @@ color:#214A34;
 
 .nee-info p{
 
-margin:4px 0;
+margin:2px 0;
 
 color:#238A52;
 
 font-weight:700;
 
-font-size:15px;
+font-size:13px;
 
 }
 
@@ -116,7 +118,7 @@ font-size:15px;
 
 color:#7D8C84;
 
-font-size:14px;
+font-size:12px;
 
 }
 
@@ -142,25 +144,25 @@ display:flex;
 
 justify-content:center;
 
-margin:18px 0 8px;
+margin:0px 0 0px;
 
 }
 
 .nee-add{
 
-height:48px;
+height:42px;
 
-padding:0 22px;
+padding:0 18px;
 
 border:none;
 
-border-radius:18px;
+border-radius:14px;
 
 background:#228B52;
 
 color:white;
 
-font-size:16px;
+font-size:15px;
 
 font-weight:700;
 

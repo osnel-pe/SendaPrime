@@ -40,15 +40,41 @@ observaciones:""
 
         if(!abierto) return;
 
-        if(citaActual){
+        if (citaActual) {
 
-        setDatos({
+    setDatos({
 
-        ...citaActual
+        alumno_id: citaActual.alumno_id || "",
 
-        });
+        fecha: citaActual.fecha || "",
 
-        }else{
+        hora: citaActual.hora || "",
+
+        tipo: citaActual.tipo || "",
+
+        motivo: citaActual.motivo || "",
+
+        observaciones: citaActual.observaciones || ""
+
+    });
+
+    const alumno = students?.find(
+
+        a => a.id === citaActual.alumno_id
+
+    );
+
+    if (alumno) {
+
+        setBuscarAlumno(
+
+            `${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno}`
+
+        );
+
+    }
+
+    }else{
 
         setDatos({
 
@@ -328,11 +354,41 @@ Cancelar
 </button>
 
 <button
-type="button"
-className="btn-guardar"
-onClick={guardar}
+    type="button"
+    className="btn-guardar"
+    onClick={() => {
+
+        if (!datos.alumno_id) {
+
+            alert("Selecciona un alumno.");
+
+            return;
+
+        }
+
+        if (!datos.fecha) {
+
+            alert("Selecciona una fecha.");
+
+            return;
+
+        }
+
+        if (!datos.hora) {
+
+            alert("Selecciona una hora.");
+
+            return;
+
+        }
+
+        guardar(datos);
+
+    }}
 >
-Guardar
+
+    Guardar
+
 </button>
 
 </div>

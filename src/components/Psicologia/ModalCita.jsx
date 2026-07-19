@@ -1,6 +1,6 @@
 import "../../Styles/ModalCita.css";
 
-import {useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 
 export default function ModalCita({
 
@@ -12,207 +12,278 @@ export default function ModalCita({
 
     citaActual
 
-}){
+}) {
 
-    const[vista,setVista]=useState({
+    const [vista, setVista] = useState({
 
-        fecha:"",
+        fecha: "",
 
-        tipo:"Seguimiento",
+        tipo: "Seguimiento",
 
-        motivo:"",
+        motivo: "",
 
-        intervencion:"",
+        intervencion: "",
 
-        acuerdos:""
+        acuerdos: ""
 
     });
 
-    useEffect(()=>{
+    useEffect(() => {
 
-        if(citaActual){
+        if (!abierto) return;
 
-            setVista(citaActual);
-
-        }else{
+        if (citaActual) {
 
             setVista({
 
-                fecha:new Date().toISOString().split("T")[0],
+                fecha: citaActual.fecha || "",
 
-                tipo:"Seguimiento",
+                tipo: citaActual.tipo || "Seguimiento",
 
-                motivo:"",
+                motivo: citaActual.motivo || "",
 
-                intervencion:"",
+                intervencion: citaActual.intervencion || "",
 
-                acuerdos:""
+                acuerdos: citaActual.acuerdos || ""
+
+            });
+
+        } else {
+
+            setVista({
+
+                fecha: new Date()
+                    .toISOString()
+                    .split("T")[0],
+
+                tipo: "Seguimiento",
+
+                motivo: "",
+
+                intervencion: "",
+
+                acuerdos: ""
 
             });
 
         }
 
-    },[citaActual,abierto]);
+    }, [citaActual, abierto]);
 
-    if(!abierto) return null;
+    if (!abierto) return null;
 
-    return(
+    return (
 
-<div className="modal-opciones">
+        <div className="modal-opciones">
 
-    <div className="modal-contenido modal-cita">
+            <div className="modal-contenido modal-cita">
 
-        <h2>
+                <h2>
 
-            Seguimiento
+                    Seguimiento
 
-        </h2>
+                </h2>
 
-        <input
+                <input
 
-            type="date"
+                    type="date"
 
-            value={vista.fecha}
+                    value={vista.fecha}
 
-            onChange={(e)=>setVista({
+                    onChange={(e) => setVista({
 
-                ...vista,
+                        ...vista,
 
-                fecha:e.target.value
+                        fecha: e.target.value
 
-            })}
+                    })}
 
-        />
+                />
 
-        <select
+                <select
 
-            value={vista.tipo}
+                    value={vista.tipo}
 
-            onChange={(e)=>setVista({
+                    onChange={(e) => setVista({
 
-                ...vista,
+                        ...vista,
 
-                tipo:e.target.value
+                        tipo: e.target.value
 
-            })}
+                    })}
 
-        >
+                >
 
-            <option>Entrevista inicial</option>
+                    <option value="Entrevista inicial">
 
-            <option>Seguimiento</option>
+                        Entrevista inicial
 
-            <option>Intervención individual</option>
+                    </option>
 
-            <option>Intervención grupal</option>
+                    <option value="Seguimiento">
 
-            <option>Orientación familiar</option>
+                        Seguimiento
 
-            <option>Orientación docente</option>
+                    </option>
 
-            <option>Cierre</option>
+                    <option value="Intervención individual">
 
-            <option>Otro</option>
+                        Intervención individual
 
-        </select>
+                    </option>
 
-        <label className="campo-label">
+                    <option value="Intervención grupal">
 
-            Motivo:
+                        Intervención grupal
 
-        </label>
+                    </option>
 
-        <textarea
+                    <option value="Orientación familiar">
 
-            rows={1}
+                        Orientación familiar
 
-            value={vista.motivo}
+                    </option>
 
-            onChange={(e)=>setVista({
+                    <option value="Orientación docente">
 
-                ...vista,
+                        Orientación docente
 
-                motivo:e.target.value
+                    </option>
 
-            })}
+                    <option value="Cierre">
 
-        />
+                        Cierre
 
-        <label className="campo-label">
+                    </option>
 
-            Intervención realizada:
+                    <option value="Otro">
 
-        </label>
+                        Otro
 
-        <textarea
+                    </option>
 
-            rows={5}
+                </select>
 
-            value={vista.intervencion}
+                <label className="campo-label">
 
-            onChange={(e)=>setVista({
+                    Motivo:
 
-                ...vista,
+                </label>
 
-                intervencion:e.target.value
+                <textarea
 
-            })}
+                    rows={1}
 
-        />
+                    value={vista.motivo}
 
-        <label className="campo-label">
+                    onChange={(e) => setVista({
 
-            Acuerdos:
+                        ...vista,
 
-        </label>
+                        motivo: e.target.value
 
-        <textarea
+                    })}
 
-            rows={5}
+                />
 
-            value={vista.acuerdos}
+                <label className="campo-label">
 
-            onChange={(e)=>setVista({
+                    Intervención realizada:
 
-                ...vista,
+                </label>
 
-                acuerdos:e.target.value
+                <textarea
 
-            })}
+                    rows={5}
 
-        />
+                    value={vista.intervencion}
 
-        <div className="modal-botones">
+                    onChange={(e) => setVista({
 
-            <button
+                        ...vista,
 
-                className="btn-cancelar"
+                        intervencion: e.target.value
 
-                onClick={cerrar}
+                    })}
 
-            >
+                />
 
-                Cancelar
+                <label className="campo-label">
 
-            </button>
+                    Acuerdos:
 
-            <button
+                </label>
 
-                className="btn-guardar"
+                <textarea
 
-                onClick={()=>guardar(vista)}
+                    rows={5}
 
-            >
+                    value={vista.acuerdos}
 
-                Guardar
+                    onChange={(e) => setVista({
 
-            </button>
+                        ...vista,
+
+                        acuerdos: e.target.value
+
+                    })}
+
+                />
+
+                <div className="modal-botones">
+
+                    <button
+
+                        type="button"
+
+                        className="btn-cancelar"
+
+                        onClick={cerrar}
+
+                    >
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+
+                        type="button"
+
+                        className="btn-guardar"
+
+                        onClick={() => {
+
+                            console.log(
+
+                                "BOTÓN GUARDAR CITA"
+
+                            );
+
+                            console.log(
+
+                                "DATOS DE LA CITA:",
+
+                                vista
+
+                            );
+
+                            guardar(vista);
+
+                        }}
+
+                    >
+
+                        Guardar
+
+                    </button>
+
+                </div>
+
+            </div>
 
         </div>
 
-    </div>
+    );
 
-</div>
-
-);
 }

@@ -38,6 +38,7 @@ import {
 import { guardarArchivo } from "./share/ShareStorage";
 import CitasProgramadas from "./pages/CitasProgramadas";
 import NEE from "./pages/NEE";
+import Notas from "./pages/Notas";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -587,6 +588,22 @@ useEffect(() => {
                   students={students || []}
 
                   setStudents={setStudents}
+
+              />
+
+              );
+
+              break;
+
+              case "notas":
+
+              contenido=(
+
+              <Notas
+
+              students={students}
+
+              cambiarPantalla={setPantalla}
 
               />
 

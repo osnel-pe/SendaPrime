@@ -68,25 +68,67 @@ setStudents
 
     },[]);
 
-    const guardarCita=async(datos)=>{
+    const guardarCita = async (datos) => {
 
-        if(indiceEditar===null){
+    console.log("DATOS QUE SE VAN A GUARDAR:", datos);
 
-        const {error}=await supabase
+    if (!datos.alumno_id) {
 
-        .from("citas_programadas")
-
-        .insert(datos);
-
-        if(error){
-
-        alert(error.message);
+        alert("Debes seleccionar un alumno.");
 
         return;
 
+    }
+
+    if (!datos.fecha) {
+
+        alert("Debes seleccionar una fecha.");
+
+        return;
+
+    }
+
+    if (!datos.hora) {
+
+        alert("Debes seleccionar una hora.");
+
+        return;
+
+    }
+
+    if (indiceEditar === null) {
+
+        const { error } = await supabase
+
+            .from("citas_programadas")
+
+            .insert({
+
+                alumno_id: datos.alumno_id,
+
+                fecha: datos.fecha,
+
+                hora: datos.hora,
+
+                tipo: datos.tipo,
+
+                motivo: datos.motivo,
+
+                observaciones: datos.observaciones
+
+            });
+
+        if (error) {
+
+            console.error("ERROR AL CREAR CITA:", error);
+
+            alert(error.message);
+
+            return;
+
         }
 
-        }else{
+    } else {
 
         const { error } = await supabase
 
@@ -94,39 +136,41 @@ setStudents
 
             .update({
 
-                fecha:datos.fecha,
+                alumno_id: datos.alumno_id,
 
-                hora:datos.hora,
+                fecha: datos.fecha,
 
-                tipo:datos.tipo,
+                hora: datos.hora,
 
-                motivo:datos.motivo,
+                tipo: datos.tipo,
 
-                observaciones:datos.observaciones,
+                motivo: datos.motivo,
 
-                alumno_id:datos.alumno_id
+                observaciones: datos.observaciones
 
-                })
+            })
 
-            .eq("id",indiceEditar);
+            .eq("id", indiceEditar);
 
-        if(error){
+        if (error) {
 
-        alert(error.message);
+            console.error("ERROR AL EDITAR CITA:", error);
 
-        return;
+            alert(error.message);
+
+            return;
 
         }
 
-        }
+    }
 
-        setIndiceEditar(null);
+    setIndiceEditar(null);
 
-        setModal(false);
+    setModal(false);
 
-        cargarCitas();
+    await cargarCitas();
 
-    };
+};
 
     const eliminarCita=async()=>{
 

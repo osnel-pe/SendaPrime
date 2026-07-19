@@ -15,28 +15,30 @@ import {
 
 const accesos = [
 
-    {
+        {
         titulo:"Perfiles",
         icono:UserRound,
         pantalla:"perfilPsicopedagogico"
         },
-        
+
         {
         titulo:"Citas",
         icono:CalendarDays,
         pantalla:"agenda"
         },
-        
+
         {
         titulo:"NEE",
         icono:Brain,
         pantalla:"nee"
         },
-        
+
         {
-        titulo: "Notas",
-        icono: FolderOpen
-        },
+        titulo:"Notas",
+        icono:FolderOpen,
+        pantalla:"notas"
+        }
+
 ];
 
 export default function AccesosRapidos({ cambiarPantalla }) {

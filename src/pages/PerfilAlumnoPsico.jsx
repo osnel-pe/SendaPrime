@@ -31,6 +31,10 @@ import CitasCard from "../components/Psicologia/CitasCard";
 
 import ModalCita from "../components/Psicologia/ModalCita";
 
+import NotasAlumnoCard from "../components/Psicologia/NotasAlumnoCard";
+
+import ModalNota from "../components/Psicologia/ModalNota";
+
 export default function PerfilAlumnoPsico({
 
     alumno,
@@ -58,6 +62,16 @@ export default function PerfilAlumnoPsico({
     const [indiceNEE, setIndiceNEE] = useState(null);
     
     const [mostrarEliminarNEE, setMostrarEliminarNEE] = useState(false);
+
+    const [notasAlumno,setNotasAlumno]=useState([]);
+
+    const [modalNota,setModalNota]=useState(false);
+
+    const [notaEditar,setNotaEditar]=useState(null);
+
+    const [notaEliminar,setNotaEliminar]=useState(null);
+
+    const [notaVista,setNotaVista]=useState(null);
 
     const [indiceEliminarNEE, setIndiceEliminarNEE] = useState(null);
    
@@ -124,6 +138,16 @@ export default function PerfilAlumnoPsico({
         cargarAlumno();
 
     }, []);
+
+    useEffect(()=>{
+
+    if(datosAlumno?.id){
+
+        cargarNotasAlumno();
+
+    }
+
+    },[datosAlumno]);
 
     if (!datosAlumno) return null;
 
@@ -398,8 +422,28 @@ const guardarNEE = async (datos)=>{
             nee:lista
 
         })
+        .eq("id",datosAlumno.id); 
+        const { data } = await supabase
+            .from("alumnos")
+            .select("*")
+            .eq("id",datosAlumno.id)
+            .single();
 
-        .eq("id",datosAlumno.id);
+            setStudents(prev=>
+
+            prev.map(a=>
+
+            a.id===data.id
+
+            ? data
+
+            : a
+
+            )
+
+            );
+
+        
 
     if(error){
 
@@ -423,33 +467,126 @@ const guardarNEE = async (datos)=>{
 
 };
 
-const guardarCita = async(datos)=>{
+const guardarNotaAlumno = async (datos) => {
 
-    const lista=[...(datosAlumno.citas || [])];
+    if (notaEditar) {
 
-    if(indiceCita===null){
+        const { error } = await supabase
 
-        lista.unshift(datos);
+            .from("notas_psicologia")
 
-    }else{
+            .update({
 
-        lista[indiceCita]=datos;
+                titulo: datos.titulo,
+
+                nota: datos.nota,
+
+                color: datos.color
+
+            })
+
+            .eq("id", notaEditar.id);
+
+        if (error) {
+
+            console.log(error);
+
+            alert(error.message);
+
+            return;
+
+        }
+
+    } else {
+
+        const { error } = await supabase
+
+            .from("notas_psicologia")
+
+            .insert({
+
+                alumno_id: datosAlumno.id,
+
+                titulo: datos.titulo,
+
+                nota: datos.nota,
+
+                color: datos.color,
+
+                grupo: null
+
+            });
+
+        if (error) {
+
+            console.log(error);
+
+            alert(error.message);
+
+            return;
+
+        }
 
     }
 
+    setModalNota(false);
+
+    setNotaEditar(null);
+
+    cargarNotasAlumno();
+
+};
+
+const eliminarNotaAlumno=async()=>{
+
     const {error}=await supabase
 
-        .from("alumnos")
+    .from("notas_psicologia")
 
-        .update({
+    .delete()
 
-            citas:lista
-
-        })
-
-        .eq("id",datosAlumno.id);
+    .eq("id",notaEliminar.id);
 
     if(error){
+
+    alert(error.message);
+
+    return;
+
+    }
+
+    setNotaEliminar(null);
+
+    cargarNotasAlumno();
+
+};
+
+const guardarCita = async (datos) => {
+
+    console.log("RECIBIDO EN PERFIL:", datos);
+
+    const lista = [...(datosAlumno.citas || [])];
+
+    if (indiceCita === null) {
+
+        lista.unshift(datos);
+
+    } else {
+
+        lista[indiceCita] = datos;
+
+    }
+
+    const { error } = await supabase
+        .from("alumnos")
+        .update({
+            citas: lista
+        })
+        .eq("id", datosAlumno.id);
+
+    if (error) {
+
+        console.error("ERROR AL GUARDAR CITA:", error);
 
         alert(error.message);
 
@@ -457,13 +594,10 @@ const guardarCita = async(datos)=>{
 
     }
 
-    setDatosAlumno({
-
-        ...datosAlumno,
-
-        citas:lista
-
-    });
+    setDatosAlumno(prev => ({
+        ...prev,
+        citas: lista
+    }));
 
     setIndiceCita(null);
 
@@ -494,6 +628,26 @@ const eliminarNEE = async(index)=>{
         .eq("id", datosAlumno.id);
 
         console.log(error);
+
+        const { data } = await supabase
+        .from("alumnos")
+        .select("*")
+        .eq("id",datosAlumno.id)
+        .single();
+
+        setStudents(prev=>
+
+        prev.map(a=>
+
+        a.id===data.id
+
+        ? data
+
+        : a
+
+        )
+
+        );
 
     if(error){
 
@@ -548,6 +702,24 @@ const eliminarCita = async(index)=>{
     });
 
 };
+
+        const cargarNotasAlumno = async()=>{
+
+            const {data,error}=await supabase
+
+            .from("notas_psicologia")
+
+            .select("*")
+
+            .eq("alumno_id",datosAlumno.id)
+
+            .order("created_at",{ascending:false});
+
+            console.log(error);
+
+            setNotasAlumno(data || []);
+
+        };
     //=====================================
 // GUARDAR PDF GENERADO POR EL ESCÁNER
 //=====================================
@@ -700,6 +872,40 @@ console.log(datosAlumno?.nee);
 
                             />
 
+                            <NotasAlumnoCard
+
+                            notas={notasAlumno}
+
+                            onAgregar={()=>{
+
+                                setNotaEditar(null);
+
+                                setModalNota(true);
+
+                            }}
+
+                            onEditar={(nota)=>{
+
+                                setNotaEditar(nota);
+
+                                setModalNota(true);
+
+                            }}
+
+                            onEliminar={(nota)=>{
+
+                                setNotaEliminar(nota);
+
+                            }}
+
+                            onVer={(nota)=>{
+
+                                setNotaVista(nota);
+
+                            }}
+
+                        />
+
                     </div>
 
                 </div>
@@ -767,6 +973,108 @@ console.log(datosAlumno?.nee);
                 }
 
             />
+
+            <ModalNota
+
+                abierto={modalNota}
+
+                cerrar={() => {
+
+                    setModalNota(false);
+
+                    setNotaEditar(null);
+
+                }}
+
+                guardar={guardarNotaAlumno}
+
+                students={[datosAlumno]}
+
+                notaActual={notaEditar}
+
+                ocultarAlumno={true}
+
+            />
+
+            {
+
+            notaVista&&(
+
+                <div className="modal-opciones">
+
+                <div
+
+                className={`modal-contenido ${notaVista.color || "verde"}`}
+
+                >
+
+                <h2>
+
+                {notaVista.titulo}
+
+                </h2>
+
+                <p>
+
+                <strong>
+
+                Alumno:
+
+                </strong>
+
+                {" "}
+
+                {datosAlumno.nombre}
+
+                {" "}
+
+                {datosAlumno.apellido_paterno}
+
+                </p>
+
+                <hr/>
+
+                <p
+
+                style={{
+
+                whiteSpace:"pre-wrap",
+
+                lineHeight:1.6,
+
+                marginTop:18
+
+                }}
+
+                >
+
+                {notaVista.nota}
+
+                </p>
+
+                <div className="modal-botones">
+
+                <button
+
+                className="btn-guardar"
+
+                onClick={()=>setNotaVista(null)}
+
+                >
+
+                Cerrar
+
+                </button>
+
+                </div>
+
+                </div>
+
+                </div>
+
+                )
+
+            }
 
             {
 
