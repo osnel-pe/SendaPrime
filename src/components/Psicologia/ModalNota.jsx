@@ -14,7 +14,7 @@ nota:"",
 
 color:"verde",
 
-anclada:false
+fijada: false
 
 };
 
@@ -359,11 +359,29 @@ Selecciona un grupo
 
 {
 
-[...new Set(students.map(a=>a.grupo))]
+[...new Set(
 
-.sort()
+    students
 
-.map(grupo=>(
+        .map(a => a.grupo)
+
+        .filter(Boolean)
+
+)]
+
+.sort((a, b) =>
+
+    a.localeCompare(b, undefined, {
+
+        numeric: true,
+
+        sensitivity: "base"
+
+    })
+
+)
+
+.map(grupo => (
 
 <option
 

@@ -72,64 +72,111 @@ cargarNotas();
 
 },[]);
 
-const guardarNota=async(datos)=>{
+const guardarNota = async (datos) => {
 
-console.log(datos);
+    console.log("DATOS QUE SE VAN A GUARDAR:", datos);
 
-if(notaEditar){
 
-const {error}=await supabase
+    if (notaEditar) {
 
-.from("notas_psicologia")
+        const { error } = await supabase
 
-.update({
+            .from("notas_psicologia")
 
-titulo:datos.titulo,
+            .update({
 
-nota:datos.nota,
+                titulo: datos.titulo,
 
-alumno_id:datos.alumno_id,
+                nota: datos.nota,
 
-grupo:datos.grupo,
+                alumno_id: datos.alumno_id,
 
-color:datos.color
+                grupo: datos.grupo,
 
-})
+                color: datos.color
 
-.eq("id",notaEditar.id);
+            })
 
-if(error){
+            .eq("id", notaEditar.id);
 
-alert(error.message);
 
-return;
+        if (error) {
 
-}
+            console.error(
 
-}else{
+                "ERROR AL ACTUALIZAR NOTA:",
 
-const {data,error}=await supabase
+                error
 
-.from("notas_psicologia")
+            );
 
-.insert({
-...datos,
-color:datos.color
-})
+            alert(error.message);
 
-.select();
+            return;
 
-console.log(error);
+        }
 
-console.log(data);
+    }
 
-}
 
-setModal(false);
+    else {
 
-setNotaEditar(null);
+        const { data, error } = await supabase
 
-cargarNotas();
+            .from("notas_psicologia")
+
+            .insert({
+
+                alumno_id: datos.alumno_id || null,
+
+                grupo: datos.grupo || null,
+
+                titulo: datos.titulo,
+
+                nota: datos.nota,
+
+                color: datos.color,
+
+                fijada: false
+
+            })
+
+            .select();
+
+
+        if (error) {
+
+            console.error(
+
+                "ERROR AL INSERTAR NOTA:",
+
+                error
+
+            );
+
+            alert(error.message);
+
+            return;
+
+        }
+
+
+        console.log(
+
+            "NOTA GUARDADA CORRECTAMENTE:",
+
+            data
+
+        );
+
+    }
+
+
+    setModal(false);
+
+    setNotaEditar(null);
+
+    await cargarNotas();
 
 };
 

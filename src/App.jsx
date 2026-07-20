@@ -39,6 +39,7 @@ import { guardarArchivo } from "./share/ShareStorage";
 import CitasProgramadas from "./pages/CitasProgramadas";
 import NEE from "./pages/NEE";
 import Notas from "./pages/Notas";
+import AsistenteIA from "./pages/AsistenteIA";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -88,6 +89,11 @@ function App() {
         if(error) throw error;
 
         setStudents(data);
+        console.log("ALUMNOS CARGADOS:", data);
+        console.log(
+            "GRUPOS EN APP:",
+            [...new Set(data.map(alumno => alumno.grupo))]
+        );
 
     }catch(error){
 
@@ -606,6 +612,20 @@ useEffect(() => {
               cambiarPantalla={setPantalla}
 
               />
+
+              );
+
+              break;
+
+              case "asistenteIA":
+
+              contenido = (
+
+                  <AsistenteIA
+
+                      cambiarPantalla={setPantalla}
+
+                  />
 
               );
 

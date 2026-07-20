@@ -53,8 +53,9 @@ export default function Students({
     "1ro C",
     "2do A",
     "2do B",
-    "2do C"
-
+    "2do C",
+    "3ro A",
+    "3ro B"
   ];
 
   const alumnosGrupo = students.filter(

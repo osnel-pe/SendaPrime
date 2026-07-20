@@ -171,8 +171,9 @@ seleccionarAlumno
 return(
 
 <motion.section
-
-className="citas-card"
+    className={`citas-card ${
+        citas.length > 3 ? "citas-con-scroll" : "citas-ajustadas"
+    }`}
 
 initial={{opacity:0,y:20}}
 
@@ -198,7 +199,7 @@ transition={{duration:.4}}
 
 <div className="titulo">
 
-<CalendarDays size={20}/>
+<CalendarDays size={22}/>
 
 <h3>Citas de hoy</h3>
 
@@ -206,19 +207,21 @@ transition={{duration:.4}}
 
 <button
 
-className="agenda-add-mini"
+    className="agenda-add-mini"
 
-onClick={()=>setModalNuevaCita(true)}
+    onClick={() => setModalNuevaCita(true)}
 
 >
 
-<Plus size={17}/>
+    <Plus size={16}/>
 
- Nueva
+    Nueva
 
 </button>
 
 </div>
+
+<div className="lista-citas-scroll">
 
 <div className="lista-citas">
 
@@ -324,6 +327,8 @@ onClick={()=>abrirAlumno(cita.alumno_id)}
 ))
 
 }
+
+</div>
 
 </div>
 

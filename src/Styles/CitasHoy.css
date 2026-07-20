@@ -1,34 +1,37 @@
 .citas-card{
 
-    margin-top:12px;
+    margin-top:8px;
 
     padding:16px;
 
     border-radius:28px;
- 
-  background:
 
-    linear-gradient(
-
-    145deg,
-
-    rgba(255,255,255,.82),
-
-    rgba(236,249,241,.60)
-
-    );
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.82),
+            rgba(236,249,241,.60)
+        );
 
     backdrop-filter:blur(20px) saturate(180%);
 
     -webkit-backdrop-filter:blur(20px) saturate(180%);
-  
+
     border:1px solid rgba(255,255,255,.18);
-    
+
     box-shadow:
-    
-    0 18px 40px rgba(0,0,0,.18);
-    
-    }
+        0 18px 40px rgba(0,0,0,.18);
+
+    /* AÑADE ESTO */
+    display:flex;
+
+    flex-direction:column;
+
+    min-height:0;
+
+    overflow:hidden;
+
+}
     
     .citas-header{
 
@@ -39,6 +42,8 @@
       align-items:center;
   
       margin-bottom:10px;
+
+      flex-shrink:0;
   
     }
   
@@ -76,7 +81,7 @@
   
   }
   
-  .lista-citas{
+.lista-citas{
   
   display:flex;
   
@@ -84,7 +89,23 @@
   
   gap:8px;
   
-  }
+}
+
+.lista-citas-scroll{
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    max-height:calc(100dvh - 500px);
+
+    padding-bottom:10px;
+
+    -webkit-overflow-scrolling:touch;
+
+    height:auto;
+
+}
   
   .cita{
   
@@ -231,7 +252,7 @@ justify-content:center;
 
 gap:8px;
 
-padding:10px 18px;
+padding:10px 10px;
 
 border:none;
 
@@ -344,5 +365,53 @@ text-decoration:line-through;
 .realizada p{
 
 text-decoration:line-through;
+
+}
+
+/* =========================================
+   POCAS CITAS
+========================================= */
+
+.citas-card.citas-ajustadas{
+
+    flex:0 0 auto;
+
+    height:auto;
+
+    max-height:none;
+
+}
+
+
+/* =========================================
+   MUCHAS CITAS
+========================================= */
+
+.citas-card.citas-con-scroll{
+
+    flex:0 1 auto;
+
+    min-height:0;
+
+}
+
+
+/* La lista solo crece hasta cierto punto */
+
+.citas-card.citas-con-scroll
+.lista-citas-scroll{
+
+    max-height:calc(100dvh - 500px);
+
+    overflow-y:auto;
+
+}
+
+.citas-card.citas-ajustadas
+.lista-citas-scroll{
+
+    overflow:visible;
+
+    max-height:none;
 
 }

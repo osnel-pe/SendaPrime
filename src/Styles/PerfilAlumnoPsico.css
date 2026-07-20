@@ -583,3 +583,19 @@ MODAL ELIMINAR
     0 14px 28px rgba(244,67,54,.35);
 
 }
+
+/* =========================================
+   CITA / SEGUIMIENTO EN PERFIL
+========================================= */
+
+.perfil-scroll .citas-card{
+
+    flex:0 0 auto;
+
+    height:auto;
+
+    min-height:0;
+
+    max-height:none;
+
+}

@@ -4,24 +4,21 @@ CONTENEDOR PRINCIPAL
 
 .ps-container{
 
-  width:100%;
-  max-width:430px;
+    width:100%;
 
-  padding:6px 18px 18px;
+    max-width:430px;
 
-  display:flex;
-  
-  flex-direction:column;
+    padding:6px 18px 18px;
 
-  height:100vh;
+    display:flex;
 
-  gap:6px;
+    flex-direction:column;
 
-  box-sizing:border-box;
+    height:100vh;
 
-  padding-bottom:20px;
+    gap:6px;
 
-  
+    box-sizing:border-box;
 
 }
 
@@ -41,7 +38,11 @@ BOTÓN CERRAR SESIÓN
 
     z-index:50;
 
-    padding:12px 20px 18px;
+    padding:12px 70px 18px;
+
+    box-sizing:border-box;
+
+    background:transparent;
 
     background:
 
@@ -296,5 +297,248 @@ BOTÓN CERRAR SESIÓN
 .btn-confirmar-cerrar:hover{
 
     background:#a92727;
+
+}
+
+.citas-hoy-area{
+
+    flex:1 1 auto;
+
+    min-height:0;
+
+    height:0;
+
+    overflow:hidden;
+
+    padding-top:8px;
+
+    padding-bottom:8px;
+
+    box-sizing:border-box;
+
+}
+
+.citas-hoy-scroll::-webkit-scrollbar{
+
+    display:none;
+
+}
+
+.ps-fixed-top{
+
+    flex-shrink:0;
+
+    width:100%;
+
+}
+
+.ps-fixed-top .ps-header{
+
+    margin-bottom:10px;
+
+}
+
+/* =========================================
+   SOLO LA PANTALLA PRINCIPAL DE PSICOLOGÍA
+========================================= */
+
+.ps-pantalla-principal .ps-container{
+
+    padding-bottom:100px;
+
+}
+
+/* =========================================
+   NEURI - BOTÓN FLOTANTE
+========================================= */
+
+.neuri-boton-wrapper{
+
+    position:fixed;
+
+    right:20px;
+
+    bottom:94px;
+
+    z-index:60;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+    gap:8px;
+
+}
+
+
+/* =========================================
+   BOTÓN CIRCULAR
+========================================= */
+
+.neuri-boton{
+
+    width:64px;
+
+    height:64px;
+
+    padding:0;
+
+    border-radius:50%;
+
+    border:1px solid rgba(255,255,255,.45);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    overflow:hidden;
+
+    background:
+
+        linear-gradient(
+
+            145deg,
+
+            rgba(255,255,255,.35),
+
+            rgba(255,255,255,.12)
+
+        );
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    box-shadow:
+
+        0 10px 28px rgba(0,0,0,.28),
+
+        inset 0 1px 2px rgba(255,255,255,.45);
+
+    transition:
+
+        transform .2s ease,
+
+        box-shadow .2s ease;
+
+}
+
+
+.neuri-boton img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
+.neuri-boton:hover{
+
+    transform:scale(1.08);
+
+    box-shadow:
+
+        0 14px 34px rgba(0,0,0,.35),
+
+        inset 0 1px 2px rgba(255,255,255,.5);
+
+}
+
+
+.neuri-boton:active{
+
+    transform:scale(.92);
+
+}
+
+
+/* =========================================
+   MENSAJE DE NEURI
+========================================= */
+
+.neuri-saludo{
+
+    position:relative;
+
+    max-width:220px;
+
+    padding:12px 16px;
+
+    border-radius:18px 18px 5px 18px;
+
+    color:#214834;
+
+    font-size:14px;
+
+    line-height:1.4;
+
+    text-align:left;
+
+    background:
+
+        rgba(255,255,255,.90);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    box-shadow:
+
+        0 8px 24px rgba(0,0,0,.18);
+
+    animation:
+
+        neuri-apare .35s ease;
+
+}
+
+
+.neuri-saludo::after{
+
+    content:"";
+
+    position:absolute;
+
+    right:18px;
+
+    bottom:-8px;
+
+    width:16px;
+
+    height:16px;
+
+    background:rgba(255,255,255,.90);
+
+    transform:rotate(45deg);
+
+}
+
+
+@keyframes neuri-aparece{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px) scale(.95);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0) scale(1);
+
+    }
 
 }

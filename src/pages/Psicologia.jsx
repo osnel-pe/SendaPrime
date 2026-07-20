@@ -12,6 +12,7 @@ import HeaderPsico from "../components/Psicologia/HeaderPsico";
 import FrasePsico from "../components/Psicologia/FrasePsico";
 import AccesosRapidos from "../components/Psicologia/AccesosRapidos";
 import CitasHoy from "../components/Psicologia/CitasHoy";
+import BotonIA from "../components/Psicologia/BotonIA";
 
 // ESTE ES EL COMPONENTE DEL BANNER
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
@@ -41,7 +42,7 @@ export default function Psicologia({
                 }}
             />
 
-            <div className="ps-app">
+            <div className="ps-app ps-pantalla-principal">
 
                 <motion.div
                     className="ps-container"
@@ -50,24 +51,37 @@ export default function Psicologia({
                     transition={{ duration:.35 }}
                 >
 
-                    <HeaderPsico/>
+                    <div className="ps-fixed-top">
 
-                    <FrasePsico/>
-               
-                    <AccesosRapidos
-                        cambiarPantalla={cambiarPantalla}
+                        <HeaderPsico/>
+
+                        <FrasePsico/>
+
+                        <AccesosRapidos
+                            cambiarPantalla={cambiarPantalla}
+                        />
+
+                    </div>
+
+                    <div className="citas-hoy-area">
+
+                        <CitasHoy
+
+                            cambiarPantalla={cambiarPantalla}
+
+                            students={students}
+
+                            seleccionarAlumno={setAlumnoSeleccionado}
+
+                        />
+
+                    </div>
+
+                    <BotonIA
+
+                        abrir={() => cambiarPantalla("asistenteIA")}
+
                     />
-                    
-                    <CitasHoy
-
-                        cambiarPantalla={cambiarPantalla}
-
-                        students={students}
-
-                        seleccionarAlumno={setAlumnoSeleccionado}
-
-                    />
-            
 
                     <div className="logout-container">
 
@@ -75,8 +89,11 @@ export default function Psicologia({
                             className="cerrar-sesion-btn"
                             onClick={() => setMostrarConfirmarCerrar(true)}
                         >
+
                             <LogOut size={20}/>
+
                             Cerrar sesión
+
                         </button>
 
                     </div>
@@ -128,6 +145,7 @@ export default function Psicologia({
                                     Cancelar
 
                                 </button>
+
 
                                 <button
 
