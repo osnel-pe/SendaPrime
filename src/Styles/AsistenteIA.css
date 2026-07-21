@@ -1,18 +1,28 @@
 /* =========================================
-   PANTALLA DEL ASISTENTE
+   CONTENEDOR GENERAL
 ========================================= */
 
 .asistente-container{
 
+    height:100dvh;
+
+    min-height:0;
+
+    display:flex;
+
+    flex-direction:column;
+
     padding-top:10px;
 
-    padding-bottom:10px;
+    padding-bottom:0;
+
+    overflow:hidden;
 
 }
 
 
 /* =========================================
-   ENCABEZADO DEL CHAT
+   ENCABEZADO
 ========================================= */
 
 .chat-header{
@@ -25,7 +35,9 @@
 
     gap:12px;
 
-    padding:10px 0 14px;
+    padding:8px 0 14px;
+
+    border-bottom:1px solid rgba(255,255,255,.20);
 
 }
 
@@ -48,7 +60,7 @@
 
     color:white;
 
-    background:rgba(255,255,255,.18);
+    background:rgba(255,255,255,.16);
 
     backdrop-filter:blur(18px);
 
@@ -72,9 +84,9 @@
 
 .chat-avatar{
 
-    width:44px;
+    width:46px;
 
-    height:44px;
+    height:46px;
 
     border-radius:50%;
 
@@ -84,7 +96,7 @@
 
     justify-content:center;
 
-    color:white;
+    overflow:hidden;
 
     background:
 
@@ -98,6 +110,21 @@
 
         );
 
+    box-shadow:
+
+        0 6px 16px rgba(0,0,0,.20);
+
+}
+
+
+.chat-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
 }
 
 
@@ -107,7 +134,9 @@
 
     color:white;
 
-    font-size:19px;
+    font-size:20px;
+
+    font-weight:700;
 
 }
 
@@ -123,22 +152,178 @@
 }
 
 
+.neuri-online{
+
+    margin-left:auto;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:5px;
+
+    color:rgba(255,255,255,.75);
+
+    font-size:11px;
+
+}
+
+
+.neuri-online span{
+
+    width:7px;
+
+    height:7px;
+
+    border-radius:50%;
+
+    background:#75E69A;
+
+    box-shadow:0 0 8px #75E69A;
+
+}
+
+
 /* =========================================
-   MENSAJES
+   ÁREA DE MENSAJES
 ========================================= */
 
 .chat-mensajes{
 
-    flex:1;
+    flex:1 1 auto;
 
     min-height:0;
 
     overflow-y:auto;
 
-    padding:10px 0 20px;
+    padding:20px 4px 20px;
+
+    scroll-behavior:smooth;
+
+    overscroll-behavior:contain;
 
 }
 
+
+.chat-mensajes::-webkit-scrollbar{
+
+    width:5px;
+
+}
+
+
+.chat-mensajes::-webkit-scrollbar-thumb{
+
+    background:rgba(255,255,255,.35);
+
+    border-radius:10px;
+
+}
+
+
+/* =========================================
+   BIENVENIDA
+========================================= */
+
+.chat-bienvenida{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    text-align:center;
+
+    padding:20px 20px 28px;
+
+}
+
+
+.bienvenida-avatar{
+
+    width:76px;
+
+    height:76px;
+
+    border-radius:50%;
+
+    overflow:hidden;
+
+    margin-bottom:12px;
+
+    background:
+
+        linear-gradient(
+
+            145deg,
+
+            #59C96E,
+
+            #168343
+
+        );
+
+    box-shadow:
+
+        0 10px 25px rgba(0,0,0,.25);
+
+}
+
+
+.bienvenida-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
+.chat-bienvenida h2{
+
+    margin:0;
+
+    color:white;
+
+    font-size:22px;
+
+}
+
+
+.chat-bienvenida p{
+
+    margin:7px 0 0;
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:600;
+
+}
+
+
+.chat-bienvenida span{
+
+    margin-top:6px;
+
+    max-width:300px;
+
+    color:rgba(255,255,255,.72);
+
+    font-size:13px;
+
+    line-height:1.4;
+
+}
+
+
+/* =========================================
+   MENSAJES
+========================================= */
 
 .mensaje{
 
@@ -150,12 +335,42 @@
 
     margin-bottom:14px;
 
+    animation:aparecerMensaje .25s ease;
+
+}
+
+
+@keyframes aparecerMensaje{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
 }
 
 
 .mensaje-ia{
 
     justify-content:flex-start;
+
+}
+
+
+.mensaje-usuario{
+
+    justify-content:flex-end;
 
 }
 
@@ -170,59 +385,106 @@
 
     border-radius:50%;
 
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:white;
+    overflow:hidden;
 
     background:#2E8B57;
 
 }
 
 
+.mensaje-avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+
 .burbuja{
 
-    max-width:82%;
+    max-width:78%;
 
     padding:12px 15px;
-
-    border-radius:20px 20px 20px 5px;
-
-    color:#214834;
 
     font-size:15px;
 
     line-height:1.45;
 
-    background:
-
-        rgba(255,255,255,.86);
-
     box-shadow:
 
-        0 6px 18px rgba(0,0,0,.12);
+        0 5px 15px rgba(0,0,0,.12);
+
+}
+
+
+.mensaje-ia .burbuja{
+
+    color:#214834;
+
+    border-radius:20px 20px 20px 5px;
+
+    background:rgba(255,255,255,.90);
+
+}
+
+
+.mensaje-usuario .burbuja{
+
+    color:white;
+
+    border-radius:20px 20px 5px 20px;
+
+    background:
+
+        linear-gradient(
+
+            145deg,
+
+            #2E8B57,
+
+            #197342
+
+        );
 
 }
 
 
 /* =========================================
-   CAJA DE ESCRIBIR
+   ZONA DE ESCRITURA
 ========================================= */
 
 .chat-input-container{
 
     flex-shrink:0;
 
+    width:100%;
+
     display:flex;
 
     align-items:center;
 
-    gap:8px;
+    gap:3px;
 
-    padding:10px 0 0;
+    padding:10px 0;
+
+    padding-bottom:
+
+        calc(10px + env(safe-area-inset-bottom));
+
+    background:
+
+        linear-gradient(
+
+            to top,
+
+            rgba(0,0,0,.35),
+
+            rgba(0,0,0,0)
+
+        );
 
 }
 
@@ -247,7 +509,7 @@
 
     color:#214834;
 
-    background:rgba(255,255,255,.88);
+    background:rgba(255,255,255,.92);
 
     box-shadow:
 
@@ -256,7 +518,16 @@
 }
 
 
+.chat-input-container input::placeholder{
+
+    color:#87968C;
+
+}
+
+
 .chat-input-container button{
+
+    flex-shrink:0;
 
     width:48px;
 
@@ -274,8 +545,6 @@
 
     color:white;
 
-    background:#2E8B57;
-
     cursor:pointer;
 
     transition:.2s;
@@ -283,28 +552,16 @@
 }
 
 
-.chat-input-container button:active{
+.chat-plus-btn{
 
-    transform:scale(.92);
+    background:rgba(255,255,255,.22);
 
-}
-
-/* =========================================
-   MENSAJES DE LA PSICÓLOGA
-========================================= */
-
-.mensaje-usuario{
-
-    justify-content:flex-end;
+    backdrop-filter:blur(10px);
 
 }
 
 
-.mensaje-usuario .burbuja{
-
-    border-radius:20px 20px 5px 20px;
-
-    color:white;
+.chat-send-btn{
 
     background:
 
@@ -314,46 +571,91 @@
 
             #2E8B57,
 
-            #1E6A42
+            #197342
 
         );
 
+    box-shadow:
+
+        0 6px 15px rgba(46,139,87,.35);
+
 }
 
 
-/* =========================================
-   EVITAR QUE EL CHAT SE DESBORDE
-========================================= */
+.chat-input-container button:active{
+
+    transform:scale(.90);
+
+}
+
+.ps-app{
+
+    height:105dvh;
+
+    min-height:0;
+
+    overflow:hidden;
+
+}
 
 .asistente-container{
 
-    display:flex;
-
-    flex-direction:column;
+    height:100%;
 
     min-height:0;
 
 }
-
-
-.chat-header{
-
-    flex-shrink:0;
-
-}
-
-
-.chat-mensajes{
-
-    flex:1;
-
-    min-height:0;
-
-}
-
 
 .chat-input-container{
 
     flex-shrink:0;
+
+    width:100%;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:3px;
+
+    padding:10px 0;
+
+    padding-bottom:
+
+        calc(
+
+            10px +
+
+            env(safe-area-inset-bottom)
+
+        );
+
+    background:
+
+        linear-gradient(
+
+            to top,
+
+            rgba(0,0,0,.35),
+
+            rgba(0,0,0,0)
+
+        );
+
+    position:relative;
+
+    z-index:10;
+
+}
+
+@media (max-width:600px){
+
+    .asistente-container{
+
+        height:100dvh;
+
+        padding-bottom:0;
+
+    }
 
 }
