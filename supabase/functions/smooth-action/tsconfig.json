@@ -1,0 +1,6 @@
+{
+  "extends": "./deno.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true
+  }
+}

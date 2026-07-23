@@ -1,122 +1,50 @@
+import BaseTool from "./BaseTool";
 import { supabase } from "../../services/supabase";
 
-const BUCKET = "expedientes";
+class BuscarExpedienteTool extends BaseTool{
 
-export async function buscarExpediente({
+    constructor(){
 
-    grupo,
-
-    alumnoId
-
-} = {}) {
-
-    if (!grupo || !alumnoId) {
-
-        return {
-
-            encontrado: false,
-
-            archivos: [],
-
-            mensaje:
-                "No se proporcionó grupo o alumno."
-
-        };
+        super("buscarExpediente");
 
     }
 
-    try {
+    async ejecutar({ alumno }){
 
-        const ruta = `${grupo}/${alumnoId}`;
+        if(!alumno){
 
-        const {
-
-            data,
-
-            error
-
-        } = await supabase.storage
-
-            .from(BUCKET)
-
-            .list(ruta, {
-
-                limit: 100,
-
-                sortBy: {
-
-                    column: "name",
-
-                    order: "asc"
-
-                }
-
-            });
-
-        if (error) {
-
-            console.error(
-                "Error consultando expediente:",
-                error
-            );
-
-            throw error;
+            return null;
 
         }
 
-        const archivos = (data || [])
+        const { data,error } =
 
-            .filter(
+        await supabase
 
-                archivo =>
+        .from("alumnos")
 
-                    archivo.name
-                        .toLowerCase()
-                        .endsWith(".pdf")
+        .select(`
+            expediente_pdf,
+            nee,
+            nee_observaciones
+        `)
 
-            )
+        .eq("id", alumno.id)
 
-            .map(
+        .single();
 
-                archivo => ({
+        if(error){
 
-                    nombre: archivo.name,
+            console.error(error);
 
-                    ruta: `${ruta}/${archivo.name}`
+            return null;
 
-                })
+        }
 
-            );
-
-        return {
-
-            encontrado:
-                archivos.length > 0,
-
-            archivos
-
-        };
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "buscarExpediente:",
-            error
-        );
-
-        return {
-
-            encontrado: false,
-
-            archivos: [],
-
-            error:
-                "No se pudo consultar el expediente."
-
-        };
+        return data;
 
     }
 
 }
+
+export default new BuscarExpedienteTool();

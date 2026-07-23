@@ -1,0 +1,6 @@
+{
+  "workspace": [
+    "./supabase/functions/smooth-action"
+  ],
+  "nodeModulesDir": "auto"
+}

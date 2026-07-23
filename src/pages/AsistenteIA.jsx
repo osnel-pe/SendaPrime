@@ -1,265 +1,424 @@
 import {
-
     ArrowLeft,
-
     Send,
-
     Plus
-
 } from "lucide-react";
 
-import { useEffect, useRef, useState } from "react";
+import {
+    useEffect,
+    useRef,
+    useState
+} from "react";
 
 import "../Styles/AppLayout.css";
 import "../Styles/Psicologia.css";
 import "../Styles/AsistenteIA.css";
 
-import SelectorAlumno from "../components/SelectorAlumno";
-import { preguntarANeuri } from "../ai/neuriService";
-import { supabase } from "../services/supabase";
-import fondoPsicologia from "../assets/fondo-psicologia.jpg";
-import neuriCerebro from "../assets/neuri-cerebro.png";
+import {
+    preguntarANeuri
+} from "../ai/neuriService";
+
+import fondoPsicologia
+    from "../assets/fondo-psicologia.jpg";
+
+import neuriCerebro
+    from "../assets/neuri-cerebro.png";
 
 
 export default function AsistenteIA({
 
     cambiarPantalla
 
-}){
+}) {
 
-    const inputRef = useRef(null);
+    const inputRef =
+        useRef(null);
+
+    const mensajesRef =
+        useRef(null);
+
+
+    const [
+
+        mensaje,
+
+        setMensaje
+
+    ] = useState("");
+
+
+    const [
+
+        pensando,
+
+        setPensando
+
+    ] = useState(false);
+
+
+    /*
+     * ID ÚNICO DE LA CONVERSACIÓN
+     *
+     * Se mantiene mientras el chat
+     * permanezca abierto.
+     */
+
+    const [
+
+        chatId
+
+    ] = useState(
+
+        () =>
+
+            crypto.randomUUID()
+
+    );
+
+
+    const [
+
+        mensajes,
+
+        setMensajes
+
+    ] = useState([
+
+        {
+
+            id: crypto.randomUUID(),
+
+            tipo: "ia",
+
+            texto:
+                "Hola. ¿En qué puedo ayudarte?"
+
+        }
+
+    ]);
+
+
+    /*
+     * AJUSTE PARA TECLADO MÓVIL
+     */
 
     useEffect(() => {
 
-        const viewport = window.visualViewport;
+        const viewport =
+            window.visualViewport;
 
-        if (!viewport) return;
+        if (!viewport) {
+
+            return;
+
+        }
+
 
         const ajustarPantalla = () => {
 
             const diferencia =
-                window.innerHeight - viewport.height;
 
-            document.documentElement.style.setProperty(
-                "--teclado-altura",
-                `${diferencia}px`
-            );
+                window.innerHeight -
+
+                viewport.height;
+
+
+            document.documentElement.style
+                .setProperty(
+
+                    "--teclado-altura",
+
+                    `${diferencia}px`
+
+                );
 
         };
 
-        viewport.addEventListener(
-            "resize",
-            ajustarPantalla
-        );
 
         viewport.addEventListener(
-            "scroll",
+
+            "resize",
+
             ajustarPantalla
+
         );
+
+
+        viewport.addEventListener(
+
+            "scroll",
+
+            ajustarPantalla
+
+        );
+
 
         ajustarPantalla();
+
 
         return () => {
 
             viewport.removeEventListener(
+
                 "resize",
+
                 ajustarPantalla
+
             );
 
+
             viewport.removeEventListener(
+
                 "scroll",
+
                 ajustarPantalla
+
             );
 
         };
 
     }, []);
 
-    const [mensaje, setMensaje] = useState("");
 
-    const [pensando, setPensando] = useState(false);
+    /*
+     * MANTENER EL CHAT EN LA RESPUESTA
+     *
+     * Cuando llega una nueva respuesta,
+     * mostramos el inicio de esa respuesta.
+     */
 
-    const [
+    useEffect(() => {
 
-        alumnoSeleccionado,
+        if (
 
-        setAlumnoSeleccionado
+            mensajes.length <= 1
 
-    ] = useState(null);
+        ) {
 
-    const [mensajes, setMensajes] = useState([
-
-        {
-
-            id:1,
-
-            tipo:"ia",
-
-            texto:
-
-            "Hola. Soy Neuri. Estoy aquí para ayudarte a analizar la información de tus estudiantes y pensar juntos en estrategias de acompañamiento."
+            return;
 
         }
 
-    ]);
 
-    const mensajesRef = useRef(null);
+        const ultimoMensaje =
 
+            mensajes[
 
-    useEffect(()=>{
+                mensajes.length - 1
 
-        if(mensajesRef.current){
-
-            mensajesRef.current.scrollTop =
-
-                mensajesRef.current.scrollHeight;
-
-        }
-
-    },[mensajes]);
+            ];
 
 
-    const enviarMensaje = async () => {
+        const elemento =
 
-    if (
-        !mensaje.trim() ||
-        pensando
-    ) {
+            document.getElementById(
 
-        return;
+                `mensaje-${ultimoMensaje.id}`
 
-    }
+            );
 
-    const textoUsuario =
-        mensaje.trim();
 
-    setMensaje("");
+        if (elemento) {
 
-    setPensando(true);
+            elemento.scrollIntoView({
 
-    // ============================================
-    // MOSTRAR MENSAJE DEL USUARIO
-    // ============================================
+                behavior: "smooth",
 
-    setMensajes(anterior => [
-
-        ...anterior,
-
-        {
-
-            id: Date.now(),
-
-            tipo: "usuario",
-
-            texto: textoUsuario
-
-        }
-
-    ]);
-
-    // ============================================
-    // VALIDAR ALUMNO
-    // ============================================
-
-    if (!alumnoSeleccionado) {
-
-        setMensajes(anterior => [
-
-            ...anterior,
-
-            {
-
-                id: Date.now() + 1,
-
-                tipo: "ia",
-
-                texto:
-                    "Selecciona un alumno antes de hacer una consulta sobre su información."
-
-            }
-
-        ]);
-
-        setPensando(false);
-
-        return;
-
-    }
-
-    try {
-
-        const respuestaNeuri =
-            await preguntarANeuri({
-
-                mensaje:
-                    textoUsuario,
-
-                alumnoId:
-                    alumnoSeleccionado.id
+                block: "start"
 
             });
 
-        setMensajes(anterior => [
+        }
 
-            ...anterior,
+    }, [mensajes]);
 
-            {
 
-                id: Date.now() + 1,
+    /*
+     * ENVIAR MENSAJE
+     */
 
-                tipo: "ia",
+    const enviarMensaje = async () => {
 
-                texto:
-                    respuestaNeuri
+        const textoUsuario =
 
-            }
+            mensaje.trim();
 
-        ]);
 
-    }
+        if (
 
-    catch (error) {
+            !textoUsuario ||
 
-        console.error(
+            pensando
 
-            "ERROR COMPLETO DE NEURI:",
+        ) {
 
-            error
+            return;
+
+        }
+
+
+        const idUsuario =
+
+            crypto.randomUUID();
+
+
+        setMensaje("");
+
+
+        setPensando(true);
+
+
+        setMensajes(
+
+            anterior => [
+
+                ...anterior,
+
+                {
+
+                    id: idUsuario,
+
+                    tipo: "usuario",
+
+                    texto: textoUsuario
+
+                }
+
+            ]
 
         );
 
-        setMensajes(anterior => [
 
-            ...anterior,
-
-            {
-
-                id: Date.now() + 1,
-
-                tipo: "ia",
-
-                texto:
-
-                    `Error: ${error.message}`
-
-            }
-
-        ]);
-
-    }
-
-    finally {
-
-        setPensando(false);
-
-    }
-
-};
+        try {
 
 
-    const manejarTecla = (e)=>{
+            /*
+             * ENVIAMOS EL chatId
+             *
+             * Esto permite que Neuri
+             * recuerde el alumno actual.
+             */
 
-        if(e.key === "Enter"){
+            const respuestaNeuri =
+
+                await preguntarANeuri({
+
+                    mensaje:
+
+                        textoUsuario,
+
+                    chatId
+
+                });
+
+
+            const textoRespuesta =
+
+                typeof respuestaNeuri === "string"
+
+                    ? respuestaNeuri
+
+                    : JSON.stringify(
+
+                        respuestaNeuri
+
+                    );
+
+
+            setMensajes(
+
+                anterior => [
+
+                    ...anterior,
+
+                    {
+
+                        id:
+
+                            crypto.randomUUID(),
+
+                        tipo: "ia",
+
+                        texto:
+
+                            textoRespuesta
+
+                    }
+
+                ]
+
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+
+                "ERROR COMPLETO DE NEURI:",
+
+                error
+
+            );
+
+
+            const mensajeError =
+
+                error instanceof Error
+
+                    ? error.message
+
+                    : "No fue posible conectar con Neuri.";
+
+
+            setMensajes(
+
+                anterior => [
+
+                    ...anterior,
+
+                    {
+
+                        id:
+
+                            crypto.randomUUID(),
+
+                        tipo: "ia",
+
+                        texto:
+
+                            mensajeError
+
+                    }
+
+                ]
+
+            );
+
+        }
+
+        finally {
+
+            setPensando(false);
+
+        }
+
+    };
+
+
+    /*
+     * ENTER PARA ENVIAR
+     */
+
+    const manejarTecla = (e) => {
+
+        if (
+
+            e.key === "Enter" &&
+
+            !e.shiftKey
+
+        ) {
 
             e.preventDefault();
 
@@ -270,7 +429,52 @@ export default function AsistenteIA({
     };
 
 
-    return(
+    /*
+     * RENDERIZAR TEXTO
+     *
+     * Evitamos errores si el texto
+     * no llega como string.
+     */
+
+    const renderizarTexto = (texto) => {
+
+        const textoSeguro =
+
+            typeof texto === "string"
+
+                ? texto
+
+                : String(texto ?? "");
+
+
+        return textoSeguro
+
+            .split("\n")
+
+            .map(
+
+                (linea, indice) => (
+
+                    <span
+
+                        key={indice}
+
+                    >
+
+                        {linea}
+
+                        <br />
+
+                    </span>
+
+                )
+
+            );
+
+    };
+
+
+    return (
 
         <>
 
@@ -282,7 +486,7 @@ export default function AsistenteIA({
 
                     backgroundImage:
 
-                    `url(${fondoPsicologia})`
+                        `url(${fondoPsicologia})`
 
                 }}
 
@@ -291,7 +495,14 @@ export default function AsistenteIA({
 
             <div className="ps-app">
 
-                <div className="ps-container asistente-container">
+
+                <div
+
+                    className=
+
+                        "ps-container asistente-container"
+
+                >
 
 
                     <div className="chat-header">
@@ -299,29 +510,55 @@ export default function AsistenteIA({
 
                         <button
 
-                            className="chat-back-btn"
+                            className=
 
-                            onClick={()=>{
+                                "chat-back-btn"
 
-                                cambiarPantalla("psicologia");
+                            onClick={() =>
 
-                            }}
+                                cambiarPantalla(
+
+                                    "psicologia"
+
+                                )
+
+                            }
 
                         >
 
-                            <ArrowLeft size={22}/>
+                            <ArrowLeft
+
+                                size={22}
+
+                            />
 
                         </button>
 
 
-                        <div className="chat-header-info">
+                        <div
+
+                            className=
+
+                                "chat-header-info"
+
+                        >
 
 
-                            <div className="chat-avatar">
+                            <div
+
+                                className=
+
+                                    "chat-avatar"
+
+                            >
 
                                 <img
 
-                                    src={neuriCerebro}
+                                    src={
+
+                                        neuriCerebro
+
+                                    }
 
                                     alt="Neuri"
 
@@ -332,11 +569,13 @@ export default function AsistenteIA({
 
                             <div>
 
+
                                 <h1>
 
                                     Neuri
 
                                 </h1>
+
 
                                 <p>
 
@@ -346,11 +585,16 @@ export default function AsistenteIA({
 
                             </div>
 
-
                         </div>
 
 
-                        <div className="neuri-online">
+                        <div
+
+                            className=
+
+                                "neuri-online"
+
+                        >
 
                             <span></span>
 
@@ -361,35 +605,42 @@ export default function AsistenteIA({
 
                     </div>
 
-                    <SelectorAlumno
-
-                        alumnoSeleccionado={
-                            alumnoSeleccionado
-                        }
-
-                        setAlumnoSeleccionado={
-                            setAlumnoSeleccionado
-                        }
-
-                    />
-
 
                     <div
 
-                        className="chat-mensajes"
+                        className=
+
+                            "chat-mensajes"
 
                         ref={mensajesRef}
 
                     >
 
 
-                        <div className="chat-bienvenida">
+                        <div
 
-                            <div className="bienvenida-avatar">
+                            className=
+
+                                "chat-bienvenida"
+
+                        >
+
+
+                            <div
+
+                                className=
+
+                                    "bienvenida-avatar"
+
+                            >
 
                                 <img
 
-                                    src={neuriCerebro}
+                                    src={
+
+                                        neuriCerebro
+
+                                    }
 
                                     alt="Neuri"
 
@@ -400,87 +651,166 @@ export default function AsistenteIA({
 
                             <h2>
 
-                                Hola, soy Neuri
+                                Soy Neuri
 
                             </h2>
 
-
-                            <p>
-
-                                Tu asistente de apoyo para Psicología Escolar.
-
-                            </p>
-
-
-                            <span>
-
-                                Podemos analizar juntos la información de tus estudiantes.
-
-                            </span>
 
                         </div>
 
 
                         {
 
-                            mensajes.map((m)=> (
+                            mensajes.map(
+
+                                (m) => (
+
+                                    <div
+
+                                        key={m.id}
+
+                                        id={
+
+                                            `mensaje-${m.id}`
+
+                                        }
+
+                                        className={
+
+                                            `mensaje ${
+
+                                                m.tipo ===
+
+                                                "usuario"
+
+                                                    ?
+
+                                                    "mensaje-usuario"
+
+                                                    :
+
+                                                    "mensaje-ia"
+
+                                            }`
+
+                                        }
+
+                                    >
+
+
+                                        {
+
+                                            m.tipo ===
+
+                                            "ia" && (
+
+                                                <div
+
+                                                    className=
+
+                                                        "mensaje-avatar"
+
+                                                >
+
+                                                    <img
+
+                                                        src={
+
+                                                            neuriCerebro
+
+                                                        }
+
+                                                        alt="Neuri"
+
+                                                    />
+
+                                                </div>
+
+                                            )
+
+                                        }
+
+
+                                        <div
+
+                                            className=
+
+                                                "burbuja"
+
+                                        >
+
+                                            {
+
+                                                renderizarTexto(
+
+                                                    m.texto
+
+                                                )
+
+                                            }
+
+                                        </div>
+
+
+                                    </div>
+
+                                )
+
+                            )
+
+                        }
+
+
+                        {
+
+                            pensando && (
 
                                 <div
 
-                                    key={m.id}
+                                    className=
 
-                                    className={
-
-                                        `mensaje ${
-
-                                            m.tipo === "usuario"
-
-                                            ?
-
-                                            "mensaje-usuario"
-
-                                            :
-
-                                            "mensaje-ia"
-
-                                        }`
-
-                                    }
+                                        "mensaje mensaje-ia"
 
                                 >
 
+                                    <div
 
-                                    {
+                                        className=
 
-                                        m.tipo === "ia" && (
+                                            "mensaje-avatar"
 
-                                            <div className="mensaje-avatar">
+                                    >
 
-                                                <img
+                                        <img
 
-                                                    src={neuriCerebro}
+                                            src={
 
-                                                    alt="Neuri"
+                                                neuriCerebro
 
-                                                />
+                                            }
 
-                                            </div>
+                                            alt="Neuri"
 
-                                        )
-
-                                    }
-
-
-                                    <div className="burbuja">
-
-                                        {m.texto}
+                                        />
 
                                     </div>
 
 
+                                    <div
+
+                                        className=
+
+                                            "burbuja"
+
+                                    >
+
+                                        Estoy pensando...
+
+                                    </div>
+
                                 </div>
 
-                            ))
+                            )
 
                         }
 
@@ -488,23 +818,33 @@ export default function AsistenteIA({
                     </div>
 
 
-                    <div className="chat-input-container">
+                    <div
+
+                        className=
+
+                            "chat-input-container"
+
+                    >
 
 
                         <button
 
-                            className="chat-plus-btn"
+                            className=
+
+                                "chat-plus-btn"
 
                             type="button"
 
                         >
 
-                            <Plus size={20}/>
+                            <Plus size={20} />
 
                         </button>
 
 
                         <input
+
+                            ref={inputRef}
 
                             type="text"
 
@@ -512,30 +852,50 @@ export default function AsistenteIA({
 
                             enterKeyHint="send"
 
-                            placeholder="Escribe un mensaje..."
+                            placeholder=
+
+                                "Escribe un mensaje..."
 
                             value={mensaje}
 
-                            onChange={(e)=>
+                            onChange={(e) =>
 
-                                setMensaje(e.target.value)
+                                setMensaje(
+
+                                    e.target.value
+
+                                )
 
                             }
 
-                            onKeyDown={manejarTecla}
+                            onKeyDown={
+
+                                manejarTecla
+
+                            }
+
+                            disabled={pensando}
 
                         />
 
 
                         <button
 
-                            className="chat-send-btn"
+                            className=
 
-                            onClick={enviarMensaje}
+                                "chat-send-btn"
+
+                            onClick={
+
+                                enviarMensaje
+
+                            }
+
+                            disabled={pensando}
 
                         >
 
-                            <Send size={20}/>
+                            <Send size={20} />
 
                         </button>
 

@@ -1,100 +1,74 @@
 import { supabase } from "../services/supabase";
 
-const FUNCTION_URL =
-    "https://aolwnnymiepciaehkhgo.supabase.co/functions/v1/smooth-action";
-
 export async function preguntarANeuri({
 
     mensaje,
 
-    alumnoId = null
+    alumnoId = null,
+
+    chatId = null
 
 }) {
 
-    console.log("NEURI: iniciando petición");
+    const {
 
-    const respuesta = await fetch(
+        data,
 
-        FUNCTION_URL,
+        error
+
+    } = await supabase.functions.invoke(
+
+        "smooth-action",
 
         {
 
-            method: "POST",
-
-            headers: {
-
-                "Content-Type":
-                    "application/json",
-
-                apikey:
-                    supabase.supabaseKey
-
-            },
-
-            body: JSON.stringify({
+            body: {
 
                 mensaje,
 
-                alumnoId
+                alumnoId,
 
-            })
+                chatId
+
+            }
 
         }
 
     );
 
-    console.log(
-        "NEURI: status HTTP",
-        respuesta.status
+
+    if (error) {
+
+        throw new Error(
+
+            error.message ||
+
+            "Error conectando con Neuri."
+
+        );
+
+    }
+
+
+    if (!data) {
+
+        throw new Error(
+
+            "Neuri no devolvió una respuesta."
+
+        );
+
+    }
+
+
+    return (
+
+        data.respuesta ||
+
+        data.message ||
+
+        "No pude generar una respuesta."
+
     );
-
-    const texto =
-        await respuesta.text();
-
-    console.log(
-        "NEURI: respuesta cruda",
-        texto
-    );
-
-    let datos;
-
-    try {
-
-        datos =
-            JSON.parse(texto);
-
-    }
-
-    catch {
-
-        throw new Error(
-            "La respuesta del servidor no es JSON."
-        );
-
-    }
-
-    if (!respuesta.ok) {
-
-        throw new Error(
-
-            datos?.error ||
-
-            datos?.message ||
-
-            `Error HTTP ${respuesta.status}`
-
-        );
-
-    }
-
-    if (!datos.respuesta) {
-
-        throw new Error(
-            "La función no devolvió respuesta."
-        );
-
-    }
-
-    return datos.respuesta;
 
 }
