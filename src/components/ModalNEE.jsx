@@ -5,30 +5,48 @@ export default function ModalNEE({
     abierto,
     cerrar,
     guardar,
-    neeActual
+    nee
 }) {
 
     const [diagnostico, setDiagnostico] = useState("");
     const [nivel, setNivel] = useState("Leve");
     const [observaciones, setObservaciones] = useState("");
 
-    useEffect(() => {
+    useEffect(()=>{
 
-        if (neeActual) {
+        if(nee){
 
-            setDiagnostico(neeActual.diagnostico || "");
-            setNivel(neeActual.nivel || "Leve");
-            setObservaciones(neeActual.observaciones || "");
+            setDiagnostico(
 
-        } else {
+                nee.diagnostico || ""
+
+            );
+
+            setNivel(
+
+                nee.nivel || "Leve"
+
+            );
+
+            setObservaciones(
+
+                nee.observaciones || ""
+
+            );
+
+        }
+
+        else{
 
             setDiagnostico("");
+
             setNivel("Leve");
+
             setObservaciones("");
 
         }
 
-    }, [neeActual, abierto]);
+    },[nee,abierto]);
 
     if (!abierto) return null;
 
@@ -40,7 +58,19 @@ export default function ModalNEE({
 
                 <h2>
 
-                    Necesidad Educativa Especial
+                    {
+
+                        nee
+
+                        ?
+
+                        "Editar NEE"
+
+                        :
+
+                        "Nueva NEE"
+
+                    }
 
                 </h2>
 
@@ -50,6 +80,24 @@ export default function ModalNEE({
                     value={diagnostico}
                     onChange={(e)=>setDiagnostico(e.target.value)}
                     placeholder="Ej. TDAH"
+                    onKeyDown={(e)=>{
+
+                        if(e.key==="Enter"){
+
+                            guardar({
+
+                                diagnostico:diagnostico.trim(),
+
+                                nivel,
+
+                                observaciones:observaciones.trim()
+
+                            });
+
+                        }
+
+                    }}
+                    autoFocus
                 />
 
                 <label>Nivel</label>
@@ -88,15 +136,42 @@ export default function ModalNEE({
                     </button>
 
                     <button
+
+                        type="button"
+
                         className="btn-guardar"
-                        onClick={()=>guardar({
-                            diagnostico,
-                            nivel,
-                            observaciones
-                        })}
+
+                        onClick={()=>{
+
+                            if(!diagnostico.trim()) return;
+
+                            guardar({
+
+                                diagnostico:diagnostico.trim(),
+
+                                nivel,
+
+                                observaciones:observaciones.trim()
+
+                            });
+
+                        }}
+
                     >
 
-                        Guardar
+                        {
+
+                            nee
+
+                            ?
+
+                            "Actualizar"
+
+                            :
+
+                            "Guardar"
+
+                        }
 
                     </button>
 

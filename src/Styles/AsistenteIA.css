@@ -588,16 +588,6 @@
 
 }
 
-.ps-app{
-
-    height:105dvh;
-
-    min-height:0;
-
-    overflow:hidden;
-
-}
-
 .asistente-container{
 
     height:100%;
@@ -652,7 +642,7 @@
 
     .asistente-container{
 
-        height:100dvh;
+        flex:1;
 
         padding-bottom:0;
 

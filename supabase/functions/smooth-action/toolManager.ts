@@ -1,34 +1,59 @@
-import { analizarIntencion } from "./intentAnalyzer.ts";
+import {
+
+    analizarIntencion
+
+} from "./intentAnalyzer.ts";
+
 
 export function seleccionarHerramientas(
 
     mensaje: string
 
-){
+) {
 
-    const i = analizarIntencion(mensaje);
+
+    const i =
+
+        analizarIntencion(
+
+            mensaje
+
+        );
+
 
     return {
 
+
         alumno: true,
+
 
         notas:
 
+            i.notas ||
+
             i.resumen ||
 
-            i.riesgo ||
+            i.perfil ||
 
-            i.estrategias ||
+            i.rendimiento ||
 
             i.progreso ||
 
-            i.emociones,
+            i.estrategias ||
+
+            i.recomendaciones,
+
 
         citas:
 
             i.citas ||
 
-            i.seguimiento,
+            i.seguimiento ||
+
+            i.historial ||
+
+            i.resumen,
+
 
         expediente:
 
@@ -36,15 +61,40 @@ export function seleccionarHerramientas(
 
             i.informe,
 
+
         timeline:
 
             i.historial ||
 
+            i.seguimiento ||
+
+            i.progreso ||
+
             i.resumen,
+
 
         dashboard:
 
-            i.dashboard
+            i.dashboard ||
+
+            i.estadisticas,
+
+
+        analisis:
+
+            i.riesgo ||
+
+            i.emociones ||
+
+            i.progreso ||
+
+            i.estrategias ||
+
+            i.recomendaciones ||
+
+            i.intervenciones ||
+
+            i.resumen
 
     };
 

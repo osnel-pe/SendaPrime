@@ -1,0 +1,101 @@
+.vista-nee{
+
+    width:min(95vw,520px);
+
+    background:white;
+
+    border-radius:26px;
+
+    overflow:hidden;
+
+}
+
+.vista-header{
+
+    height:68px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    padding:0 18px;
+
+    background:#23954E;
+
+    color:white;
+
+}
+
+.vista-header h2{
+
+    margin:0;
+
+    font-size:21px;
+
+    font-weight:700;
+
+}
+
+.vista-btn{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.18);
+
+    color:white;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+}
+
+.vista-body{
+
+    padding:24px;
+
+}
+
+.vista-campo{
+
+    margin-bottom:22px;
+
+}
+
+.vista-campo label{
+
+    display:block;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    color:#23954E;
+
+    margin-bottom:6px;
+
+}
+
+.vista-campo p{
+
+    margin:0;
+
+    white-space:pre-wrap;
+
+    color:#333;
+
+    line-height:1.55;
+
+}

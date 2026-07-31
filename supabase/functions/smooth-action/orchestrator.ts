@@ -1,259 +1,181 @@
-import { buscarAlumno } from "./buscarAlumno.ts";
 import { construirContexto } from "./contextBuilder.ts";
 import { analizarAlumno } from "./analysisEngine.ts";
 import { construirPrompt } from "./promptBuilder.ts";
 import { preguntarGroq } from "./groq.ts";
 
+import { resolverAlumno } from "./resolverAlumno.ts";
+
+import { responderDirectamente } from "./responseEngine.ts";
+
 import {
+
     obtenerContexto,
+
     guardarContexto
+
 } from "./memory.ts";
 
 import {
-    seleccionarAlumnoPorTexto,
+
     obtenerNombreCompleto
+
 } from "./seleccionAlumno.ts";
 
-import type { Alumno } from "./types.ts";
+import type {
 
-type EjecutarNeuriParams = {
-    mensaje: string;
-    alumnoId?: string | null;
-    chatId?: string | null;
+    Alumno
+
+} from "./types.ts";
+
+import {
+
+    ejecutarTools
+
+} from "./toolExecutor.ts";
+
+type EjecutarNeuriParams={
+
+    mensaje:string;
+
+    alumnoId?:string|null;
+
+    chatId?:string|null;
+
 };
 
 
 export async function ejecutarNeuri({
+
     mensaje,
+
     alumnoId,
+
     chatId
-}: EjecutarNeuriParams) {
 
-    const texto = mensaje.trim();
+}:EjecutarNeuriParams){
 
-    if (!texto) {
+    const texto=
+
+        mensaje.trim();
+
+    if(!texto){
+
         throw new Error(
+
             "El mensaje no puede estar vacío."
-        );
-    }
 
-
-    let alumno: Alumno | null = null;
-
-    let memoriaAnterior: any = null;
-
-
-    /*
-     * 1. RECUPERAR MEMORIA
-     */
-
-    if (chatId) {
-
-        memoriaAnterior =
-            await obtenerContexto(chatId);
-
-    }
-
-
-    /*
-     * 2. SELECCIONAR ALUMNO PENDIENTE
-     */
-
-    if (
-
-        memoriaAnterior &&
-
-        Array.isArray(
-            memoriaAnterior.alumnosPendientes
-        ) &&
-
-        memoriaAnterior.alumnosPendientes.length > 0
-
-    ) {
-
-        const alumnoSeleccionado =
-            seleccionarAlumnoPorTexto(
-                memoriaAnterior.alumnosPendientes,
-                texto
-            );
-
-        if (alumnoSeleccionado) {
-
-            alumno =
-                alumnoSeleccionado as Alumno;
-
-            console.log(
-                "ALUMNO SELECCIONADO:",
-                obtenerNombreCompleto(alumno)
-            );
-
-        }
-
-    }
-
-
-    /*
-     * 3. BUSCAR POR ID
-     */
-
-    if (!alumno && alumnoId) {
-
-        const resultadoPorId =
-            await buscarAlumno({
-                alumnoId: alumnoId
-            });
-
-        if (
-
-            resultadoPorId &&
-
-            resultadoPorId.estado === "unico" &&
-
-            resultadoPorId.alumno
-
-        ) {
-
-            alumno =
-                resultadoPorId.alumno as Alumno;
-
-        }
-
-    }
-
-
-    /*
-     * 4. RECUPERAR ALUMNO ACTUAL DE LA MEMORIA
-     *
-     * Esto permite:
-     *
-     * Usuario:
-     * ¿Cómo está Francisco?
-     *
-     * Después:
-     * ¿Cuáles son sus citas?
-     *
-     */
-
-    if (
-
-        !alumno &&
-
-        memoriaAnterior &&
-
-        memoriaAnterior.alumnoActual
-
-    ) {
-
-        alumno =
-            memoriaAnterior.alumnoActual as Alumno;
-
-        console.log(
-            "ALUMNO RECUPERADO DE MEMORIA:",
-            obtenerNombreCompleto(alumno)
         );
 
     }
 
+    let memoriaAnterior:any=null;
 
-    /*
-     * 5. DETECTAR POSIBLE REFERENCIA A ALUMNO
-     */
+    if(chatId){
 
-    const pareceMencionarAlumno =
-        /\b(alumno|alumna|estudiante|niño|niña|joven|chico|chica|calificaciones|notas|expediente|riesgo|seguimiento|cita|citas|historial|progreso|conducta)\b/i.test(texto);
+        memoriaAnterior=
 
+            await obtenerContexto(
 
-    /*
-     * 6. BUSCAR ALUMNO NUEVO
-     */
+                chatId
 
-    if (
+            );
 
-        !alumno &&
+    }
 
-        pareceMencionarAlumno
+    const resultado=
 
-    ) {
+        await resolverAlumno({
 
-        const resultadoBusqueda =
-            await buscarAlumno({
-                mensaje: texto
-            });
+            texto,
 
+            alumnoId,
 
-        /*
-         * VARIOS ALUMNOS
-         */
+            chatId,
 
-        if (
+            memoriaAnterior
 
-            resultadoBusqueda &&
+        });
 
-            resultadoBusqueda.estado === "varios"
+    let alumno:Alumno|null=null;
 
-        ) {
+    switch(resultado.tipo){
 
-            const alumnos: Alumno[] =
-                resultadoBusqueda.alumnos || [];
+        case "seleccionado":{
 
+            alumno=
 
-            const nombres =
+                resultado.alumno ?? null;
+
+            if(!alumno){
+
+                break;
+
+            }
+
+            return{
+
+                respuesta:
+
+                    `Perfecto.\n\nTrabajaré con ${obtenerNombreCompleto(alumno)}${alumno.grupo?` (${alumno.grupo})`:""}.\n\n¿Qué deseas consultar sobre este alumno?`,
+
+                tipo:
+
+                    "alumno_seleccionado",
+
+                alumno
+
+            };
+
+        }
+
+        case "varios":{
+
+            const alumnos=
+
+                resultado.alumnos ?? [];
+
+            const lista=
+
                 alumnos.map(
-                    (
-                        estudiante,
-                        indice
-                    ) => {
 
-                        const nombre =
-                            obtenerNombreCompleto(
-                                estudiante
-                            );
+                    (a,i)=>
 
-                        const grupo =
-                            estudiante.grupo
-                                ? ` — Grupo ${estudiante.grupo}`
-                                : "";
+                        `${i+1}. ${obtenerNombreCompleto(a)}${a.grupo?` — Grupo ${a.grupo}`:""}`
 
-                        return (
-                            `${indice + 1}. ` +
-                            `${nombre}` +
-                            `${grupo}`
-                        );
-
-                    }
                 );
 
-
-            /*
-             * GUARDAR LISTA EN MEMORIA
-             */
-
-            if (chatId) {
+            if(chatId){
 
                 await guardarContexto(
+
                     chatId,
+
                     {
-                        ...(memoriaAnterior || {}),
 
-                        alumnoActual:
-                            null,
+                        ...(memoriaAnterior||{}),
 
-                        alumnosPendientes:
-                            alumnos
+                        alumnoActual:null,
+
+                        alumnosPendientes:alumnos
+
                     }
+
                 );
 
             }
 
-
-            return {
+            return{
 
                 respuesta:
-                    "Encontré varios alumnos que coinciden con tu solicitud:\n\n" +
-                    nombres.join("\n") +
-                    "\n\nIndícame el número, el nombre completo o los apellidos del alumno que deseas consultar.",
+
+                    "Encontré varios alumnos que coinciden:\n\n"+
+
+                    lista.join("\n")+
+
+                    "\n\nIndícame cuál deseas consultar.",
 
                 tipo:
+
                     "seleccion_alumno",
 
                 alumnos
@@ -262,85 +184,170 @@ export async function ejecutarNeuri({
 
         }
 
+        case "unico":
 
-        /*
-         * UN SOLO ALUMNO
-         */
+        case "memoria":{
 
-        if (
+            alumno=
 
-            resultadoBusqueda &&
+                resultado.alumno ?? null;
 
-            resultadoBusqueda.estado === "unico" &&
+            break;
 
-            resultadoBusqueda.alumno
+        }
 
-        ) {
+        case "ninguno":{
 
-            alumno =
-                resultadoBusqueda.alumno as Alumno;
+            const respuesta=
+
+                await preguntarGroq(`
+
+Eres Neuri.
+
+No pudiste identificar al alumno.
+
+Pide únicamente el nombre completo.
+
+Usuario:
+
+${texto}
+
+`);
+
+            return{
+
+                respuesta,
+
+                tipo:
+
+                    "conversacion_general"
+
+            };
 
         }
 
     }
 
+    if(!alumno){
 
-    /*
-     * 7. CONVERSACIÓN GENERAL
+        throw new Error(
+
+            "No fue posible identificar al alumno."
+
+        );
+
+    }
+
+    console.log("==============");
+
+    console.log(
+
+        obtenerNombreCompleto(
+
+            alumno
+
+        )
+
+    );
+
+    console.log(
+
+        alumno.id
+
+    );
+
+    console.log("==============");
+        /*
+     * =====================================
+     * CONSTRUIR CONTEXTO
+     * =====================================
      */
 
-    if (!alumno) {
+    const contexto =
 
-        const promptGeneral = `
+        await construirContexto(
 
-Eres Neuri, asistente especializado en Psicología Escolar.
+            alumno,
 
-Responde siempre en español.
+            texto
 
-Responde de forma clara, breve y profesional.
-
-Puedes responder preguntas generales sobre:
-
-- educación;
-- psicología escolar;
-- aprendizaje;
-- conducta;
-- convivencia;
-- desarrollo socioemocional;
-- orientación educativa;
-- estrategias psicopedagógicas.
-
-No inventes información sobre alumnos.
-
-No inventes expedientes, calificaciones, citas, notas, riesgos ni antecedentes.
-
-No emitas diagnósticos clínicos.
-
-Responde únicamente a la pregunta realizada.
-
-Si el usuario solicita información sobre un alumno específico
-y no existe un alumno identificado, solicita su nombre completo
-o sus apellidos.
-
-Pregunta del usuario:
-
-${texto}
-
-`;
+        );
 
 
-        const respuesta =
-            await preguntarGroq(
-                promptGeneral
+    /*
+     * =====================================
+     * RESPUESTA DIRECTA
+     * =====================================
+     */
+
+    const respuestaDirecta =
+
+    ejecutarTools(
+
+        texto,
+
+        contexto
+
+    )
+
+    ??
+
+    responderDirectamente(
+
+        texto,
+
+        contexto
+
+    );
+
+
+    if (
+
+        respuestaDirecta
+
+    ) {
+
+        if (
+
+            chatId
+
+        ) {
+
+            await guardarContexto(
+
+                chatId,
+
+                {
+
+                    ...(memoriaAnterior || {}),
+
+                    ...contexto,
+
+                    alumnoActual:
+
+                        alumno,
+
+                    alumnosPendientes: []
+
+                }
+
             );
 
+        }
 
         return {
 
-            respuesta,
+            respuesta:
+
+                respuestaDirecta,
+
+            alumno,
+
+            contexto,
 
             tipo:
-                "conversacion_general"
+
+                "respuesta_directa"
 
         };
 
@@ -348,62 +355,34 @@ ${texto}
 
 
     /*
-     * 8. IDENTIDAD DEL ALUMNO
-     */
-
-    console.log(
-        "===== NEURI ====="
-    );
-
-    console.log(
-        "ALUMNO IDENTIFICADO:",
-        obtenerNombreCompleto(alumno)
-    );
-
-    console.log(
-        "ID:",
-        alumno.id
-    );
-
-    console.log(
-        "GRUPO:",
-        alumno.grupo
-    );
-
-    console.log(
-        "================="
-    );
-
-
-    /*
-     * 9. CONSTRUIR CONTEXTO
-     */
-
-    const contexto =
-        await construirContexto(
-            alumno,
-            texto
-        );
-
-
-    /*
-     * 10. ANALIZAR ALUMNO
+     * =====================================
+     * ANÁLISIS DEL ALUMNO
+     * =====================================
      */
 
     const analisis =
+
         analizarAlumno(
+
             contexto
+
         );
-
-
-    /*
-     * 11. GUARDAR MEMORIA
+        /*
+     * =====================================
+     * GUARDAR MEMORIA
+     * =====================================
      */
 
-    if (chatId) {
+    if (
+
+        chatId
+
+    ) {
 
         await guardarContexto(
+
             chatId,
+
             {
 
                 ...(memoriaAnterior || {}),
@@ -411,25 +390,32 @@ ${texto}
                 ...contexto,
 
                 alumnoActual:
+
                     alumno,
 
                 alumnosPendientes:
+
                     []
 
             }
+
         );
 
     }
 
 
     /*
-     * 12. CONSTRUIR PROMPT
+     * =====================================
+     * CONSTRUIR PROMPT
+     * =====================================
      */
 
     const prompt =
+
         construirPrompt({
 
             mensaje:
+
                 texto,
 
             contexto,
@@ -440,17 +426,24 @@ ${texto}
 
 
     /*
-     * 13. CONSULTAR GROQ
+     * =====================================
+     * CONSULTAR IA
+     * =====================================
      */
 
     const respuesta =
+
         await preguntarGroq(
+
             prompt
+
         );
 
 
     /*
-     * 14. RESPUESTA FINAL
+     * =====================================
+     * RESPUESTA FINAL
+     * =====================================
      */
 
     return {
@@ -464,6 +457,7 @@ ${texto}
         analisis,
 
         tipo:
+
             "analisis_alumno"
 
     };

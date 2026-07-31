@@ -18,6 +18,8 @@ export default function ModalCita({
 
         fecha: "",
 
+        hora: "08:00",
+
         tipo: "Seguimiento",
 
         motivo: "",
@@ -38,7 +40,9 @@ export default function ModalCita({
 
                 fecha: citaActual.fecha || "",
 
-                tipo: citaActual.tipo || "Seguimiento",
+                hora: citaActual.hora || "08:00",
+
+                tipo: citaActual.tipo || "",
 
                 motivo: citaActual.motivo || "",
 
@@ -53,8 +57,12 @@ export default function ModalCita({
             setVista({
 
                 fecha: new Date()
+
                     .toISOString()
+
                     .split("T")[0],
+
+                hora: "08:00",
 
                 tipo: "Seguimiento",
 
@@ -74,15 +82,21 @@ export default function ModalCita({
 
     return (
 
-        <div className="modal-opciones">
+        <div className="modal-overlay">
 
-            <div className="modal-contenido modal-cita">
+            <div className="modal-nee">
 
                 <h2>
 
                     Seguimiento
 
                 </h2>
+
+                <label>
+
+                Fecha
+
+                </label>
 
                 <input
 
@@ -99,6 +113,38 @@ export default function ModalCita({
                     })}
 
                 />
+
+                <label>
+
+                Hora
+
+                </label>
+
+                <input
+
+                    type="time"
+
+                    value={vista.hora}
+
+                    onChange={(e)=>
+
+                        setVista({
+
+                            ...vista,
+
+                            hora:e.target.value
+
+                        })
+
+                    }
+
+                />
+
+                <label>
+
+                Tipo de seguimiento
+
+                </label>
 
                 <select
 
@@ -164,7 +210,7 @@ export default function ModalCita({
 
                 </select>
 
-                <label className="campo-label">
+                <label>
 
                     Motivo:
 
@@ -172,7 +218,7 @@ export default function ModalCita({
 
                 <textarea
 
-                    rows={1}
+                    rows={3}
 
                     value={vista.motivo}
 
@@ -186,7 +232,7 @@ export default function ModalCita({
 
                 />
 
-                <label className="campo-label">
+                <label>
 
                     Intervención realizada:
 
@@ -194,7 +240,7 @@ export default function ModalCita({
 
                 <textarea
 
-                    rows={5}
+                    rows={6}
 
                     value={vista.intervencion}
 
@@ -208,7 +254,7 @@ export default function ModalCita({
 
                 />
 
-                <label className="campo-label">
+                <label>
 
                     Acuerdos:
 
@@ -216,7 +262,7 @@ export default function ModalCita({
 
                 <textarea
 
-                    rows={5}
+                    rows={6}
 
                     value={vista.acuerdos}
 

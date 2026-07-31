@@ -14,7 +14,7 @@ import "../Styles/AppLayout.css";
 import "../Styles/Psicologia.css";
 import "../Styles/AsistenteIA.css";
 
-import {
+import { 
     preguntarANeuri
 } from "../ai/neuriService";
 
@@ -298,7 +298,6 @@ export default function AsistenteIA({
              * Esto permite que Neuri
              * recuerde el alumno actual.
              */
-
             const respuestaNeuri =
 
                 await preguntarANeuri({

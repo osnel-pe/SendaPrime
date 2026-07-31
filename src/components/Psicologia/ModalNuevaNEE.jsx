@@ -36,11 +36,53 @@ useEffect(()=>{
 
     if(!abierto) return;
 
-    setDatos(inicial);
+    if(neeActual){
 
-    setBuscar("");
+        setDatos({
 
-},[abierto]);
+            alumno_id:neeActual.alumno_id || "",
+
+            diagnostico:neeActual.diagnostico || "",
+
+            nivel:neeActual.nivel || "Leve",
+
+            observaciones:neeActual.observaciones || ""
+
+        });
+
+        const alumnoSeleccionado=students.find(
+
+            a=>a.id===neeActual.alumno_id
+
+        );
+
+        if(alumnoSeleccionado){
+
+            setBuscar(
+
+                `${alumnoSeleccionado.nombre} ${alumnoSeleccionado.apellido_paterno} ${alumnoSeleccionado.apellido_materno}`
+
+            );
+
+        }
+
+    }
+
+    else{
+
+        setDatos({
+
+            ...inicial,
+
+            nivel:"Leve"
+
+        });
+
+        setBuscar("");
+
+    }
+
+},[abierto,neeActual,students]);
 
 if(!abierto) return null;
 
@@ -64,9 +106,8 @@ return nombre.includes(normalizar(buscar));
 
 return createPortal(
 
-<div className="modal-opciones">
-
-<div className="modal-contenido modal-cita">
+<div className="modal-overlay">
+    <div className="modal-nee">
 
 <h2>Nueva NEE</h2>
 
@@ -74,19 +115,31 @@ return createPortal(
 
 <input
 
-placeholder="Buscar alumno..."
+    placeholder="Buscar alumno..."
 
-value={buscar}
+    value={buscar}
 
-onFocus={()=>setMostrar(true)}
+    onFocus={()=>setMostrar(true)}
 
-onChange={(e)=>{
+    onBlur={()=>
 
-setBuscar(e.target.value);
+        setTimeout(
 
-setMostrar(true);
+            ()=>setMostrar(false),
 
-}}
+            150
+
+        )
+
+    }
+
+    onChange={(e)=>{
+
+        setBuscar(e.target.value);
+
+        setMostrar(true);
+
+    }}
 
 />
 
@@ -172,19 +225,43 @@ diagnostico:e.target.value
 
 <label>Nivel</label>
 
-<input
+<select
 
-value={datos.nivel}
+    value={datos.nivel}
 
-onChange={(e)=>setDatos({
+    onChange={(e)=>
 
-...datos,
+        setDatos({
 
-nivel:e.target.value
+            ...datos,
 
-})}
+            nivel:e.target.value
 
-/>
+        })
+
+    }
+
+>
+
+    <option>
+
+        Leve
+
+    </option>
+
+    <option>
+
+        Moderado
+
+    </option>
+
+    <option>
+
+        Severo
+
+    </option>
+
+</select>
 
 <label>Observaciones</label>
 
@@ -222,7 +299,35 @@ Cancelar
 
 className="btn-guardar"
 
-onClick={()=>guardar(datos)}
+onClick={()=>{
+
+    if(!datos.alumno_id){
+
+        alert("Selecciona un alumno.");
+
+        return;
+
+    }
+
+    if(!datos.diagnostico.trim()){
+
+        alert("Escribe un diagnóstico.");
+
+        return;
+
+    }
+
+    guardar({
+
+        ...datos,
+
+        diagnostico:datos.diagnostico.trim(),
+
+        observaciones:datos.observaciones.trim()
+
+    });
+
+}}
 
 >
 

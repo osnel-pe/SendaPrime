@@ -2,82 +2,256 @@ import "../Styles/AppLayout.css";
 import "../Styles/Psicologia.css";
 import "../Styles/Notas.css";
 
-import fondoPsicologia from "../assets/fondo-psicologia.jpg";
+import { useEffect, useState } from "react";
 
 import {
-
-ArrowLeft,
-House,
-Search,
-Plus,
-Pencil,
-Trash2,
-Pin
-
+    Search,
+    Plus,
+    Pencil,
+    Trash2,
+    Pin,
+    User,
+    Users
 } from "lucide-react";
 
-import {useEffect,useState} from "react";
+import fondoPsicologia from "../assets/fondo-psicologia.jpg";
 
-import {supabase} from "../services/supabase";
+import { supabase } from "../services/supabase";
 
 import ModalNota from "../components/Psicologia/ModalNota";
 
+import VistaDetalleNota from "../components/Psicologia/VistaDetalleNota";
+
+
 export default function Notas({
 
-students,
+    students = [],
 
-cambiarPantalla
+    cambiarPantalla,
+
+    embebido = false
 
 }){
 
-const [tipo,setTipo]=useState("individual");
 
-const [notas,setNotas]=useState([]);
+    /* ==========================================
+       ESTADOS
+    ========================================== */
 
-const [buscar,setBuscar]=useState("");
+    const [buscar,setBuscar] = useState("");
 
-const [modal,setModal]=useState(false);
+    const [modal,setModal] = useState(false);
 
-const [notaEditar,setNotaEditar]=useState(null);
+    const [notas,setNotas] = useState([]);
 
-const [notaEliminar,setNotaEliminar]=useState(null);
+    const [notaEditar,setNotaEditar] = useState(null);
 
-const [notaVista,setNotaVista]=useState(null);
+    const [notaEliminar,setNotaEliminar] = useState(null);
 
-const cargarNotas=async()=>{
+    const [notaVista,setNotaVista] = useState(null);
+    console.log("NOTA VISTA:", notaVista);
 
-const {data,error}=await supabase
+    /* ==========================================
+       CARGAR NOTAS
+    ========================================== */
 
-.from("notas_psicologia")
+    const cargarNotas = async () => {
 
-.select("*")
-.order("fijada",{ascending:false})
-.order("created_at",{ascending:false});
+        const { data, error } = await supabase
 
-if(error){
+            .from("notas_psicologia")
 
-console.log(error);
+            .select("*")
 
-return;
+            .order("fijada",{ ascending:false })
 
-}
-
-setNotas(data || []);
-
-};
-
-useEffect(()=>{
-
-cargarNotas();
-
-},[]);
-
-const guardarNota = async (datos) => {
-
-    console.log("DATOS QUE SE VAN A GUARDAR:", datos);
+            .order("created_at",{ ascending:false });
 
 
-    if (notaEditar) {
+        if(error){
+
+            console.error(
+
+                "Error cargando notas:",
+
+                error
+
+            );
+
+            return;
+
+        }
+
+
+        setNotas(data || []);
+
+    };
+
+
+    /* ==========================================
+       CARGAR AL INICIAR
+    ========================================== */
+
+    useEffect(()=>{
+
+        cargarNotas();
+
+    },[]);
+
+
+    /* ==========================================
+       GUARDAR / EDITAR NOTA
+    ========================================== */
+
+    const guardarNota = async (datos) => {
+
+
+        if(notaEditar){
+
+            const { error } = await supabase
+
+                .from("notas_psicologia")
+
+                .update({
+
+                    titulo: datos.titulo,
+
+                    nota: datos.nota,
+
+                    alumno_id: datos.alumno_id || null,
+
+                    grupo: datos.grupo || null,
+
+                    color: datos.color
+
+                })
+
+                .eq("id",notaEditar.id);
+
+
+            if(error){
+
+                console.error(
+
+                    "Error actualizando nota:",
+
+                    error
+
+                );
+
+                alert(error.message);
+
+                return;
+
+            }
+
+        }
+
+
+        else{
+
+            const { error } = await supabase
+
+                .from("notas_psicologia")
+
+                .insert({
+
+                    alumno_id: datos.alumno_id || null,
+
+                    grupo: datos.grupo || null,
+
+                    titulo: datos.titulo,
+
+                    nota: datos.nota,
+
+                    color: datos.color,
+
+                    fijada: false
+
+                });
+
+
+            if(error){
+
+                console.error(
+
+                    "Error creando nota:",
+
+                    error
+
+                );
+
+                alert(error.message);
+
+                return;
+
+            }
+
+        }
+
+
+        setModal(false);
+
+        setNotaEditar(null);
+
+        await cargarNotas();
+
+    };
+
+
+    /* ==========================================
+       ELIMINAR NOTA
+    ========================================== */
+
+    const eliminarNota = async () => {
+
+
+        if(!notaEliminar){
+
+            return;
+
+        }
+
+
+        const { error } = await supabase
+
+            .from("notas_psicologia")
+
+            .delete()
+
+            .eq("id",notaEliminar.id);
+
+
+        if(error){
+
+            console.error(
+
+                "Error eliminando nota:",
+
+                error
+
+            );
+
+            alert(error.message);
+
+            return;
+
+        }
+
+
+        setNotaEliminar(null);
+
+        await cargarNotas();
+
+    };
+
+
+    /* ==========================================
+       FIJAR / DESFIJAR NOTA
+    ========================================== */
+
+    const fijarNota = async (nota) => {
+
 
         const { error } = await supabase
 
@@ -85,70 +259,18 @@ const guardarNota = async (datos) => {
 
             .update({
 
-                titulo: datos.titulo,
-
-                nota: datos.nota,
-
-                alumno_id: datos.alumno_id,
-
-                grupo: datos.grupo,
-
-                color: datos.color
+                fijada: !nota.fijada
 
             })
 
-            .eq("id", notaEditar.id);
+            .eq("id",nota.id);
 
 
-        if (error) {
-
-            console.error(
-
-                "ERROR AL ACTUALIZAR NOTA:",
-
-                error
-
-            );
-
-            alert(error.message);
-
-            return;
-
-        }
-
-    }
-
-
-    else {
-
-        const { data, error } = await supabase
-
-            .from("notas_psicologia")
-
-            .insert({
-
-                alumno_id: datos.alumno_id || null,
-
-                grupo: datos.grupo || null,
-
-                titulo: datos.titulo,
-
-                nota: datos.nota,
-
-                color: datos.color,
-
-                fijada: false
-
-            })
-
-            .select();
-
-
-        if (error) {
+        if(error){
 
             console.error(
 
-                "ERROR AL INSERTAR NOTA:",
+                "Error fijando nota:",
 
                 error
 
@@ -161,566 +283,668 @@ const guardarNota = async (datos) => {
         }
 
 
-        console.log(
+        await cargarNotas();
 
-            "NOTA GUARDADA CORRECTAMENTE:",
+    };
 
-            data
+
+    /* ==========================================
+       NORMALIZAR TEXTO
+    ========================================== */
+
+    const normalizar = (texto = "") => {
+
+        return texto
+
+            .normalize("NFD")
+
+            .replace(/[\u0300-\u036f]/g,"")
+
+            .toLowerCase();
+
+    };
+
+
+    /* ==========================================
+       FILTRAR NOTAS
+    ========================================== */
+
+    const lista = notas.filter((nota) => {
+
+
+        const alumno = students.find(
+
+            (student) =>
+
+                student.id === nota.alumno_id
 
         );
 
-    }
 
+        const texto = normalizar(`
 
-    setModal(false);
+            ${nota.titulo || ""}
 
-    setNotaEditar(null);
+            ${nota.nota || ""}
 
-    await cargarNotas();
+            ${nota.grupo || ""}
 
-};
+            ${alumno?.nombre || ""}
 
-const eliminarNota=async()=>{
+            ${alumno?.apellido_paterno || ""}
 
-const {error}=await supabase
+            ${alumno?.apellido_materno || ""}
 
-.from("notas_psicologia")
+            ${alumno?.grupo || ""}
 
-.delete()
+        `);
 
-.eq("id",notaEliminar.id);
 
-if(error){
+        return texto.includes(
 
-alert(error.message);
+            normalizar(buscar)
 
-return;
+        );
 
-}
+    });
 
-setNotaEliminar(null);
 
-cargarNotas();
+    /* ==========================================
+       CONTENIDO PRINCIPAL
+    ========================================== */
 
-};
+    const contenido = (
 
-const fijarNota=async(nota)=>{
+        <div className="notas-pantalla-completa">
 
-const {error}=await supabase
+            {/* ================================
+               BUSCADOR
+            ================================= */}
 
-.from("notas_psicologia")
+            <div className="nota-search-box">
 
-.update({
 
-fijada:!nota.fijada
+                <Search size={18}/>
 
-})
 
-.eq("id",nota.id);
+                <input
 
-if(error){
+                    className="nota-search-input"
 
-alert(error.message);
+                    placeholder="Buscar nota, alumno o grupo..."
 
-return;
+                    value={buscar}
 
-}
+                    onChange={(e)=>{
 
-cargarNotas();
+                        setBuscar(e.target.value);
 
-};
+                    }}
 
-const normalizar=(texto="")=>
+                />
 
-texto
-.normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"")
-.toLowerCase();
 
-const lista=notas.filter(n=>{
+            </div>
 
-const alumno=students.find(
-a=>a.id===n.alumno_id
-);
 
-const texto=normalizar(
+            {/* ================================
+               BOTÓN NUEVA NOTA
+            ================================= */}
 
-`${n.titulo}
-${n.nota}
-${n.grupo || ""}
-${alumno?.nombre || ""}
-${alumno?.apellido_paterno || ""}
-${alumno?.apellido_materno || ""}
-${alumno?.grupo || ""}`
+            <div className="nota-toolbar">
 
-);
 
-return texto.includes(
+                <button
 
-normalizar(buscar)
+                    className="nota-add"
 
-);
+                    onClick={()=>{
 
-});
+                        setNotaEditar(null);
 
-return(
+                        setModal(true);
 
-<>
+                    }}
 
-<div
-className="app-background"
-style={{
-backgroundImage:`url(${fondoPsicologia})`
-}}
-/>
+                >
 
-<div className="ps-app">
+                    <Plus size={18}/>
 
-<div className="ps-container">
+                    Nueva nota
 
-<div className="sticky-header">
 
-<div className="page-top">
+                </button>
 
-<button
-className="back-btn"
-onClick={()=>cambiarPantalla("psicologia")}
->
 
-<ArrowLeft size={22}/>
+            </div>
 
-</button>
 
-<h1>
+            {/* ================================
+               LISTA
+            ================================= */}
 
-Notas
+            <div className="notas-scroll">
 
-</h1>
 
-<button
-className="home-btn"
-onClick={()=>cambiarPantalla("psicologia")}
->
+                <div className="notas-lista">
 
-<House size={20}/>
 
-</button>
+                    {
 
-</div>
+                        lista.length === 0
 
-<div className="search-box">
+                        ?
 
-<Search
-size={18}
-color="#228B52"
-/>
+                        (
 
-<input
+                            <div className="agenda-vacia">
 
-className="search-input"
+                                No existen notas registradas.
 
-placeholder="Buscar nota, alumno o grupo..."
+                            </div>
 
-value={buscar}
+                        )
 
-onChange={(e)=>setBuscar(e.target.value)}
+                        :
 
-/>
+                        (
 
-</div>
+                            lista.map((nota)=>{
 
-<div className="nee-toolbar">
 
-<button
+                                const alumno = students.find(
 
-className="nee-add"
+                                    (student) =>
 
-onClick={(e)=>{
+                                        student.id === nota.alumno_id
 
-e.stopPropagation();
+                                );
 
-setNotaEditar(null);
 
-setModal(true);
+                                return (
 
-}}
 
->
+                                    <div
 
-<Plus size={18}/>
+                                        key={nota.id}
 
-Nueva nota
+                                        className={
 
-</button>
+                                            `nota-card ${
 
-</div>
+                                                nota.color || "verde"
 
-</div>
+                                            }`
 
-<div className="notas-lista">
+                                        }
 
-{
+                                        onClick={(e)=>{
 
-lista.length===0 ?
 
-(
+                                            if(
 
-<div className="agenda-vacia">
+                                                e.target.closest(
 
-No existen notas registradas.
+                                                    ".nota-acciones"
 
-</div>
+                                                )
 
-)
+                                            ){
 
-:
+                                                return;
 
-lista.map(n=>{
+                                            }
 
-const alumno=students.find(
 
-a=>a.id===n.alumno_id
+                                            setNotaVista(nota);
 
-);
 
-return(
+                                        }}
 
-<div
+                                    >
 
-key={n.id}
 
-className={`nota-card ${n.color || "verde"}`}
+                                        {/* ==========================
+                                           CABECERA DE LA NOTA
+                                        ========================== */}
 
-onClick={(e)=>{
+                                        <div className="nota-header">
 
-if(
-e.target.closest(".nota-acciones")
-)return;
 
-setNotaVista(n);
+                                            <div className="nota-icono">
 
-}}
+                                                {
 
->
+                                                    nota.grupo
 
-<div className="nota-header">
+                                                    ?
 
-<div className="nota-icono">
+                                                    <Users size={18}/>
 
-{
+                                                    :
 
-n.grupo
+                                                    <User size={18}/>
 
-?
+                                                }
 
-"👥"
+                                            </div>
 
-:
 
-"📝"
+                                            <div className="nota-header-info">
 
-}
 
-</div>
+                                                <h3>
 
-    <button
+                                                    {nota.titulo}
 
-        className={
-        n.fijada
+                                                </h3>
+
+
+                                                <p>
+
+
+                                                    {
+
+                                                        nota.grupo
+
+                                                        ?
+
+                                                        `Grupo ${nota.grupo}`
+
+                                                        :
+
+                                                        `${
+
+                                                            alumno?.nombre || ""
+
+                                                        }
+
+                                                        ${
+
+                                                            alumno?.apellido_paterno || ""
+
+                                                        }
+
+                                                        ${
+
+                                                            alumno?.apellido_materno || ""
+
+                                                        }`
+
+                                                    }
+
+
+                                                </p>
+
+
+                                            </div>
+
+
+                                            <button
+
+                                                className={
+
+                                                    nota.fijada
+
+                                                    ?
+
+                                                    "nota-pin activo"
+
+                                                    :
+
+                                                    "nota-pin"
+
+                                                }
+
+                                                onClick={(e)=>{
+
+
+                                                    e.stopPropagation();
+
+
+                                                    fijarNota(nota);
+
+
+                                                }}
+
+                                            >
+
+                                                <Pin size={15}/>
+
+
+                                            </button>
+
+
+                                        </div>
+
+
+                                        {/* ==========================
+                                           TEXTO
+                                        ========================== */}
+
+                                        <div className="nota-texto">
+
+
+                                            {
+
+                                                (nota.nota || "")
+
+                                                    .split(" ")
+
+                                                    .slice(0,6)
+
+                                                    .join(" ")
+
+                                            }
+
+
+                                            {
+
+                                                (nota.nota || "")
+
+                                                    .split(" ")
+
+                                                    .length > 6
+
+                                                    ?
+
+                                                    "..."
+
+                                                    :
+
+                                                    ""
+
+                                            }
+
+
+                                        </div>
+
+
+                                        {/* ==========================
+                                           FECHA
+                                        ========================== */}
+
+                                        <div className="nota-fecha">
+
+
+                                            {
+
+                                                nota.created_at
+
+                                                ?
+
+                                                new Date(
+
+                                                    nota.created_at
+
+                                                ).toLocaleDateString(
+
+                                                    "es-MX"
+
+                                                )
+
+                                                :
+
+                                                ""
+
+                                            }
+
+
+                                        </div>
+
+
+                                        {/* ==========================
+                                           ACCIONES
+                                        ========================== */}
+
+                                        <div className="nota-acciones">
+
+
+                                            <button
+
+                                                className="agenda-icon editar"
+
+                                                onClick={(e)=>{
+
+
+                                                    e.stopPropagation();
+
+
+                                                    setNotaEditar(nota);
+
+
+                                                    setModal(true);
+
+
+                                                }}
+
+                                            >
+
+                                                <Pencil size={15}/>
+
+
+                                            </button>
+
+
+                                            <button
+
+                                                className="agenda-icon eliminar"
+
+                                                onClick={(e)=>{
+
+                                                    e.stopPropagation();
+
+                                                    console.log("Eliminar", nota);
+
+                                                    setNotaEliminar(nota);
+
+                                                }}
+
+                                            >
+
+                                                <Trash2 size={15}/>
+
+
+                                            </button>
+
+
+                                        </div>
+
+
+                                    </div>
+
+
+                                );
+
+                            })
+
+                        )
+
+                    }
+
+
+                </div>
+
+
+            </div>
+
+
+            {/* =================================
+               MODAL CREAR / EDITAR
+            ================================== */}
+
+            <ModalNota
+
+                abierto={modal}
+
+                cerrar={()=>{
+
+                    setModal(false);
+
+                    setNotaEditar(null);
+
+                }}
+
+                guardar={guardarNota}
+
+                students={students}
+
+                notaActual={notaEditar}
+
+            />
+
+            {/* =================================
+               MODAL ELIMINAR
+            ================================== */}
+
+            {
+
+                notaEliminar && (
+
+
+                    <div className="modal-opciones">
+
+
+                        <div className="modal-contenido eliminar-modal">
+
+
+                            <h2>
+
+                                Eliminar nota
+
+                            </h2>
+
+
+                            <p>
+
+                                ¿Deseas eliminar esta nota?
+
+                            </p>
+
+
+                            <div className="eliminar-botones">
+
+
+                                <button
+
+                                    className="btn-cancelar"
+
+                                    onClick={()=>{
+
+                                        setNotaEliminar(null);
+
+                                    }}
+
+                                >
+
+                                    Cancelar
+
+
+                                </button>
+
+
+                                <button
+
+                                    className="btn-eliminar"
+
+                                    onClick={eliminarNota}
+
+                                >
+
+                                    Eliminar
+
+
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+                )
+
+            }
+
+            <VistaDetalleNota
+
+                abierta={notaVista!==null}
+
+                nota={notaVista}
+
+                students={students}
+
+                cerrar={()=>setNotaVista(null)}
+
+                editar={(nota)=>{
+
+                    setNotaVista(null);
+
+                    setNotaEditar(nota);
+
+                    setModal(true);
+
+                }}
+
+            />
+
+
+        </div>
+
+    );
+
+
+    /* ==========================================
+       RENDERIZADO
+    ========================================== */
+
+    return (
+
+        embebido
+
         ?
-        "nota-pin activo"
+
+        contenido
+
         :
-        "nota-pin"
-        }
 
-        onClick={(e)=>{
+        <>
 
-        e.stopPropagation();
 
-        fijarNota(n);
+            <div
 
-        }}
+                className="app-background"
 
-        >
+                style={{
 
-        <Pin size={15}/>
+                    backgroundImage:
 
-    </button>
+                        `url(${fondoPsicologia})`
 
-<div className="nota-header-info">
+                }}
 
-<h3>
+            />
 
-{n.titulo}
 
-</h3>
+            <div className="ps-app">
 
-<p>
 
-{
+                <div className="ps-container">
 
-n.grupo
 
-?
+                    {contenido}
 
-`Grupo ${n.grupo}`
 
-:
+                </div>
 
-`${alumno?.nombre}
-${alumno?.apellido_paterno}
-${alumno?.apellido_materno}`
+            </div>
 
-}
+        </>
 
-</p>
-
-</div>
-
-</div>
-
-<div className="nota-texto">
-
-{
-
-n.nota
-
-.split(" ")
-
-.slice(0,6)
-
-.join(" ")
-
-}
-
-...
-
-</div>
-
-<div className="nota-fecha">
-
-{new Date(n.created_at).toLocaleDateString("es-MX")}
-
-</div>
-
-<div className="nota-acciones">
-
-<button
-
-className="agenda-icon editar"
-
-onClick={(e)=>{
-
-e.stopPropagation();
-
-setNotaEditar(n);
-
-setModal(true);
-
-}}
-
->
-
-<Pencil size={15}/>
-
-</button>
-
-<button
-
-className="agenda-icon eliminar"
-
-onClick={(e)=>{
-
-e.stopPropagation();
-
-setNotaEliminar(n);
-
-}}
-
->
-
-<Trash2 size={15}/>
-
-</button>
-
-</div>
-
-</div>
-
-);
-
-})
-
-}
-
-</div>
-
-<ModalNota
-
-abierto={modal}
-
-cerrar={()=>{
-
-setModal(false);
-
-setNotaEditar(null);
-
-}}
-
-guardar={guardarNota}
-
-students={students}
-
-notaActual={notaEditar}
-
-/>
-
-{
-
-notaVista && (
-
-<div className="modal-opciones">
-
-<div
-    className={`modal-contenido nota-vista ${notaVista.color || "verde"}`}
->
-
-<h2>
-
-{notaVista.titulo}
-
-</h2>
-
-<p>
-
-<strong>
-
-{
-
-notaVista.grupo
-
-?
-
-`Grupo ${notaVista.grupo}`
-
-:
-
-students.find(
-
-a=>a.id===notaVista.alumno_id
-
-)?.nombre
-
-}
-
-</strong>
-
-</p>
-
-<hr/>
-
-<p
-style={{
-
-whiteSpace:"pre-wrap",
-
-lineHeight:1.6,
-
-marginTop:15
-
-}}
->
-
-{notaVista.nota}
-
-</p>
-
-<div className="modal-botones">
-
-<button
-
-className="btn-guardar"
-
-onClick={()=>setNotaVista(null)}
-
->
-
-Volver
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-)
-
-}
-
-{
-
-notaEliminar && (
-
-<div className="modal-opciones">
-
-<div className="modal-contenido eliminar-modal">
-
-<h2>
-
-Eliminar nota
-
-</h2>
-
-<p>
-
-¿Deseas eliminar esta nota?
-
-</p>
-
-<div className="eliminar-botones">
-
-<button
-
-className="btn-cancelar"
-
-onClick={()=>setNotaEliminar(null)}
-
->
-
-Cancelar
-
-</button>
-
-<button
-
-className="btn-eliminar"
-
-onClick={eliminarNota}
-
->
-
-Eliminar
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-)
-
-}
-
-</div>
-
-</div>
-
-</>
-
-);
+    );
 
 }

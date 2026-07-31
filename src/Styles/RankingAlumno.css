@@ -1,3 +1,5 @@
+@import "./RankingProfesor.css";
+
 @import "./AppLayout.css";
 
 .ranking-card{
@@ -107,7 +109,6 @@ border:3px solid #5FAF74;
 background:#F4FFF5;
 
 }
-@import "./RankingProfesor.css";
 
 /*==========================
   TARJETA MI POSICIÓN

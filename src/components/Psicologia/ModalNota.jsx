@@ -1,640 +1,661 @@
-import {useEffect,useState} from "react";
+import { useEffect,useState } from "react";
 
 import "../../Styles/ModalNEE.css";
 
 const inicial={
 
-alumno_id:"",
+    alumno_id:null,
 
-grupo:"",
+    grupo:null,
 
-titulo:"",
+    titulo:"",
 
-nota:"",
+    nota:"",
 
-color:"verde",
+    color:"verde",
 
-fijada: false
+    fijada:false
 
 };
 
 export default function ModalNota({
 
     abierto,
+
     cerrar,
+
     guardar,
+
     students=[],
-    notaActual,
+
+    notaActual=null,
+
     ocultarAlumno=false,
+
     soloIndividual=false,
+
     soloPerfil=false
 
 }){
 
-const [datos,setDatos]=useState(inicial);
+    const [datos,setDatos]=useState(inicial);
 
-const [buscar,setBuscar]=useState("");
+    const [tipo,setTipo]=useState("individual");
 
-const [mostrar,setMostrar]=useState(false);
+    const [buscar,setBuscar]=useState("");
 
-const [tipo,setTipo]=useState("individual");
+    const [mostrarLista,setMostrarLista]=useState(false);
 
-useEffect(()=>{
+        useEffect(()=>{
 
-if(!abierto)return;
+        if(!abierto) return;
 
-if(notaActual){
+        if(notaActual){
 
-setTipo(
+            setDatos({
 
-notaActual.grupo
+                alumno_id:notaActual.alumno_id ?? null,
 
-?
+                grupo:notaActual.grupo ?? null,
 
-"grupo"
+                titulo:notaActual.titulo ?? "",
 
-:
+                nota:notaActual.nota ?? "",
 
-"individual"
+                color:notaActual.color ?? "verde",
 
-);
+                fijada:notaActual.fijada ?? false
 
-const alumno=students.find(
+            });
 
-a=>a.id===notaActual.alumno_id
+            setTipo(
 
-);
+                notaActual.grupo
 
-setDatos({
+                ?
 
-alumno_id:notaActual.alumno_id,
+                "grupo"
 
-grupo:notaActual.grupo || "",
+                :
 
-titulo:notaActual.titulo || "",
+                "individual"
 
-nota:notaActual.nota || "",
+            );
 
-color:notaActual.color || "verde",
+            const alumno=students.find(
 
-});
+                a=>a.id===notaActual.alumno_id
 
-setBuscar(
+            );
 
-alumno
+            if(alumno){
 
-?
+                setBuscar(
 
-`${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno}`
+                    `${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno}`
 
-:
+                );
 
-""
+            }else{
 
-);
+                setBuscar("");
 
-}else{
+            }
 
-setTipo("individual");
+        }else{
 
-setDatos(inicial);
+            setDatos(inicial);
 
-setBuscar("");
+            setTipo("individual");
 
-}
+            setBuscar("");
 
-},[abierto,notaActual]);
+        }
 
-if(!abierto)return null;
+    },[abierto,notaActual,students]);
+        if(!abierto) return null;
 
-const normalizar=(texto="")=>
+    const normalizar=(texto="")=>
 
-texto
+        texto
 
-.normalize("NFD")
+        .normalize("NFD")
 
-.replace(/[\u0300-\u036f]/g,"")
+        .replace(/[\u0300-\u036f]/g,"")
 
-.toLowerCase();
+        .toLowerCase();
 
-const lista=students.filter(a=>{
+    const alumnosFiltrados=(students || []).filter((alumno)=>{
 
-const nombre=normalizar(
+        const nombre=normalizar(
 
-`${a.nombre} ${a.apellido_paterno} ${a.apellido_materno}`
+            `${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno}`
 
-);
+        );
 
-return nombre.includes(
+        return nombre.includes(
 
-normalizar(buscar)
+            normalizar(buscar)
 
-);
+        );
 
-});
+    });
 
-return(
+    return(
 
-<div className="modal-opciones">
+        <div className="modal-overlay">
 
-<div className="modal-contenido modal-cita">
+            <div className="modal-nee">
 
-<h2>
+                <h2>
 
-{
+                    {
 
-notaActual
+                        notaActual
 
-?
+                        ?
 
-"Editar nota"
+                        "Editar nota"
 
-:
+                        :
 
-"Nueva nota"
+                        "Nueva nota"
 
-}
+                    }
 
-</h2>
+                </h2>
 
-{
+                                {
 
-!soloIndividual && (
+                    !soloPerfil && !soloIndividual && (
 
-<>
+                        <>
 
-<label>
+                            <label>
 
-Tipo
+                                Tipo
 
-</label>
+                            </label>
 
-<select
+                            <select
 
-value={tipo}
+                                value={tipo}
 
-onChange={(e)=>setTipo(e.target.value)}
+                                onChange={(e)=>
 
->
+                                    setTipo(e.target.value)
 
-<option value="individual">
+                                }
 
-Alumno
+                            >
 
-</option>
+                                <option value="individual">
 
-<option value="grupo">
+                                    Alumno
 
-Grupo completo
+                                </option>
 
-</option>
+                                <option value="grupo">
 
-</select>
+                                    Grupo
 
-</>
+                                </option>
 
-)
+                            </select>
 
-}
+                        </>
 
-{
+                    )
 
-tipo==="individual"
+                }
 
-?
+                                {
 
-(
+                    tipo==="individual"
 
-<>
+                    ? (
 
-{
+                        <>
 
-!ocultarAlumno && (
+                            {
 
-<>
+                                !ocultarAlumno && !soloPerfil && (
 
-<label>
+                                    <>
 
-Alumno
+                                        <label>
 
-</label>
+                                            Alumno
 
-<input
+                                        </label>
 
-placeholder="Buscar alumno..."
+                                        <input
 
-value={buscar}
+                                            placeholder="Buscar alumno..."
 
-onFocus={()=>setMostrar(true)}
+                                            value={buscar}
 
-onChange={(e)=>{
+                                            onFocus={()=>setMostrarLista(true)}
 
-setBuscar(e.target.value);
+                                            onChange={(e)=>{
 
-setMostrar(true);
+                                                setBuscar(e.target.value);
 
-}}
+                                                setMostrarLista(true);
 
-/>
+                                            }}
 
-{
+                                            onBlur={()=>{
 
-mostrar && (
+                                                setTimeout(()=>{
 
-<div className="lista-alumnos-modal">
+                                                    setMostrarLista(false);
 
-{
+                                                },150);
 
-lista.map(alumno=>(
+                                            }}
 
-<div
+                                        />
 
-key={alumno.id}
+                                        {
 
-className="item-alumno-modal"
+                                            mostrarLista && (
 
-onClick={()=>{
+                                                <div className="lista-alumnos-modal">
 
-setBuscar(
+                                                    {
 
-`${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno}`
+                                                        alumnosFiltrados.map(alumno=>(
 
-);
+                                                            <div
 
-setDatos({
+                                                                key={alumno.id}
 
-...datos,
+                                                                className="item-alumno-modal"
 
-alumno_id:alumno.id
+                                                                onClick={()=>{
 
-});
+                                                                    setBuscar(
 
-setMostrar(false);
+                                                                        `${alumno.nombre} ${alumno.apellido_paterno} ${alumno.apellido_materno}`
 
-}}
+                                                                    );
 
->
+                                                                    setDatos({
 
-<strong>
+                                                                        ...datos,
 
-{alumno.nombre}
+                                                                        alumno_id:alumno.id
 
-{" "}
+                                                                    });
 
-{alumno.apellido_paterno}
+                                                                    setMostrarLista(false);
 
-{" "}
+                                                                }}
 
-{alumno.apellido_materno}
+                                                            >
 
-</strong>
+                                                                <strong>
 
-<br/>
+                                                                    {alumno.nombre}{" "}
 
-<small>
+                                                                    {alumno.apellido_paterno}{" "}
 
-{alumno.grupo}
+                                                                    {alumno.apellido_materno}
 
-</small>
+                                                                </strong>
 
-</div>
+                                                                <br/>
 
-))
+                                                                <small>
 
-}
+                                                                    {alumno.grupo}
 
-</div>
+                                                                </small>
 
-)
+                                                            </div>
 
-}
+                                                        ))
 
-</>
+                                                    }
 
-)
+                                                </div>
 
-}
+                                            )
 
-</>
+                                        }
 
-)
+                                    </>
 
-:
+                                )
 
-(
+                            }
 
-<>
+                        </>
 
-<label>
+                    )
 
-Grupo
+                    : (
 
-</label>
+                        <>
 
-<select
+                            <label>
 
-value={datos.grupo}
+                                Grupo
 
-onChange={(e)=>
+                            </label>
 
-setDatos({
+                            <select
 
-...datos,
+                                value={datos.grupo || ""}
 
-grupo:e.target.value,
+                                onChange={(e)=>
 
-alumno_id:null
+                                    setDatos({
 
-})
+                                        ...datos,
 
-}
+                                        grupo:e.target.value,
 
->
+                                        alumno_id:null
 
-<option value="">
+                                    })
 
-Selecciona un grupo
+                                }
 
-</option>
+                            >
 
-{
+                                <option value="">
 
-[...new Set(
+                                    Selecciona un grupo
 
-    students
+                                </option>
 
-        .map(a => a.grupo)
+                                {
 
-        .filter(Boolean)
+                                    [...new Set(
 
-)]
+                                        students
 
-.sort((a, b) =>
+                                            .map(a=>a.grupo)
 
-    a.localeCompare(b, undefined, {
+                                            .filter(Boolean)
 
-        numeric: true,
+                                    )]
 
-        sensitivity: "base"
+                                    .sort((a,b)=>
 
-    })
+                                        a.localeCompare(
 
-)
+                                            b,
 
-.map(grupo => (
+                                            undefined,
 
-<option
+                                            {
 
-key={grupo}
+                                                numeric:true,
 
-value={grupo}
+                                                sensitivity:"base"
 
->
+                                            }
 
-{grupo}
+                                        )
 
-</option>
+                                    )
 
-))
+                                    .map(grupo=>(
 
-}
+                                        <option
 
-</select>
+                                            key={grupo}
 
-</>
+                                            value={grupo}
 
-)
+                                        >
 
-}
+                                            {grupo}
 
-<label>
+                                        </option>
 
-Título
+                                    ))
 
-</label>
+                                }
 
-<input
+                            </select>
 
-value={datos.titulo}
+                        </>
 
-placeholder="Título de la nota"
+                    )
 
-onChange={(e)=>
+                }
 
-setDatos({
+                                <label>
 
-...datos,
+                    Título
 
-titulo:e.target.value
+                </label>
 
-})
+                <input
 
-}
+                    value={datos.titulo}
 
-/>
+                    placeholder="Ej. Entrevista con padres"
 
-<label>
+                    onChange={(e)=>
 
-Nota
+                        setDatos({
 
-</label>
+                            ...datos,
 
-<textarea
+                            titulo:e.target.value
 
-rows={7}
+                        })
 
-placeholder="Escribe la nota..."
+                    }
 
-value={datos.nota}
+                />
 
-onChange={(e)=>
+                <label>
 
-setDatos({
+                    Nota
 
-...datos,
+                </label>
 
-nota:e.target.value
+                <textarea
 
-})
+                    rows={6}
 
-}
+                    value={datos.nota}
 
-/>
+                    placeholder="Escribe aquí las observaciones..."
 
-<label>
+                    onChange={(e)=>
 
-Color
+                        setDatos({
 
-</label>
+                            ...datos,
 
-<div className="nota-colores">
+                            nota:e.target.value
 
-<button
+                        })
 
-type="button"
+                    }
 
-className={
+                />
 
-datos.color==="verde"
+                <label>
 
-?
+                    Color
 
-"color activo verde"
+                </label>
 
-:
+                <div className="nota-colores">
 
-"color verde"
+                    <button
 
-}
+                        type="button"
 
-onClick={()=>
+                        className={
 
-setDatos({
+                            datos.color==="verde"
 
-...datos,
+                            ?
 
-color:"verde"
+                            "color activo verde"
 
-})
+                            :
 
-}
+                            "color verde"
 
-/>
+                        }
 
-<button
+                        onClick={()=>
 
-type="button"
+                            setDatos({
 
-className={
+                                ...datos,
 
-datos.color==="amarillo"
+                                color:"verde"
 
-?
+                            })
 
-"color activo amarillo"
+                        }
 
-:
+                    />
 
-"color amarillo"
+                    <button
 
-}
+                        type="button"
 
-onClick={()=>
+                        className={
 
-setDatos({
+                            datos.color==="amarillo"
 
-...datos,
+                            ?
 
-color:"amarillo"
+                            "color activo amarillo"
 
-})
+                            :
 
-}
+                            "color amarillo"
 
-/>
+                        }
 
-<button
+                        onClick={()=>
 
-type="button"
+                            setDatos({
 
-className={
+                                ...datos,
 
-datos.color==="rojo"
+                                color:"amarillo"
 
-?
+                            })
 
-"color activo rojo"
+                        }
 
-:
+                    />
 
-"color rojo"
+                    <button
 
-}
+                        type="button"
 
-onClick={()=>
+                        className={
 
-setDatos({
+                            datos.color==="rojo"
 
-...datos,
+                            ?
 
-color:"rojo"
+                            "color activo rojo"
 
-})
+                            :
 
-}
+                            "color rojo"
 
-/>
+                        }
 
-</div>
+                        onClick={()=>
 
-<div className="modal-botones">
+                            setDatos({
 
-<button
+                                ...datos,
 
-className="btn-cancelar"
+                                color:"rojo"
 
-type="button"
+                            })
 
-onClick={cerrar}
+                        }
 
->
+                    />
 
-Cancelar
+                </div>
 
-</button>
+                <div className="modal-botones">
 
-<button
+                    <button
 
-className="btn-guardar"
+                        type="button"
 
-type="button"
+                        className="btn-cancelar"
 
-onClick={()=>{
+                        onClick={cerrar}
 
-guardar({
+                    >
 
-...datos,
+                        Cancelar
 
-grupo:
+                    </button>
 
-tipo==="grupo"
+                    <button
 
-?
+                        type="button"
 
-datos.grupo
+                        className="btn-guardar"
 
-:
+                        onClick={()=>{
 
-null,
+                            if(!datos.titulo.trim()) return;
 
-alumno_id:
+                            if(!datos.nota.trim()) return;
 
-tipo==="individual"
+                            guardar({
 
-?
+                            ...datos,
 
-datos.alumno_id
+                            titulo:datos.titulo.trim(),
 
-:
+                            nota:datos.nota.trim(),
 
-null
+                            grupo:
 
-});
+                                tipo==="grupo"
 
-}}
+                                ? datos.grupo
 
->
+                                : null,
 
-Guardar
+                            alumno_id:
 
-</button>
+                                tipo==="individual"
 
-</div>
+                                ? datos.alumno_id
 
-</div>
+                                : null
 
-</div>
+                        });
+                        }}
 
-);
+                    >
+
+                        Guardar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    );
 
 }

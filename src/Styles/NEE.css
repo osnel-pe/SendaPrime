@@ -24,7 +24,7 @@ align-items:center;
 
 gap:12px;
 
-padding:8px 12px;
+padding:7px 12px;
 
 border-radius:20px;
 
@@ -92,6 +92,10 @@ flex:1;
 
 }
 
+.nee-info{
+    flex:1;
+}
+
 .nee-info h3{
 
 margin:0;
@@ -139,47 +143,31 @@ font-size:18px;
 }
 
 .nee-toolbar{
-
-display:flex;
-
-justify-content:center;
-
-margin:0px 0 0px;
-
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin-bottom:22px;
 }
 
 .nee-add{
+    width:150px;
+    height:46px;
 
-height:42px;
+    border:none;
+    border-radius:15px;
 
-padding:0 18px;
+    background:#2ea55f;
+    color:#fff;
 
-border:none;
+    font-size:14px;
+    font-weight:700;
 
-border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
 
-background:#228B52;
-
-color:white;
-
-font-size:15px;
-
-font-weight:700;
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-cursor:pointer;
-
-box-shadow:
-
-0 10px 22px rgba(0,0,0,.22);
-
-transition:.25s;
-
+    cursor:pointer;
 }
 
 .nee-add:hover{
@@ -187,5 +175,85 @@ transition:.25s;
 transform:translateY(-2px);
 
 background:#1d7747;
+
+}
+
+/*==========================
+BUSCADOR NEE
+==========================*/
+
+.nee-search-box{
+
+    width:100%;
+
+    position:relative;
+
+    margin:12px 0 22px;
+
+    flex-shrink:0;
+
+}
+
+.nee-search-box svg{
+
+    position:absolute;
+
+    left:18px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:rgba(255,255,255,.75);
+
+}
+
+.nee-search-input{
+
+    width:100%;
+
+    height:56px;
+
+    padding-left:52px;
+
+    padding-right:18px;
+
+    border:none;
+
+    outline:none;
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,.14);
+
+    backdrop-filter:blur(20px);
+
+    color:white;
+
+    font-size:16px;
+
+    box-sizing:border-box;
+
+}
+
+.nee-search-input::placeholder{
+
+    color:rgba(255,255,255,.65);
+
+}
+
+/*==========================
+BOTÓN
+==========================*/
+
+.nee-toolbar{
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-top:-6px;
+
+    margin-bottom:12px;
 
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import "../../Styles/ModalCita.css";
+import "../../Styles/ModalNEE.css";
 
 export default function ModalSeguimientoGrupo({
 
@@ -42,9 +42,9 @@ export default function ModalSeguimientoGrupo({
 
     return(
 
-        <div className="modal-opciones">
+        <div className="modal-overlay">
 
-            <div className="modal-contenido modal-cita">
+            <div className="modal-nee">
 
                 <h2>
 
@@ -86,6 +86,8 @@ export default function ModalSeguimientoGrupo({
 
                 <input
 
+                    placeholder="Ej. Prevención del acoso escolar"
+
                     value={datos.tema}
 
                     onChange={(e)=>
@@ -99,6 +101,7 @@ export default function ModalSeguimientoGrupo({
                         })
 
                     }
+                    autofocus
 
                 />
 
@@ -110,7 +113,9 @@ export default function ModalSeguimientoGrupo({
 
                 <textarea
 
-                    rows={3}
+                    placeholder="Objetivo del seguimiento..."
+
+                    rows={4}
 
                     value={datos.objetivo}
 
@@ -136,7 +141,9 @@ export default function ModalSeguimientoGrupo({
 
                 <textarea
 
-                    rows={4}
+                    placeholder="Describe las actividades realizadas..."
+
+                    rows={6}
 
                     value={datos.actividades}
 
@@ -162,7 +169,9 @@ export default function ModalSeguimientoGrupo({
 
                 <textarea
 
-                    rows={3}
+                  placeholder="Observaciones adicionales..."
+
+                    rows={4}
 
                     value={datos.observaciones}
 
@@ -198,7 +207,25 @@ export default function ModalSeguimientoGrupo({
 
                         className="btn-guardar"
 
-                        onClick={()=>guardar(datos)}
+                        onClick={()=>{
+
+                            if(!datos.tema.trim()) return;
+
+                            guardar({
+
+                                ...datos,
+
+                                tema:datos.tema.trim(),
+
+                                objetivo:datos.objetivo.trim(),
+
+                                actividades:datos.actividades.trim(),
+
+                                observaciones:datos.observaciones.trim()
+
+                            });
+
+                        }}
 
                     >
 

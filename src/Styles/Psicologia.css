@@ -8,17 +8,33 @@ CONTENEDOR PRINCIPAL
 
     max-width:430px;
 
-    padding:6px 18px 18px;
+    height:100vh;
 
     display:flex;
 
     flex-direction:column;
 
-    height:100vh;
+    overflow:hidden;
 
-    gap:6px;
+    position:relative;
+
+    padding:18px 18px 0;
 
     box-sizing:border-box;
+
+}
+
+.ps-app{
+
+    width:100%;
+
+    height:100dvh;
+
+    display:flex;
+
+    justify-content:center;
+
+    overflow:hidden;
 
 }
 
@@ -28,33 +44,13 @@ BOTÓN CERRAR SESIÓN
 
 .logout-container{
 
-    position:fixed;
+    display:flex;
 
-    left:0;
+    justify-content:center;
 
-    right:0;
+    margin-top:20px;
 
-    bottom:0;
-
-    z-index:50;
-
-    padding:12px 70px 18px;
-
-    box-sizing:border-box;
-
-    background:transparent;
-
-    background:
-
-        linear-gradient(
-
-            to top,
-
-            rgba(0,0,0,.35),
-
-            transparent
-
-        );
+    margin-bottom:20px;
 
 }
 
@@ -302,17 +298,17 @@ BOTÓN CERRAR SESIÓN
 
 .citas-hoy-area{
 
-    flex:1 1 auto;
+    width:100%;
+
+    flex:0 0 auto;
+
+    height:auto;
 
     min-height:0;
 
-    height:0;
+    overflow:visible;
 
-    overflow:hidden;
-
-    padding-top:8px;
-
-    padding-bottom:8px;
+    padding:8px 0;
 
     box-sizing:border-box;
 
@@ -330,11 +326,33 @@ BOTÓN CERRAR SESIÓN
 
     width:100%;
 
+    z-index:5;
+
 }
 
 .ps-fixed-top .ps-header{
 
     margin-bottom:10px;
+
+}
+
+.ps-contenido{
+
+    flex:1;
+    min-height:0;
+
+    display:flex;
+    flex-direction:column;
+
+    overflow:hidden;
+
+    padding-bottom:0;
+
+}
+
+.ps-contenido::-webkit-scrollbar{
+
+    display:none;
 
 }
 
@@ -379,15 +397,15 @@ BOTÓN CERRAR SESIÓN
 
 .neuri-boton{
 
-    width:64px;
+    width:54px;
 
-    height:64px;
+    height:54px;
 
     padding:0;
 
     border-radius:50%;
 
-    border:1px solid rgba(255,255,255,.45);
+    border:2px solid rgba(255,255,255,.45);
 
     display:flex;
 
@@ -542,3 +560,23 @@ BOTÓN CERRAR SESIÓN
     }
 
 }
+
+
+.ps-pantalla-principal{
+
+    overflow:hidden;
+
+}
+
+.citas-hoy-area .agenda-card{
+
+    padding:12px;
+
+    border-radius:18px;
+
+    max-height:190px;
+
+    overflow:hidden;
+
+}
+

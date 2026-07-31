@@ -1,194 +1,167 @@
-import { useRef, useState, useEffect } from "react";
+import { useState } from "react";
 
 import {
-  ArrowLeft,
-  Search,
-  ChevronRight,
-  Plus,
-  House
-  } from "lucide-react";
+    ArrowLeft,
+    Search,
+    ChevronRight,
+    Plus,
+    House
+} from "lucide-react";
 
-import "../Styles/GrupoPsicologia.css";
 import "../Styles/AppLayout.css";
 import "../Styles/Psicologia.css";
+import "../Styles/GrupoPsicologia.css";
 
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
+
 import ModalSeguimientoGrupo from "../components/Psicologia/ModalSeguimientoGrupo";
+
 import { supabase } from "../services/supabase";
 
 export default function GrupoPsicologia({
 
     students,
-    
+
     setStudents,
 
     grupoSeleccionado,
 
     cambiarPantalla,
 
-    seleccionarAlumno
+    seleccionarAlumno,
+
+    embebido=false
 
 }){
-  
-  const alumnosGrupo = (students || []).filter(
 
-    alumno => alumno.grupo === grupoSeleccionado
+    const [busqueda,setBusqueda]=useState("");
 
-  );
+    const [modalGrupo,setModalGrupo]=useState(false);
 
-  console.log("Grupo seleccionado:", grupoSeleccionado);
-console.log("Primer alumno:", students[0]);
-console.log("Alumnos del grupo:", alumnosGrupo.length);
-  
-  const [busqueda,setBusqueda]=useState("");
+    const normalizar=(texto="")=>
 
-  const [modalGrupo,setModalGrupo]=useState(false);
+        String(texto)
 
-  const normalizar = (texto = "") =>
-    String(texto)
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, " ")
+
+        .replace(/[\u0300-\u036f]/g,"")
+
+        .replace(/\s+/g," ")
+
         .trim()
+
         .toLowerCase();
 
-    const alumnosFiltrados = alumnosGrupo.filter((alumno) => {
+    const alumnosGrupo=(students || []).filter(
 
-      const nombre = normalizar(
-          `${alumno.nombre || ""} ${alumno.apellido_paterno || ""} ${alumno.apellido_materno || ""}`
-      );
-  
-      const textoBusqueda = normalizar(busqueda.trim());
-  
-      return nombre.includes(textoBusqueda);
-  
-  });
+        alumno=>alumno.grupo===grupoSeleccionado
 
-  const alumnosMostrar =
+    );
 
-  busqueda.trim() === ""
+    const alumnosMostrar=alumnosGrupo.filter(alumno=>{
 
-  ? alumnosGrupo
+        if(busqueda.trim()==="") return true;
 
-  : alumnosFiltrados;
+        const nombre=normalizar(
 
-    const guardarSeguimientoGrupo = async(datos)=>{
+            `${alumno.nombre || ""}
 
-        console.log("Entró");
-        console.log(datos);
-        alert("Entró a guardar");
+            ${alumno.apellido_paterno || ""}
 
-    // resto del código...
+            ${alumno.apellido_materno || ""}`
 
-      const alumnosActualizados = [];
+        );
 
-      for(const alumno of students.filter(
-          a=>a.grupo===grupoSeleccionado
-      )){
+        return nombre.includes(
 
-          const historial = [...(alumno.citas || [])];
+            normalizar(busqueda)
 
-          historial.unshift({
+        );
 
-              ...datos,
+    });
 
-              tipo:"grupal"
+    const guardarSeguimientoGrupo=async(datos)=>{
 
-          });
+        const nuevosStudents=[...students];
 
-          const { error } = await supabase
+        for(const alumno of alumnosGrupo){
 
-              .from("alumnos")
+            const historial=[
 
-              .update({
+                ...(alumno.citas || [])
 
-                  citas: historial
+            ];
 
-              })
+            historial.unshift({
 
-              .eq("id", alumno.id);
+                ...datos,
 
-          if(error){
+                tipo:"grupal"
 
-              alert(error.message);
+            });
 
-              return;
+            const {error}=await supabase
 
-          }
+            .from("alumnos")
 
-          alumnosActualizados.push({
+            .update({
 
-              ...alumno,
+                citas:historial
 
-              citas: historial
+            })
 
-          });
+            .eq("id",alumno.id);
 
-      }
+            if(error){
 
-      setStudents(alumnosActualizados);
+                alert(error.message);
 
-      setModalGrupo(false);
+                return;
 
-      alert("Seguimiento grupal registrado.");
+            }
 
-  };
+            const indice=nuevosStudents.findIndex(
 
-return(
+                a=>a.id===alumno.id
 
-          <>
-          
-          <div
-          
-          className="app-background"
-          
-          style={{
-          
-          backgroundImage:`url(${fondoPsicologia})`
-          
-          }}
-          
-          />
-          
-          <div className="ps-app">
-          
-          <div className="ps-container">
-              
-          <div className="sticky-header">
+            );
 
-              <div className="page-top">
+            if(indice!==-1){
 
-                  <button
+                nuevosStudents[indice]={
 
-                      className="back-btn"
+                    ...alumno,
 
-                      onClick={()=>cambiarPantalla("perfilPsicopedagogico")}
+                    citas:historial
 
-                  >
+                };
 
-                      <ArrowLeft size={22}/>
+            }
 
-                  </button>
+        }
 
-                  <h1>
+        setStudents(nuevosStudents);
 
-                      {grupoSeleccionado}
+        setModalGrupo(false);
 
-                  </h1>
+        alert("Seguimiento grupal registrado.");
 
-                  <button
+    };
 
-                      className="home-btn"
+    const contenido=(
+            <div className="grupo-wrapper">
 
-                      onClick={()=>cambiarPantalla("psicologia")}
+        <div className="sticky-header">
 
-                  >
+            <div className="page-top">
 
-                      <House size={21}/>
+                <h2>
 
-                  </button>
+                    {grupoSeleccionado}
 
-              </div>
+                </h2>
+
+            </div>
 
             <div className="search-box">
 
@@ -196,13 +169,13 @@ return(
 
                 <input
 
-                  className="search-input"
+                    className="search-input"
 
-                  placeholder="Buscar alumno..."
+                    placeholder="Buscar alumno..."
 
-                  value={busqueda}
+                    value={busqueda}
 
-                  onChange={(e)=>setBusqueda(e.target.value)}
+                    onChange={(e)=>setBusqueda(e.target.value)}
 
                 />
 
@@ -211,97 +184,187 @@ return(
             <div className="grupo-toolbar">
 
                 <button
+
                     className="btn-seguimiento-grupal"
+
                     onClick={()=>setModalGrupo(true)}
+
                 >
 
                     <Plus size={18}/>
 
-                    Seguimiento
+                    Seguimiento grupal
 
                 </button>
 
             </div>
-          </div>
-            <div className="lista-alumnos">
 
-              {
+        </div>
 
-            alumnosMostrar.map(alumno=>(
+        <div className="lista-alumnos">
 
-              <div
+            {
 
-              className="alumno-card"
+                alumnosMostrar.length===0
 
-              key={alumno.id}
+                ?
 
-              onClick={()=>{
+                (
 
-              seleccionarAlumno(alumno);
+                    <div className="agenda-vacia">
 
-              cambiarPantalla("perfilAlumnoPsico");
+                        No hay alumnos en este grupo.
 
-              }}
+                    </div>
 
-              >
-                <div className="avatar-alumno">
+                )
 
-                  {
+                :
 
-                  `${alumno.nombre?.charAt(0) || ""}${alumno.apellido_paterno?.charAt(0) || ""}`
+                alumnosMostrar.map(alumno=>(
 
-                  }
+                    <div
 
-                  </div>
-                <div className="info-alumno">
+                        key={alumno.id}
 
-                <h3>
+                        className="alumno-card"
 
-                {alumno.nombre} {alumno.apellido_paterno} {alumno.apellido_materno}
+                        onClick={()=>{
 
-                </h3>
+                            seleccionarAlumno(alumno);
 
-                <p>
+                            cambiarPantalla("perfilAlumnoPsico");
 
-                {alumno.sexo==="M" ? "Masculino" : "Femenino"}
+                        }}
 
-                </p>
+                    >
+
+                        <div className="avatar-alumno">
+
+                            {
+
+                                `${
+
+                                    alumno.nombre?.charAt(0) || ""
+
+                                }${
+                                    alumno.apellido_paterno?.charAt(0) || ""
+                                }`
+
+                            }
+
+                        </div>
+
+                        <div className="info-alumno">
+
+                            <h3>
+
+                                {alumno.nombre}{" "}
+
+                                {alumno.apellido_paterno}{" "}
+
+                                {alumno.apellido_materno}
+
+                            </h3>
+
+                            <p>
+
+                                {
+
+                                    alumno.sexo==="M"
+
+                                    ?
+
+                                    "Masculino"
+
+                                    :
+
+                                    "Femenino"
+
+                                }
+
+                            </p>
+
+                        </div>
+
+                        <ChevronRight
+
+                            size={22}
+
+                            color="#2B8A57"
+
+                        />
+
+                    </div>
+
+                ))
+
+            }
+
+        </div>
+
+    </div>
+
+);
+
+    return(
+
+        <>
+
+            {
+
+                !embebido && (
+
+                    <div
+
+                        className="app-background"
+
+                        style={{
+
+                            backgroundImage:`url(${fondoPsicologia})`
+
+                        }}
+
+                    />
+
+                )
+
+            }
+
+            {
+
+                embebido
+
+                ?
+
+                contenido
+
+                :
+
+                <div className="ps-app">
+
+                    <div className="ps-container">
+
+                        {contenido}
+
+                    </div>
 
                 </div>
 
-                <ChevronRight
+            }
 
-                  size={22}
+            <ModalSeguimientoGrupo
 
-                  color="#2B8A57"
+                abierto={modalGrupo}
 
-                  />
+                cerrar={()=>setModalGrupo(false)}
 
-              </div>
+                guardar={guardarSeguimientoGrupo}
 
-              ))
+            />
 
-              }
+        </>
 
-              </div>
-
-          </div>
-          
-       </div>
-
-        <ModalSeguimientoGrupo
-
-            abierto={modalGrupo}
-
-            cerrar={()=>setModalGrupo(false)}
-
-            guardar={guardarSeguimientoGrupo}
-
-        />
-
-    </>
-
-  );
-
+    );
 
 }

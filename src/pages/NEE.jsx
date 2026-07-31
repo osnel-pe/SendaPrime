@@ -3,7 +3,9 @@ import "../Styles/Psicologia.css";
 import "../Styles/NEE.css";
 
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
+
 import ModalNuevaNEE from "../components/Psicologia/ModalNuevaNEE";
+
 import { supabase } from "../services/supabase";
 
 import {
@@ -19,287 +21,343 @@ import { useState } from "react";
 
 export default function NEE({
 
-students,
+    students,
 
-setStudents,
+    setStudents,
 
-cargarAlumnos,
+    cargarAlumnos,
 
-cambiarPantalla,
+    cambiarPantalla,
 
-seleccionarAlumno
+    seleccionarAlumno,
+
+    embebido=false,
+
+    setCitaActiva
 
 }){
 
-const [modalNEE,setModalNEE]=useState(false);
+    const [modalNEE,setModalNEE]=useState(false);
 
-const [busqueda,setBusqueda]=useState("");
+    const [busqueda,setBusqueda]=useState("");
 
-const guardarNEE = async(datos)=>{
+    const guardarNEE=async(datos)=>{
 
-    const alumno = students.find(
-        a=>a.id===datos.alumno_id
-    );
+        const alumno=students.find(
 
-    const listaActual = Array.isArray(alumno.nee)
-        ? alumno.nee
-        : [];
+            a=>a.id===datos.alumno_id
 
-    const nuevaLista = [
-        ...listaActual,
-        {
-            diagnostico:datos.diagnostico,
-            nivel:datos.nivel,
-            observaciones:datos.observaciones
+        );
+
+        const listaActual=
+
+            Array.isArray(alumno.nee)
+
+            ? alumno.nee
+
+            : [];
+
+        const nuevaLista=[
+
+            ...listaActual,
+
+            {
+
+                diagnostico:datos.diagnostico,
+
+                nivel:datos.nivel,
+
+                observaciones:datos.observaciones
+
+            }
+
+        ];
+
+        const {error}=await supabase
+
+            .from("alumnos")
+
+            .update({
+
+                nee:lista
+
+            })
+
+            .eq("id",datosAlumno.id);
+
+            console.log(error);
+
+        if(error){
+
+            alert(error.message);
+
+            return;
+
         }
-    ];
 
-    const { error } = await supabase
-    .from("alumnos")
-    .update({
-        nee:nuevaLista
+        setModalNEE(false);
+
+        await cargarAlumnos();
+
+    };
+
+    const normalizar=(texto="")=>
+
+        texto
+
+        .normalize("NFD")
+
+        .replace(/[\u0300-\u036f]/g,"")
+
+        .toLowerCase();
+
+    const lista=(students||[])
+
+    .filter(a=>{
+
+        if(Array.isArray(a.nee))
+
+            return a.nee.length>0;
+
+        return !!a.nee;
+
     })
-    .eq("id",datos.alumno_id);
 
-    if(error){
-        alert(error.message);
-        return;
-    }
+    .filter(a=>{
 
-    setModalNEE(false);
-    await cargarAlumnos();
-};
+        const nombre=normalizar(
 
-const normalizar=(texto="")=>
+            `${a.nombre} ${a.apellido_paterno} ${a.apellido_materno}`
 
-texto
+        );
 
-.normalize("NFD")
+        return nombre.includes(
 
-.replace(/[\u0300-\u036f]/g,"")
+            normalizar(busqueda)
 
-.toLowerCase();
+        );
 
-const lista=(students || [])
+    });
 
-.filter(a=>{
-
-if(Array.isArray(a.nee))
-
-return a.nee.length>0;
-
-return !!a.nee;
-
-})
-
-.filter(a=>{
-
-const nombre=normalizar(
-
-`${a.nombre} ${a.apellido_paterno} ${a.apellido_materno}`
-
-);
-
-return nombre.includes(
-
-normalizar(busqueda)
-
-);
-
-});
-
-return(
+    const contenido = (
 
 <>
 
-    <div
-className="app-background"
-style={{
-backgroundImage:`url(${fondoPsicologia})`
-}}
-/>
+    {
 
-<div className="ps-app">
+        !embebido && (
 
-<div className="ps-container">
+            <div className="sticky-header">
 
-<div className="sticky-header">
+                <div className="page-top">
 
-<div className="page-top">
+                    <button
+                        className="back-btn"
+                        onClick={()=>cambiarPantalla("psicologia")}
+                    >
+                        <ArrowLeft size={22}/>
+                    </button>
 
-<button
+                    <h1>
+                        Necesidades Educativas
+                    </h1>
 
-className="back-btn"
+                    <button
+                        className="home-btn"
+                        onClick={()=>cambiarPantalla("psicologia")}
+                    >
+                        <House size={20}/>
+                    </button>
 
-onClick={()=>cambiarPantalla("psicologia")}
+                </div>
 
->
+            </div>
 
-<ArrowLeft size={22}/>
+        )
 
-</button>
+    }
 
-<h1>
+    <div className="nee-search-box">
 
-Necesidades Educativas
+        <Search size={18}/>
 
-</h1>
+        <input
+            className="search-input"
+            placeholder="Buscar alumno..."
+            value={busqueda}
+            onChange={(e)=>setBusqueda(e.target.value)}
+        />
 
-<button
+    </div>
 
-className="home-btn"
+    <div className="nee-toolbar">
 
-onClick={()=>cambiarPantalla("psicologia")}
+        <button
+            className="nee-add"
+            onClick={()=>setModalNEE(true)}
+        >
+            <Plus size={18}/>
+            Nueva NEE
+        </button>
 
->
+    </div>
 
-<House size={20}/>
+    <div className="nee-lista">
 
-</button>
+    {
+
+        lista.length===0
+
+        ?
+
+        (
+
+            <div className="nee-vacio">
+
+                No existen alumnos con NEE.
+
+            </div>
+
+        )
+
+        :
+
+        lista.map(alumno=>(
+
+            <div
+
+                key={alumno.id}
+
+                className="nee-card"
+
+                onClick={()=>{
+
+                    setCitaActiva(null);
+
+                    seleccionarAlumno(alumno);
+
+                    cambiarPantalla("perfilAlumnoPsico");
+
+                }}
+
+            >
+
+                <div className="nee-avatar">
+
+                    {alumno.nombre.charAt(0)}
+
+                    {alumno.apellido_paterno.charAt(0)}
+
+                </div>
+
+                <div className="nee-info">
+
+                    <h3>
+
+                        {alumno.nombre}{" "}
+
+                        {alumno.apellido_paterno}{" "}
+
+                        {alumno.apellido_materno}
+
+                    </h3>
+
+                    <p>
+
+                        {
+
+                            Array.isArray(alumno.nee)
+
+                            ? alumno.nee.map(n=>n.diagnostico).join(" | ")
+
+                            : "Sin diagnóstico"
+
+                        }
+
+                    </p>
+
+                    <span>
+
+                        {alumno.grupo}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        ))
+
+    }
 
 </div>
 
-<div className="search-box">
-
-<Search
-size={18}
-color="#228B52"
-/>
-
-<input
-
-className="search-input"
-
-placeholder="Buscar alumno..."
-
-value={busqueda}
-
-onChange={(e)=>setBusqueda(e.target.value)}
-
-/>
-
-</div>
-
-<div className="nee-toolbar">
-
-<button
-
-className="nee-add"
-
-onClick={()=>setModalNEE(true)}
-
->
-
-<Plus size={18}/>
-
-Nueva NEE
-
-</button>
-
-</div>
-
-</div>
-
-<div className="nee-lista">
-
-{lista.length===0 ? (
-
-<div className="nee-vacio">
-
-No existen alumnos con NEE.
-
-</div>
-
-) : (
-
-lista.map(alumno=>(
-
-<div
-
-key={alumno.id}
-
-className="nee-card"
-
-onClick={()=>{
-
-seleccionarAlumno(alumno);
-
-cambiarPantalla("perfilAlumnoPsico");
-
-}}
-
->
-
-<div className="nee-avatar">
-
-{alumno.nombre.charAt(0)}
-
-{alumno.apellido_paterno.charAt(0)}
-
-</div>
-
-<div className="nee-info">
-
-<h3>
-
-{alumno.nombre}
-
-{" "}
-
-{alumno.apellido_paterno}
-
-{" "}
-
-{alumno.apellido_materno}
-
-</h3>
-
-<p>
-
-{
-
-Array.isArray(alumno.nee)
-
-? alumno.nee.map(n=>n.diagnostico).join(" | ")
-
-: "Sin diagnóstico"
-
-}
-
-</p>
-
-<span>
-
-{alumno.grupo}
-
-</span>
-
-</div>
-
-</div>
-
-))
-
-)}
-
-</div>
-
-</div>
-
-</div>
-<ModalNuevaNEE
-
-abierto={modalNEE}
-
-cerrar={()=>setModalNEE(false)}
-
-guardar={guardarNEE}
-
-students={students}
-
-/>
 </>
 
 );
+
+    const modal = (
+
+    <ModalNuevaNEE
+
+        abierto={modalNEE}
+
+        cerrar={()=>setModalNEE(false)}
+
+        guardar={guardarNEE}
+
+        students={students}
+
+    />
+
+);
+
+    return(
+
+    <>
+
+        {
+
+            embebido
+
+            ?
+
+            contenido
+
+            :
+
+            <>
+
+                <div
+
+                    className="app-background"
+
+                    style={{
+
+                        backgroundImage:`url(${fondoPsicologia})`
+
+                    }}
+
+                />
+
+                <div className="ps-app">
+
+                    <div className="ps-container">
+
+                        {contenido}
+
+                    </div>
+
+                </div>
+
+            </>
+
+        }
+
+        {modal}
+
+    </>
+
+    );
 
 }

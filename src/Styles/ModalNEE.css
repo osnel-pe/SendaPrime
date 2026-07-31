@@ -160,3 +160,61 @@
     color:white;
 
 }
+
+/*========================================
+MODALES GENERALES
+========================================*/
+
+.modal-nee{
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+}
+
+.modal-nee input:focus,
+.modal-nee select:focus,
+.modal-nee textarea:focus{
+
+    background:#fff;
+
+    box-shadow:0 0 0 2px rgba(35,149,78,.18);
+
+}
+
+.modal-nee textarea{
+
+    min-height:90px;
+
+    resize:vertical;
+
+}
+
+.modal-nee select{
+
+    cursor:pointer;
+
+}
+
+.modal-nee input,
+.modal-nee select,
+.modal-nee textarea{
+
+    transition:.20s;
+
+}
+
+.modal-nee::-webkit-scrollbar{
+
+    width:6px;
+
+}
+
+.modal-nee::-webkit-scrollbar-thumb{
+
+    background:#23954E;
+
+    border-radius:30px;
+
+}

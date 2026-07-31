@@ -10,11 +10,13 @@ import ModalNuevaCita from "./ModalNuevaCita";
 
 export default function CitasHoy({
 
-cambiarPantalla,
+    cambiarPantalla,
 
-students,
+    students,
 
-seleccionarAlumno
+    setAlumnoSeleccionado,
+
+    setCitaActiva
 
 }){
 
@@ -100,25 +102,43 @@ seleccionarAlumno
 
     const guardarNuevaCita=async(datos)=>{
 
-        const {error}=await supabase
+        console.log("ENTRÓ A GUARDAR CITA");
 
-        .from("citas_programadas")
+         console.log(datos);
+        
+        const { data, error } = await supabase
 
-        .insert({
+    .from("citas_programadas")
 
-            ...datos,
+    .insert({
 
-            cumplida:false
+        alumno_id: datos.alumno_id,
 
-        })
+        fecha: datos.fecha,
 
-        if(error){
+        hora: datos.hora,
 
-        alert(error.message);
+        tipo: datos.tipo,
 
-        return;
+        estado: "Pendiente",
 
-        }
+        notificado: false
+
+    })
+
+    .select();
+
+console.log("DATA:", data);
+
+console.log("ERROR:", error);
+
+if(error){
+
+    alert(error.message);
+
+    return;
+
+}
 
         setModalNuevaCita(false);
 
@@ -126,47 +146,57 @@ seleccionarAlumno
 
     };
 
-    const abrirAlumno=(id)=>{
+    const abrirAlumno=(cita)=>{
 
-    const alumno=students.find(
+        const alumno=students.find(
 
-    a=>a.id===id
+            a=>a.id===cita.alumno_id
 
-    );
+        );
 
-    if(!alumno) return;
+        if(!alumno) return;
 
-    seleccionarAlumno(alumno);
+        setAlumnoSeleccionado(alumno);
 
-    cambiarPantalla("perfilAlumnoPsico");
+        setCitaActiva(cita);
+
+        cambiarPantalla("perfilAlumnoPsico");
 
     };
 
     const cambiarEstado = async(cita)=>{
 
-        const { error } = await supabase
+    const nuevoEstado =
+
+        cita.estado === "Pendiente"
+
+        ? "Realizada"
+
+        : "Pendiente";
+
+    const { error } = await supabase
 
         .from("citas_programadas")
 
         .update({
 
-            cumplida: !cita.cumplida
+            estado: nuevoEstado
 
         })
 
         .eq("id", cita.id);
 
-        if(error){
+    if(error){
 
-            alert(error.message);
+        alert(error.message);
 
-            return;
+        return;
 
-        }
+    }
 
-        cargarCitasHoy();
+    cargarCitasHoy();
 
-    };
+};
 
 return(
 
@@ -249,8 +279,7 @@ key={index}
 
 className={`cita ${cita.cumplida ? "realizada" : ""}`}
 
-onClick={()=>abrirAlumno(cita.alumno_id)}
-
+onClick={()=>abrirAlumno(cita)}
 >
    <button
 
@@ -268,7 +297,7 @@ onClick={()=>abrirAlumno(cita.alumno_id)}
 
         {
 
-        cita.cumplida
+        cita.estado === "Realizada"
 
         ?
 

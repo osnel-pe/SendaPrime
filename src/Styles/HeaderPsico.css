@@ -30,9 +30,9 @@ LOGO
 
 .ps-logo{
 
-  width:62px;
+  width:50px;
 
-  height:62px;
+  height: 50px;
 
   border-radius:18px;
 
@@ -58,7 +58,7 @@ TEXTOS
 
 .ps-header h1{
 
-  font-size:20px;
+  font-size:18px;
   
   font-weight:700;
   

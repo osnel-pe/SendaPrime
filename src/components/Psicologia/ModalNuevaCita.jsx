@@ -25,8 +25,6 @@ alumno_id:"",
 fecha:new Date().toISOString().slice(0,10),
 hora:"",
 tipo:"",
-motivo:"",
-observaciones:""
 
 };
 
@@ -51,10 +49,6 @@ observaciones:""
         hora: citaActual.hora || "",
 
         tipo: citaActual.tipo || "",
-
-        motivo: citaActual.motivo || "",
-
-        observaciones: citaActual.observaciones || ""
 
     });
 
@@ -128,9 +122,8 @@ observaciones:""
 
 return createPortal(
 
-<div className="modal-opciones">
-
-    <div className="modal-contenido modal-cita">
+<div className="modal-overlay">
+    <div className="modal-nee">
 
 <h2>
 
@@ -148,23 +141,35 @@ Alumno
 
     <input
 
-        type="text"
+    type="text"
 
-        placeholder="Buscar alumno..."
+    placeholder="Buscar alumno..."
 
-        value={buscarAlumno}
+    value={buscarAlumno}
 
-        onFocus={()=>setMostrarLista(true)}
+    onFocus={()=>setMostrarLista(true)}
 
-        onChange={(e)=>{
+    onBlur={()=>
 
-            setBuscarAlumno(e.target.value);
+        setTimeout(
 
-            setMostrarLista(true);
+            ()=>setMostrarLista(false),
 
-        }}
+            150
 
-    />
+        )
+
+    }
+
+    onChange={(e)=>{
+
+        setBuscarAlumno(e.target.value);
+
+        setMostrarLista(true);
+
+    }}
+
+/>
 
     {
 
@@ -295,50 +300,6 @@ tipo:e.target.value
 
 />
 
-<label>
-
-Motivo
-
-</label>
-
-<textarea
-
-rows={2}
-
-value={datos.motivo}
-
-onChange={(e)=>setDatos({
-
-...datos,
-
-motivo:e.target.value
-
-})}
-
-/>
-
-<label>
-
-Observaciones
-
-</label>
-
-<textarea
-
-rows={3}
-
-value={datos.observaciones}
-
-onChange={(e)=>setDatos({
-
-...datos,
-
-observaciones:e.target.value
-
-})}
-
-/>
-
 <div className="modal-botones">
 
 <button
@@ -381,6 +342,8 @@ Cancelar
             return;
 
         }
+
+        console.log("CLICK");
 
         guardar(datos);
 

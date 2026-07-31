@@ -5,6 +5,7 @@ import {
     guardarCache
 } from "./cache.ts";
 
+
 function normalizarTexto(
     texto: string
 ): string {
@@ -19,6 +20,7 @@ function normalizarTexto(
 
 }
 
+
 export async function buscarAlumno({
 
     alumnoId,
@@ -32,6 +34,9 @@ export async function buscarAlumno({
     mensaje?: string;
 
 }) {
+
+    console.log("🔥 BUSCAR ALUMNO SE ESTÁ EJECUTANDO");
+
 
     /*
      * BÚSQUEDA DIRECTA POR ID
@@ -56,27 +61,25 @@ export async function buscarAlumno({
 
         }
 
+
         const {
             data,
             error
         } = await supabase
-
             .from("alumnos")
-
             .select("*")
-
-            .eq(
-                "id",
-                alumnoId
-            )
-
+            .eq("id", alumnoId)
             .maybeSingle();
+
+        console.log("TOTAL ALUMNOS:", data);
+
 
         if (error) {
 
             throw error;
 
         }
+
 
         if (!data) {
 
@@ -89,13 +92,15 @@ export async function buscarAlumno({
 
         }
 
+
         guardarCache(
 
-            data.id,
+            String(data.id),
 
             data
 
         );
+
 
         return {
 
@@ -109,6 +114,7 @@ export async function buscarAlumno({
 
     }
 
+
     if (!mensaje) {
 
         return {
@@ -120,20 +126,31 @@ export async function buscarAlumno({
 
     }
 
+
     const {
         data,
         error
     } = await supabase
-
         .from("alumnos")
-
         .select("*");
+
+    console.log(
+        "TOTAL ALUMNOS:",
+        data?.length
+    );
+
+    console.log(
+        "PRIMEROS ALUMNOS:",
+        data?.slice(0,3)
+    );
+
 
     if (error) {
 
         throw error;
 
     }
+
 
     if (!data || data.length === 0) {
 
@@ -146,26 +163,25 @@ export async function buscarAlumno({
 
     }
 
+
     const texto =
         normalizarTexto(mensaje);
 
-    const palabras =
+
+    console.log(
+        "MENSAJE NORMALIZADO:",
         texto
+    );
 
-            .split(" ")
-
-            .filter(
-
-                palabra =>
-                    palabra.length >= 3
-
-            );
 
     const candidatos = [];
 
+
     for (const alumno of data) {
 
+
         const nombreCompleto =
+
             normalizarTexto(
 
                 [
@@ -184,43 +200,93 @@ export async function buscarAlumno({
 
             );
 
-        const palabrasNombre =
-            nombreCompleto.split(" ");
+
+        const nombre =
+            normalizarTexto(
+                alumno.nombre
+            );
+
+
+        const apellidoPaterno =
+            normalizarTexto(
+                alumno.apellido_paterno ?? ""
+            );
+
+
+        const apellidoMaterno =
+            normalizarTexto(
+                alumno.apellido_materno ?? ""
+            );
+
 
         let puntaje = 0;
 
-        for (
 
-            const palabraNombre
-            of palabrasNombre
-
-        ) {
-
-            if (
-
-                palabras.includes(
-                    palabraNombre
-                )
-
-            ) {
-
-                puntaje += 10;
-
-            }
-
-        }
+        /*
+         * NOMBRE EXACTO
+         */
 
         if (
 
-            texto.includes(
-                nombreCompleto
-            )
+            nombre.length >= 3 &&
+
+            texto.includes(nombre)
 
         ) {
 
             puntaje += 100;
 
         }
+
+
+        /*
+         * APELLIDO PATERNO
+         */
+
+        if (
+
+            apellidoPaterno.length >= 3 &&
+
+            texto.includes(apellidoPaterno)
+
+        ) {
+
+            puntaje += 50;
+
+        }
+
+
+        /*
+         * APELLIDO MATERNO
+         */
+
+        if (
+
+            apellidoMaterno.length >= 3 &&
+
+            texto.includes(apellidoMaterno)
+
+        ) {
+
+            puntaje += 50;
+
+        }
+
+
+        /*
+         * NOMBRE COMPLETO
+         */
+
+        if (
+
+            texto.includes(nombreCompleto)
+
+        ) {
+
+            puntaje += 200;
+
+        }
+
 
         if (puntaje > 0) {
 
@@ -236,8 +302,26 @@ export async function buscarAlumno({
 
     }
 
+
+    console.log(
+
+        "CANDIDATOS ENCONTRADOS:",
+
+        candidatos.map(
+
+            candidato =>
+
+                candidato.alumno.nombre
+
+        )
+
+    );
+
+
     if (
+
         candidatos.length === 0
+
     ) {
 
         return {
@@ -249,35 +333,44 @@ export async function buscarAlumno({
 
     }
 
+
     const mejorPuntaje =
+
         Math.max(
 
             ...candidatos.map(
 
-                c =>
-                    c.puntaje
+                candidato =>
+
+                    candidato.puntaje
 
             )
 
         );
 
+
     const mejoresCoincidencias =
+
         candidatos
 
             .filter(
 
-                c =>
-                    c.puntaje ===
+                candidato =>
+
+                    candidato.puntaje ===
+
                     mejorPuntaje
 
             )
 
             .map(
 
-                c =>
-                    c.alumno
+                candidato =>
+
+                    candidato.alumno
 
             );
+
 
     if (
 
@@ -285,16 +378,20 @@ export async function buscarAlumno({
 
     ) {
 
+
         const alumno =
+
             mejoresCoincidencias[0];
+
 
         guardarCache(
 
-            alumno.id,
+            String(alumno.id),
 
             alumno
 
         );
+
 
         return {
 
@@ -307,12 +404,14 @@ export async function buscarAlumno({
 
     }
 
+
     return {
 
         estado:
             "varios",
 
         alumnos:
+
             mejoresCoincidencias
 
     };

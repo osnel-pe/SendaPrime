@@ -21,7 +21,7 @@ import { supabase } from './services/supabase';
 import LoginAlumno from "./pages/LoginAlumno";
 import RankingProfesor from "./pages/RankingProfesor";
 import LoginPsicologia from "./pages/LoginPsicologia";
-import Psicologia from "./pages/Psicologia";
+import Psicologia from "./Screens/Psicologia.jsx";
 import ScanPsicologia from "./pages/ScanPsicologia";
 import { motion } from "framer-motion";
 import PerfilesPsicologia from "./pages/PerfilesPsicologia";
@@ -57,6 +57,7 @@ function App() {
     return localStorage.getItem("grupoSeleccionado") || "";
 
 });
+
       useEffect(()=>{
 
         if(grupoSeleccionado){
@@ -438,101 +439,34 @@ useEffect(() => {
         break;
         case "psicologia":
 
-          contenido=(
-
-          <Psicologia
-
-              cerrarSesion={cerrarSesion}
-
-              cambiarPantalla={setPantalla}
-
-              students={students}
-
-              setAlumnoSeleccionado={setAlumnoSeleccionado}
-
-          />
-
-          );
-
-        break;
-          case "perfilPsicopedagogico":
-
             contenido=(
 
-              <PerfilesPsicologia
+                <Psicologia
 
-              students={students}
-              
-              cambiarPantalla={setPantalla}
-              
-              setGrupoSeleccionado={setGrupoSeleccionado}
-              
-              seleccionarAlumno={setAlumnoSeleccionado}
-              
+                  students={students}
+
+                  setStudents={setStudents}
+
+                  cargarAlumnos={cargarAlumnos}
+
+                  cerrarSesion={cerrarSesion}
+
+                  cambiarPantalla={setPantalla}
+
+                  alumnoSeleccionado={alumnoSeleccionado}
+
+                  setAlumnoSeleccionado={setAlumnoSeleccionado}
+
+                  grupoSeleccionado={grupoSeleccionado}
+
+                  setGrupoSeleccionado={setGrupoSeleccionado}
+
               />
 
             );
 
-            break;
-            
-            case "grupoPsicologia":
-
-            contenido=(
-
-            <GrupoPsicologia
-
-                students={students}
-
-                setStudents={setStudents}
-
-                grupoSeleccionado={grupoSeleccionado}
-
-                cambiarPantalla={setPantalla}
-
-                seleccionarAlumno={setAlumnoSeleccionado}
-
-            />
-
-            );
-
-            break;
-
-          case "perfilAlumnoPsico":
-
-          contenido=(
-
-            <PerfilAlumnoPsico
-            alumno={alumnoSeleccionado}
-            cambiarPantalla={setPantalla}
-            setAlumnoSeleccionado={setAlumnoSeleccionado}
-            students={students}
-            setStudents={setStudents}
-        />
-
-          );
-
-          break;
-
-          case "nee":
-
-          contenido=(
-
-          <NEE
-
-          students={students}
-          setStudents={setStudents}
-          cargarAlumnos={cargarAlumnos}
-
-          seleccionarAlumno={setAlumnoSeleccionado}
-
-          cambiarPantalla={setPantalla}
-
-          />
-
-          );
-
-          break;
-
+        break;
+          
           case "scanPsicologia":
 
           contenido=(
@@ -583,39 +517,9 @@ useEffect(() => {
 
             break;
 
-            case "agenda":
+            
 
-              contenido=(
-
-              <CitasProgramadas
-
-                  cambiarPantalla={setPantalla}
-
-                  students={students || []}
-
-                  setStudents={setStudents}
-
-              />
-
-              );
-
-              break;
-
-              case "notas":
-
-              contenido=(
-
-              <Notas
-
-              students={students}
-
-              cambiarPantalla={setPantalla}
-
-              />
-
-              );
-
-              break;
+            
 
               case "asistenteIA":
 

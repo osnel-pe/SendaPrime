@@ -1,68 +1,212 @@
-/*=========================================
-SCROLL
-=========================================*/
+/*==================================================
+PERFIL ALUMNO PSICOLOGÍA
+==================================================*/
+
+.perfil-wrapper{
+
+    display:flex;
+
+    flex-direction:column;
+
+    height:100%;
+
+    overflow:hidden;
+
+    background:transparent;
+
+}
 
 .perfil-scroll{
 
-  flex:1;
+    flex:1;
 
-  overflow-y:auto;
+    overflow-y:auto;
 
-  padding-top:0;
+    padding:4px 12px 12px;
 
-  padding-bottom:24px;
+    padding-bottom:45px;
 
 }
-/*=========================================
-RESUMEN DEL ALUMNO
-=========================================*/
 
-.perfil-resumen{
+/*==================================================
+HEADER
+==================================================*/
+
+.perfil-header{
 
     display:flex;
 
     align-items:center;
 
-    gap:12px;
+    gap:80px;
 
-    margin-top:-2px;
+    padding:10px 16px 6px;
 
-    margin-bottom:14px;
+    margin:10px;
 
-    padding:0;
+    margin-bottom:2px;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.14);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.16);
+
+    box-shadow:
+
+        0 10px 30px rgba(0,60,35,.12);
 
 }
 
-.perfil-avatar{
+.perfil-header small{
 
-    width:52px;
+    color:#6d857c;
 
-    height:52px;
+}
 
-    border-radius:50%;
+.back-btn{
+
+    width:30px;
+
+    height:30px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:linear-gradient(
+
+            135deg,
+
+            #45d47e,
+
+            #158c55
+
+        );
+
+        color:white;
 
     display:flex;
+
+    align-items:center;
 
     justify-content:center;
 
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.back-btn:hover{
+
+    transform:scale(.95);
+
+}
+
+.perfil-header-title{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.perfil-header-title small{
+
+    color:#7d8ca5;
+
+    font-size:11px;
+
+    font-weight:600;
+
+    letter-spacing:.6px;
+
+    text-transform:uppercase;
+
+}
+
+.perfil-header-title h2{
+
+    margin:0px 0 0;
+
+    font-size:17px;
+
+    color:#23395d;
+
+}
+
+/*==================================================
+TARJETA DEL ALUMNO
+==================================================*/
+
+.pa-card-alumno{
+
+    display:flex;
+
     align-items:center;
 
-    background:linear-gradient(
-        135deg,
-        #1E8E4A,
-        #15663A
+    gap:16px;
+
+    padding:18px;
+
+    margin-bottom:6px;
+
+    border-radius:28px;
+
+    background:rgba(255,255,255,.16);
+
+    backdrop-filter:blur(20px);
+
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    box-shadow:
+
+        0 14px 35px rgba(0,70,40,.14);
+
+}
+
+.pa-avatar{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:20px;
+
+    background:
+
+    linear-gradient(
+
+        145deg,
+
+        #46c982,
+
+        #168a51
+
     );
 
     color:white;
 
-    flex-shrink:0;
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
 
     box-shadow:
-    0 6px 18px rgba(0,0,0,.22);
+
+        0 10px 24px rgba(22,138,81,.35);
 
 }
 
-.perfil-datos{
+.pa-card-info{
 
     flex:1;
 
@@ -70,532 +214,760 @@ RESUMEN DEL ALUMNO
 
 }
 
-.perfil-datos h2{
+.pa-card-info h2{
 
     margin:0;
 
-    color:white;
-
-    font-size:18px;
+    font-size:16px;
 
     font-weight:700;
 
-    line-height:1.05;
+    line-height:1.3;
 
 }
 
-.perfil-datos .nombre{
+.pa-card-extra{
 
-    font-size:21px;
-
-    font-weight:700;
-
-}
-
-.perfil-datos .apellidos{
-
-    margin-top:2px;
-
-    font-size:18px;
-
-    font-weight:600;
-
-    opacity:.92;
-
-}
-
-.perfil-datos h2 span{
-
-    display:block;
-
-}
-
-.perfil-datos h2 span:last-child{
-
-    font-size:18px;
-
-    font-weight:600;
-
-    opacity:.92;
-
-}
-
-.perfil-datos p{
-
-    margin-top:2px;
-
-    color:rgba(255,255,255,.72);
-
-    font-size:13px;
-
-}
-/*=========================================
-TARJETAS
-=========================================*/
-
-.perfil-alumno-card{
-
-width:100%;
-box-sizing:border-box;
-
-padding:20px;
-
-margin-bottom:18px;
-
-border-radius:26px;
-
-background:
-linear-gradient(
-135deg,
-rgba(255,255,255,.85),
-rgba(238,255,245,.65)
-);
-
-backdrop-filter:blur(22px);
-
-border:1px solid rgba(255,255,255,.22);
-
-box-shadow:
-0 12px 25px rgba(0,0,0,.15);
-
-height:auto;
-min-height:unset;
-
-}
-
-.perfil-alumno-card h3{
-
-  margin-top:0;
-  margin-bottom:18px;
-
-  color:#245236;
-
-  font-size:20px;
-
-}
-
-/*=========================================
-DATOS
-=========================================*/
-
-.dato{
-
-  display:flex;
-
-  justify-content:space-between;
-
-  align-items:center;
-
-  padding:12px 0;
-
-  border-bottom:1px solid rgba(0,0,0,.08);
-
-}
-
-.dato:last-child{
-
-  border-bottom:none;
-
-}
-
-.dato span{
-
-  color:#658072;
-
-  font-size:14px;
-
-}
-
-.dato strong{
-
-  color:#214735;
-
-  font-size:15px;
-
-  font-weight:700;
-
-  text-align:right;
-
-  max-width:60%;
-
-}
-/*==========================
-EXPEDIENTE
-==========================*/
-
-.section-title{
-
-  margin:0 0 20px 0;
-
-  color:#245236;
-
-  font-size:24px;
-
-  font-weight:700;
-
-}
-
-.expediente-info-row{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:18px;
-
-  margin-bottom:22px;
-
-}
-
-.expediente-icon{
-
-  width:84px;
-
-  height:84px;
-
-  border-radius:22px;
-
-  background:linear-gradient(
-      135deg,
-      #23954E,
-      #17723D
-  );
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-  color:white;
-
-  flex-shrink:0;
-
-}
-
-.expediente-info{
-
-  flex:1;
-
-}
-
-.expediente-info h4{
-
-  margin:0;
-
-  color:#214735;
-
-  font-size:24px;
-
-  font-weight:700;
-
-}
-
-.expediente-info p{
-
-  margin-top:8px;
-
-  color:#6A756E;
-
-  font-size:16px;
-
-  line-height:1.4;
-
-}
-
-.btn-escanear{
-
-  width:100%;
-
-  height:58px;
-
-  border:none;
-
-  border-radius:18px;
-
-  background:linear-gradient(
-      135deg,
-      #23954E,
-      #17723D
-  );
-
-  color:white;
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-  gap:10px;
-
-  font-size:17px;
-
-  font-weight:700;
-
-  cursor:pointer;
-}
-
-.modal-opciones{
-
-position:fixed;
-inset:0;
-
-background:rgba(0,0,0,.45);
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-z-index:99999;
-
-}
-  
-  .modal-contenido{
-  
-  background:white;
-  
-  padding:25px;
-  
-  border-radius:20px;
-  
-  width:320px;
-  
-  display:flex;
-  
-  flex-direction:column;
-  
-  gap:15px;
-
-  position:relative;
-
-   z-index:100000;
-  
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
-  
-  animation:aparecer .25s;
-  
-  }
-  
-  @keyframes aparecer{
-  
-  from{
-  
-  transform:scale(.9);
-  
-  opacity:0;
-  
-  }
-  
-  to{
-  
-  transform:scale(1);
-  
-  opacity:1;
-  
-  }
-  
-  }
-  .link-documento{
-
-    color:#1976D2;
-
-    cursor:pointer;
-
-    font-weight:600;
-
-    text-decoration:underline;
-
-    display:inline-flex;
+    display:flex;
 
     align-items:center;
+
+    gap:10px;
+
+    margin-top:5px;
+
+}
+
+.pa-card-extra span{
+
+    font-size:12px;
+
+    color:#6b7a90;
+
+    font-weight:600;
+
+}
+
+.pa-separador{
+
+    border-radius:50%;
+
+     background:rgba(255,255,255,.55);
+
+}
+
+/*==================================================
+BARRA DE MÓDULOS
+==================================================*/
+
+.pa-toolbar{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:12px;
+
+    margin-bottom:10px;
+
+}
+
+.pa-tool{
+
+    height:64px;
+
+    border:none;
+
+    border-radius:20px;
+
+    background:rgba(255,255,255,.14);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+    color:white;
+
+    box-shadow:
+
+        0 8px 20px rgba(0,60,35,.08);
+
+}
+
+.pa-tool:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.pa-tool.activo{
+
+    background:
+
+    linear-gradient(
+
+        145deg,
+
+        #4ad186,
+
+        #198a52
+
+    );
+
+    color:white;
+
+    box-shadow:
+
+        0 12px 28px rgba(25,138,82,.40);
+
+}
+
+.pa-tool svg{
+
+    width:24px;
+
+    height:24px;
+
+}
+
+/*==================================================
+CABECERA DEL MÓDULO
+==================================================*/
+
+.pa-module{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom: 8px;
+
+}
+
+.pa-module h3{
+
+    margin:0;
+
+    font-size:19px;
+
+    font-weight:700;
+
+}
+
+.pa-add-btn{
+
+    border:none;
+
+    border-radius:18px;
+
+    padding:9px 15px;
+
+    background:
+
+    linear-gradient(
+
+        145deg,
+
+        #47cb84,
+
+        #198b53
+
+    );
+
+    color:white;
+
+    font-weight:700;
+
+    box-shadow:
+
+        0 12px 25px rgba(25,139,83,.35);
+
+}
+
+.pa-add-btn:hover{
+
+    transform:translateY(-1px);
+
+}
+
+.pa-add-btn svg{
+
+    width:17px;
+
+    height:17px;
+
+}
+
+/*==================================================
+CONTENEDOR DEL MÓDULO
+==================================================*/
+
+.pa-module-body{
+
+    display:flex;
+
+    flex-direction:column;
 
     gap:8px;
 
 }
 
-.link-documento:hover{
+/*==================================================
+TARJETA UNIVERSAL
+==================================================*/
 
-    color:#0D47A1;
-
-}
-
-/*=============================
-MODAL ELIMINAR
-=============================*/
-
-.eliminar-modal{
-
-    width:320px;
-
-    border-radius:28px;
-
-    background:
-
-    linear-gradient(
-        145deg,
-        rgba(255,255,255,.96),
-        rgba(238,255,245,.92)
-    );
-
-    text-align:center;
-
-    padding:28px 24px;
-
-}
-
-.eliminar-icono{
-
-    width:74px;
-
-    height:74px;
-
-    margin:0 auto 18px;
-
-    border-radius:50%;
+.pa-card{
 
     display:flex;
 
-    justify-content:center;
+    justify-content:space-between;
 
     align-items:center;
 
-    color:white;
+    padding:14px;
 
-    background:
+    border-radius:24px;
 
-    linear-gradient(
-        135deg,
-        #FF6B6B,
-        #D32F2F
-    );
+    background:rgba(255,255,255,.16);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.16);
 
     box-shadow:
 
-    0 12px 30px rgba(211,47,47,.30);
+        0 10px 26px rgba(0,60,35,.10);
 
 }
 
-.eliminar-modal h2{
+.pa-card:hover{
 
-    margin:0;
+    transform:translateY(-2px);
 
-    color:#214735;
+    box-shadow:
 
-    font-size:24px;
-
-    font-weight:700;
+        0 12px 30px rgba(15,23,42,.10);
 
 }
 
-.eliminar-modal p{
-
-    margin:14px 0 28px;
-
-    color:#61746A;
-
-    font-size:16px;
-
-    line-height:1.5;
-
-}
-
-.eliminar-botones{
+.pa-card-left{
 
     display:flex;
 
+    align-items:flex-start;
+
     gap:14px;
-
-}
-
-.btn-cancelar{
 
     flex:1;
 
-    height:50px;
+    min-width:0;
 
-    border:none;
+}
 
-    border-radius:16px;
+.pa-card-icon{
 
-    background:#EEF3F0;
+     width:46px;
 
-    color:#2D5240;
+    height:46px;
 
-    font-size:16px;
+    border-radius:15px;
+
+    background:rgba(61,209,123,.16);
+
+    color:#43d17b;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex-shrink:0;
+
+}
+
+.pa-card-text{
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+.pa-card-text h4{
+
+    margin:0;
+
+    font-size:15px;
 
     font-weight:700;
 
-    cursor:pointer;
-
-    transition:.25s;
+    line-height:1.3;
 
 }
 
-.btn-cancelar:hover{
+.pa-card-text span{
 
-    transform:translateY(-2px);
+    display:block;
 
-    background:#E3ECE6;
+    margin-top:4px;
+
+    font-size:12px;
+
+    font-weight:600;
 
 }
 
-.btn-eliminar{
+.pa-card-text p{
 
-    flex:1;
+    margin:7px 0 0;
 
-    height:50px;
+    font-size:13px;
+
+    line-height:1.45;
+
+    display:-webkit-box;
+
+    -webkit-box-orient:vertical;
+
+    -webkit-line-clamp:2;
+
+    overflow:hidden;
+
+}
+
+.pa-card-text small{
+
+    display:block;
+
+    margin-top:7px;
+
+    font-size:11px;
+
+}
+
+.pa-card-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    flex-shrink:0;
+
+}
+
+/*==================================================
+BOTONES CIRCULARES
+==================================================*/
+
+.pa-card-icon{
+
+    width:46px;
+
+    height:46px;
+
+    border-radius:16px;
+
+    background:rgba(74,209,134,.15);
+
+    color:#198a52;
+
+}
+
+.pa-delete{
+
+    background:rgba(255,70,70,.12);
+
+    color:#d83b3b;
+
+}
+
+.pa-delete:hover{
+
+    background:#ffdede;
+
+}
+
+/*==================================================
+ESTADO VACÍO
+==================================================*/
+
+.pa-empty{
+
+    padding:35px;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.10);
+
+    backdrop-filter:blur(18px);
+
+    border:2px dashed rgba(92,139,117,.25);
+
+    color:#6d7c77;
+
+    font-weight:600;
+
+}
+
+/*==================================================
+NOTAS
+==================================================*/
+
+.pa-note.verde{
+
+    border-left:5px solid #22c55e;
+
+}
+
+.pa-note.amarillo{
+
+    border-left:5px solid #f59e0b;
+
+}
+
+.pa-note.rojo{
+
+    border-left:5px solid #ef4444;
+
+}
+
+/*==================================================
+ANIMACIONES
+==================================================*/
+
+.pa-card,
+.pa-tool,
+.pa-add-btn,
+.pa-circle-btn{
+
+    transition:
+
+        background .25s,
+
+        color .25s,
+
+        transform .25s,
+
+        box-shadow .25s,
+
+        border-color .25s;
+
+}
+
+.pa-module-body{
+
+    animation:paFade .25s ease;
+
+}
+
+@keyframes paFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+/*==================================================
+SCROLL
+==================================================*/
+
+.perfil-scroll::-webkit-scrollbar{
+
+    width:7px;
+
+}
+
+.perfil-scroll::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+.perfil-scroll::-webkit-scrollbar-thumb{
+
+    background:#c7d2e3;
+
+    border-radius:30px;
+
+}
+
+.perfil-scroll::-webkit-scrollbar-thumb:hover{
+
+    background:#9fb0c9;
+
+}
+
+/*==================================================
+FOCUS
+==================================================*/
+
+button:focus-visible{
+
+    outline:3px solid rgba(37,99,235,.25);
+
+    outline-offset:2px;
+
+}
+
+/*==================================================
+MÓVILES
+==================================================*/
+
+@media (max-width:480px){
+
+    .perfil-scroll{
+
+        padding:12px;
+
+    }
+
+    .pa-card-alumno{
+
+        padding:14px;
+
+    }
+
+    .pa-avatar{
+
+        width:56px;
+
+        height:56px;
+
+    }
+
+    .pa-card-info h2{
+
+        font-size:15px;
+
+    }
+
+    .pa-tool{
+
+        height:58px;
+
+        border-radius:16px;
+
+    }
+
+    .pa-card{
+
+        padding:13px;
+
+    }
+
+    .pa-card-icon{
+
+        width:42px;
+
+        height:42px;
+
+    }
+
+}
+
+/*==================================================
+TABLETS
+==================================================*/
+
+@media (min-width:768px){
+
+    .perfil-scroll{
+
+        max-width:760px;
+
+        margin:auto;
+
+        width:100%;
+
+    }
+
+}
+
+.perfil-header h2,
+.perfil-header small,
+.perfil-header-title h2,
+.perfil-header-title small,
+.pa-card-info h2,
+.pa-card-extra span,
+.pa-module h3,
+.pa-card-text h4,
+.pa-card-text span,
+.pa-card-text p,
+.pa-card-text small,
+.pa-empty{
+
+    color:white !important;
+
+}
+
+.pa-circle-btn{
+
+    width:38px;
+
+    height:38px;
 
     border:none;
 
-    border-radius:16px;
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    background:rgba(255,255,255,.10);
 
     color:white;
 
-    font-size:16px;
+    transition:.25s;
+
+}
+
+.pa-circle-btn:hover{
+
+    background:#42d17b;
+
+    transform:scale(1.08);
+
+}
+
+.pa-delete{
+
+    background:rgba(255,70,70,.16);
+
+    color:#ff9090;
+
+}
+
+.pa-delete:hover{
+
+    background:#ef4444;
+
+    color:white;
+
+}
+
+/*=====================================
+ARCHIVOS
+======================================*/
+
+.pa-card-text{
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    min-width:0;
+
+}
+
+.pa-card-text h4{
+
+    color:#fff !important;
+
+    font-size:15px;
 
     font-weight:700;
 
-    cursor:pointer;
+    margin:0;
 
-    transition:.25s;
+    white-space:nowrap;
 
-    background:
+    overflow:hidden;
 
-    linear-gradient(
-        135deg,
-        #F44336,
-        #C62828
-    );
-
-    box-shadow:
-
-    0 10px 22px rgba(244,67,54,.28);
+    text-overflow:ellipsis;
 
 }
 
-.btn-eliminar:hover{
+.pa-card-text small{
 
-    transform:translateY(-2px);
+    margin-top:4px;
 
-    box-shadow:
+    color:rgba(255,255,255,.72) !important;
 
-    0 14px 28px rgba(244,67,54,.35);
+    font-size:11px;
+
+    font-weight:500;
 
 }
 
-/* =========================================
-   CITA / SEGUIMIENTO EN PERFIL
-========================================= */
+.pa-card-icon{
 
-.perfil-scroll .citas-card{
+    width:48px;
 
-    flex:0 0 auto;
+    height:48px;
 
-    height:auto;
+    border-radius:16px;
 
-    min-height:0;
+    background:rgba(70,210,130,.16);
 
-    max-height:none;
+    color:#52df95;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex-shrink:0;
+
+}
+
+.pa-card-icon svg{
+
+    width:23px;
+
+    height:23px;
+
+}
+
+.pa-card-actions{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+}
+
+.pa-circle-btn{
+
+    width:40px;
+
+    height:40px;
+
+    border-radius:13px;
+
+}
+
+.pa-card{
+
+    min-height:82px;
 
 }

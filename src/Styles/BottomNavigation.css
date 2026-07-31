@@ -1,0 +1,129 @@
+.bottom-nav{
+
+    position:absolute;
+
+    left:18px;
+
+    right:18px;
+
+    bottom:18px;
+
+    height:72px;
+
+    border-radius:28px;
+
+    display:flex;
+
+    justify-content:space-around;
+
+    align-items:center;
+
+    z-index:80;
+
+    background:
+
+        rgba(255,255,255,.18);
+
+    backdrop-filter:blur(25px);
+
+    -webkit-backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    box-shadow:
+
+        0 10px 35px rgba(0,0,0,.22);
+
+}
+
+.bottom-btn{
+
+    flex:1;
+
+    height:100%;
+
+    border:none;
+
+    background:none;
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:4px;
+
+    color:white;
+
+    font-size:11px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.bottom-btn svg{
+
+    transition:.25s;
+
+}
+
+.bottom-btn span{
+
+    font-size:11px;
+
+    font-weight:600;
+
+    letter-spacing:.2px;
+
+}
+
+.bottom-btn:hover{
+
+    background:
+
+        rgba(255,255,255,.08);
+
+}
+
+.bottom-btn:active{
+
+    transform:scale(.93);
+
+}
+
+.bottom-btn.activo{
+
+    color:#7dffd4;
+
+    transform:translateY(-2px);
+
+}
+
+.bottom-btn.activo svg{
+
+    transform:scale(1.18);
+
+}
+
+.bottom-btn.activo span{
+
+    font-weight:700;
+
+}
+
+.bottom-btn svg{
+
+    transition:.25s;
+
+}
+
+.bottom-btn.activo svg{
+
+    transform:scale(1.18);
+
+}

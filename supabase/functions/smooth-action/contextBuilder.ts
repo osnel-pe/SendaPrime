@@ -93,7 +93,9 @@ export async function construirContexto(
 
     }
 
-
+    console.log("========== CONTEXTO ==========");
+    console.log(JSON.stringify(contexto, null, 2));
+    console.log("==============================");
     return contexto;
 
 }

@@ -1,56 +1,195 @@
+export type IntencionNeuri = {
+
+    resumen: boolean;
+
+    perfil: boolean;
+
+    identidad: boolean;
+
+    notas: boolean;
+
+    rendimiento: boolean;
+
+    progreso: boolean;
+
+    riesgo: boolean;
+
+    emociones: boolean;
+
+    seguimiento: boolean;
+
+    historial: boolean;
+
+    estrategias: boolean;
+
+    recomendaciones: boolean;
+
+    intervenciones: boolean;
+
+    citas: boolean;
+
+    expediente: boolean;
+
+    informe: boolean;
+
+    dashboard: boolean;
+
+    estadisticas: boolean;
+
+};
+
+
 export function analizarIntencion(
 
-    mensaje:string
+    mensaje: string
 
-){
+): IntencionNeuri {
 
-    const t=mensaje.toLowerCase();
 
-    return{
+    const texto =
+
+        mensaje
+
+            .normalize("NFD")
+
+            .replace(
+
+                /[\u0300-\u036f]/g,
+
+                ""
+
+            )
+
+            .toLowerCase();
+
+
+    return {
+
 
         resumen:
 
-        /(resumen|perfil|historial)/i.test(t),
+            /\b(resumen|panorama|analiza|analizar|informacion general)\b/
 
-        riesgo:
+                .test(texto),
 
-        /(riesgo|urgente|suicidio|violencia|bullying|autoles)/i.test(t),
 
-        estrategias:
+        perfil:
 
-        /(estrategias|plan|intervención|apoyo)/i.test(t),
+            /\b(perfil|datos del alumno|informacion del alumno|informacion personal)\b/
 
-        citas:
+                .test(texto),
 
-        /(cita|entrevista|sesión)/i.test(t),
 
-        seguimiento:
+        identidad:
 
-        /(seguimiento|continuar)/i.test(t),
+            /\b(nombre|apellido|sexo|genero|grupo|grado)\b/
 
-        expediente:
+                .test(texto),
 
-        /(expediente|archivo|pdf)/i.test(t),
 
-        informe:
+        notas:
 
-        /(informe|reporte)/i.test(t),
+            /\b(nota|notas|observacion|observaciones|registro|registros)\b/
 
-        dashboard:
+                .test(texto),
 
-        /(estadísticas|dashboard|panel)/i.test(t),
+
+        rendimiento:
+
+            /\b(rendimiento|calificacion|calificaciones|desempeno|academico)\b/
+
+                .test(texto),
+
 
         progreso:
 
-        /(progreso|evolución|avance)/i.test(t),
+            /\b(progreso|avance|evolucion|mejoro|empeoro|cambio)\b/
+
+                .test(texto),
+
+
+        riesgo:
+
+            /\b(riesgo|alerta|peligro|urgente|violencia|bullying|acoso|autolesion|suicidio)\b/
+
+                .test(texto),
+
 
         emociones:
 
-        /(emociones|estado emocional|sentimientos)/i.test(t),
+            /\b(emocion|emociones|emocional|estado emocional|sentimiento|ansiedad|tristeza|miedo|enojo|frustracion)\b/
+
+                .test(texto),
+
+
+        seguimiento:
+
+            /\b(seguimiento|continuar|reciente|ultimo|ultima|actualmente)\b/
+
+                .test(texto),
+
 
         historial:
 
-        /(historial|cronología|timeline)/i.test(t)
+            /\b(historial|historico|cronologia|timeline|trayectoria)\b/
+
+                .test(texto),
+
+
+        estrategias:
+
+            /\b(estrategia|estrategias|plan|planes|apoyar|ayuda|ayudar|intervencion)\b/
+
+                .test(texto),
+
+
+        recomendaciones:
+
+            /\b(recomendacion|recomendaciones|sugerencia|sugerencias|que hacer)\b/
+
+                .test(texto),
+
+
+        intervenciones:
+
+            /\b(intervencion|intervenciones|apoyo individual|apoyo psicologico)\b/
+
+                .test(texto),
+
+
+        citas:
+
+            /\b(cita|citas|sesion|sesiones|entrevista|entrevistas|acuerdos)\b/
+
+                .test(texto),
+
+
+        expediente:
+
+            /\b(expediente|archivo|documento|pdf|ficha|ficha general)\b/
+
+                .test(texto),
+
+
+        informe:
+
+            /\b(informe|informes|reporte|reportes)\b/
+
+                .test(texto),
+
+
+        dashboard:
+
+            /\b(dashboard|panel|resumen general)\b/
+
+                .test(texto),
+
+
+        estadisticas:
+
+            /\b(estadistica|estadisticas|porcentaje|porcentajes|total de alumnos|cantidad de alumnos)\b/
+
+                .test(texto)
 
     };
 

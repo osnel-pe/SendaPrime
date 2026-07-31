@@ -1,4 +1,39 @@
+export type NEE = {
+
+    nivel?: string | null;
+
+    diagnostico?: string | null;
+
+    observaciones?: string | null;
+
+};
+
+
+export type Cita = {
+
+    id?: number;
+
+    alumno_id?: number;
+
+    fecha?: string | null;
+
+    tipo?: string | null;
+
+    motivo?: string | null;
+
+    acuerdos?: string | null;
+
+    intervencion?: string | null;
+
+    observaciones?: string | null;
+
+    [key: string]: unknown;
+
+};
+
+
 export type Alumno = {
+
     id: number;
 
     nombre: string;
@@ -11,17 +46,23 @@ export type Alumno = {
 
     grupo?: string | null;
 
+    saldo?: number | null;
+
+    nivel?: number | null;
+
     expediente_pdf?: string | null;
 
-    nee?: unknown;
+    nee?: NEE[] | null;
 
     nee_observaciones?: string | null;
 
-    citas?: unknown;
+    citas?: Cita[] | null;
+
 };
 
 
 export type Nota = {
+
     id?: number;
 
     alumno_id?: number;
@@ -37,23 +78,7 @@ export type Nota = {
     tipo?: string | null;
 
     [key: string]: unknown;
-};
 
-
-export type Cita = {
-    id?: number;
-
-    alumno_id?: number;
-
-    fecha?: string | null;
-
-    tipo?: string | null;
-
-    motivo?: string | null;
-
-    observaciones?: string | null;
-
-    [key: string]: unknown;
 };
 
 
@@ -85,5 +110,22 @@ export type Emociones = {
     frustracion: number;
 
     alegria: number;
+
+};
+
+
+export type AnalisisAlumno = {
+
+    riesgo: unknown;
+
+    emociones: Emociones;
+
+    patrones: unknown;
+
+    progreso: unknown;
+
+    recomendaciones: unknown;
+
+    estrategias: unknown;
 
 };

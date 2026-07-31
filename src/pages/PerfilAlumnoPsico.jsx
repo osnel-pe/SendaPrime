@@ -1,653 +1,368 @@
-import "../Styles/AppLayout.css";
-import "../Styles/Psicologia.css";
-import "../Styles/PerfilAlumnoPsico.css";
+import { useState,useEffect,useRef } from "react";
 
 import {
 
     ArrowLeft,
-    House,
+
     UserRound,
+
     FolderOpen,
-    FileText,
+
     Upload,
+
+    FileText,
+
+    Eye,
+
     Trash2,
-    Eye
+
+    Brain,
+
+    ClipboardList,
+
+    Pencil,
+
+    Plus,
+
+    FilePlus2
 
 } from "lucide-react";
 
-import { useRef, useState, useEffect } from "react";
-
-import ExpedienteCard from "../components/Psicologia/ExpedienteCard";
-
-import { supabase } from "../services/supabase";
+import "../Styles/AppLayout.css";
+import "../Styles/Psicologia.css";
+import "../Styles/PerfilAlumnoPsico.css";
 
 import fondoPsicologia from "../assets/fondo-psicologia.jpg";
 
-import NEECard from "../components/Psicologia/NEECard";
-
+import ModalSeguimiento from "../components/Psicologia/ModalSeguimientoGrupo";
 import ModalNEE from "../components/ModalNEE";
-
-import CitasCard from "../components/Psicologia/CitasCard";
-
-import ModalCita from "../components/Psicologia/ModalCita";
-
-import NotasAlumnoCard from "../components/Psicologia/NotasAlumnoCard";
-
 import ModalNota from "../components/Psicologia/ModalNota";
+import ModalCita from "../components/Psicologia/ModalCita";
+import VistaDetalleNota from "../components/Psicologia/VistaDetalleNota";
+import VistaDetalleCita from "../components/Psicologia/VistaDetalleCita";
+import VistaDetalleNEE from "../components/Psicologia/VistaDetalleNEE";
+
+import { supabase } from "../services/supabase";
 
 export default function PerfilAlumnoPsico({
 
     alumno,
 
-    cambiarPantalla,
-
     students,
 
     setStudents,
 
-    setAlumnoSeleccionado
+    setAlumnoSeleccionado,
 
-}) {
+    cambiarPantalla,
 
-    const inputArchivo = useRef(null);
+    embebido=false,
 
-    const [confirmandoEliminar, setConfirmandoEliminar] = useState(false);
+    citaActiva,
 
-    const [datosAlumno, setDatosAlumno] = useState(alumno);
+    setCitaActiva
 
-    const [cargando, setCargando] = useState(false);
+}){
 
-    const [modalNEE,setModalNEE]=useState(false);
+const [datosAlumno,setDatosAlumno]=useState(alumno);
 
-    const [indiceNEE, setIndiceNEE] = useState(null);
-    
-    const [mostrarEliminarNEE, setMostrarEliminarNEE] = useState(false);
+const [modulo,setModulo]=useState("archivos");
 
-    const [notasAlumno,setNotasAlumno]=useState([]);
+const inputArchivo=useRef(null);
 
-    const [modalNota,setModalNota]=useState(false);
+const documentoExtra=useRef(null);
 
-    const [notaEditar,setNotaEditar]=useState(null);
+/*=========================================
+ARCHIVOS
+=========================================*/
 
-    const [notaEliminar,setNotaEliminar]=useState(null);
+const [archivos,setArchivos]=useState([]);
 
-    const [notaVista,setNotaVista]=useState(null);
+const [archivosExtra,setArchivosExtra]=useState([]);
 
-    const [indiceEliminarNEE, setIndiceEliminarNEE] = useState(null);
-   
-    const [modalCita,setModalCita]=useState(false);
+/*=========================================
+NEE
+=========================================*/
 
-    const [indiceCita,setIndiceCita]=useState(null);
+const [nees,setNees]=useState([]);
 
-    const [mostrarEliminarCita,setMostrarEliminarCita]=useState(false);
+const [modalNEE,setModalNEE]=useState(false);
 
-    const [indiceEliminarCita,setIndiceEliminarCita]=useState(null);
+const [neeEditar,setNeeEditar]=useState(null);
 
-    //==============================
-    // CARGAR ALUMNO DESDE SUPABASE
-    //==============================
+/*=========================================
+NOTAS
+=========================================*/
 
-    const cargarAlumno = async () => {
+const [notas,setNotas]=useState([]);
 
-        if (!alumno) return;
+const [modalNota,setModalNota]=useState(false);
 
-        const { data, error } = await supabase
+const [notaEditar,setNotaEditar]=useState(null);
 
-            .from("alumnos")
+/*=========================================
+SEGUIMIENTO
+=========================================*/
 
-            .select("*")
+const [seguimientos,setSeguimientos]=useState([]);
 
-            .eq("id", alumno.id)
+const [historial,setHistorial]=useState([]);
 
-            .single();
+const [modalSeguimiento,setModalSeguimiento]=useState(false);
 
-        if (error) {
+const [seguimientoEditar,setSeguimientoEditar]=useState(null);
 
-            console.error(error);
+const [notaVista,setNotaVista]=useState(null);
 
-            return;
+const [seguimientoVista,setSeguimientoVista]=useState(null);
 
-        }
-
-        setDatosAlumno(data);
-
-        setAlumnoSeleccionado(data);
-
-        if (students && setStudents) {
-
-            setStudents(
-
-                students.map((a) =>
-
-                    a.id === data.id
-
-                        ? data
-
-                        : a
-
-                )
-
-            );
-
-        }
-
-    };
-
-    useEffect(() => {
-
-        cargarAlumno();
-
-    }, []);
+const [neeVista,setNeeVista]=useState(null);
 
     useEffect(()=>{
 
-    if(datosAlumno?.id){
+        setDatosAlumno(alumno);
 
-        cargarNotasAlumno();
+    },[alumno]);
 
-    }
+    useEffect(()=>{
+
+        if(!alumno) return;
+
+        cargarArchivos();
+
+        cargarArchivosExtra();
+
+        cargarNotas();
+
+        cargarNEE();
+
+        cargarSeguimientos();
+
+        cargarHistorial();
+
+    },[alumno]);
+
+    useEffect(()=>{
+
+        setNees(datosAlumno?.nee || []);
 
     },[datosAlumno]);
 
-    if (!datosAlumno) return null;
+    useEffect(()=>{
 
-    //==============================
-    // ABRIR SELECTOR
-    //==============================
+    if(!citaActiva) return;
 
-    const abrirSelector = () => {
+    setSeguimientoEditar(citaActiva);
 
-    inputArchivo.current.click();
+    setModalSeguimiento(true);
 
-};
+},[citaActiva]);
 
-    //==============================
-    // SUBIR PDF
-    //==============================
+    async function cargarArchivos(){
 
-    const subirExpediente = async (e) => {
+        const {data,error}=await supabase
 
-        const archivo = e.target.files[0];
+        .from("archivos_alumno")
 
-        if (!archivo) return;
+        .select("*")
 
-        setCargando(true);
+        .eq("alumno_id",alumno.id)
 
-        try {
+        .order("created_at",{
 
-            //==============================
-            // ELIMINAR EXPEDIENTE ANTERIOR
-            //==============================
+            ascending:false
 
-            if (datosAlumno.expediente_pdf) {
+        });
 
-                const { error } = await supabase.storage
+        if(error){
 
-                    .from("expedientes")
+            console.log(error);
 
-                    .remove([datosAlumno.expediente_pdf]);
-
-                if (error) {
-
-                    console.error(error);
-
-                }
-
-            }
-
-            const nombreArchivo =
-
-            `${datosAlumno.grupo}/${datosAlumno.id}/FichaGeneral.pdf`;
-
-            //---------------------------------------
-            // SUBIR AL STORAGE
-            //---------------------------------------
-
-            const {
-
-                error: errorStorage
-
-            } = await supabase.storage
-
-                .from("expedientes")
-
-                .upload(nombreArchivo, archivo);
-
-            if (errorStorage) {
-
-                alert(errorStorage.message);
-
-                setCargando(false);
-
-                return;
-
-            }
-
-            //---------------------------------------
-            // ACTUALIZAR TABLA ALUMNOS
-            //---------------------------------------
-
-            const {
-
-                data,
-
-                error
-
-            } = await supabase
-
-                .from("alumnos")
-
-                .update({
-
-                    expediente_pdf: nombreArchivo
-
-                })
-
-                .eq("id", datosAlumno.id)
-
-                .select()
-
-                .single();
-
-            if (error) {
-
-                alert(error.message);
-
-                setCargando(false);
-
-                return;
-
-            }
-
-            //---------------------------------------
-            // ACTUALIZAR ESTADOS
-            //---------------------------------------
-
-            setDatosAlumno(data);
-
-            setAlumnoSeleccionado(data);
-
-            if (students && setStudents) {
-
-                setStudents(
-
-                    students.map((a) =>
-
-                        a.id === data.id
-
-                            ? data
-
-                            : a
-
-                    )
-
-                );
-
-            }
-
-            alert("Expediente guardado correctamente.");
-
-        }
-
-        catch (err) {
-
-            console.error(err);
-
-            alert("Ocurrió un error.");
-
-        }
-
-        finally {
-
-            setCargando(false);
-
-        }
-
-    };
-
-    //==============================
-    // ELIMINAR PDF
-    //==============================
-
-    const eliminarExpediente = async () => {
-
-        console.log("Eliminar presionado");
-        if (!datosAlumno.expediente_pdf) return;
-    
-        const confirmar = window.confirm(
-
-        `¿Deseas eliminar la ficha general de
-
-        ${datosAlumno.nombre}
-
-        ${datosAlumno.apellido_paterno}?
-
-        Esta acción no se puede deshacer.`
-
-        );
-
-        if (!confirmar) return;
-    
-        // 1. Eliminar del Storage
-        const { error: errorStorage } = await supabase.storage
-            .from("expedientes")
-            .remove([datosAlumno.expediente_pdf]);
-    
-        console.log("Eliminar Storage:", errorStorage);
-    
-        if (errorStorage) {
-            alert(errorStorage.message);
             return;
+
         }
-    
-        // 2. Eliminar referencia en la tabla alumnos
-        const { data, error: errorBD } = await supabase
-            .from("alumnos")
-            .update({
-                expediente_pdf: null
-            })
-            .eq("id", datosAlumno.id)
-            .select();
-    
-        console.log("UPDATE:", data);
-        console.log("ERROR UPDATE:", errorBD);
-    
-        if (errorBD) {
-            alert(errorBD.message);
-            return;
-        }
-    
-        // 3. Actualizar la interfaz
-        const actualizado = {
-            ...datosAlumno,
-            expediente_pdf: null
-        };
-    
-        setDatosAlumno(actualizado);
-        setAlumnoSeleccionado(actualizado);
-    
-        setStudents(
-            students.map(a =>
-                a.id === actualizado.id
-                    ? actualizado
-                    : a
-            )
-        );
-    
-        alert("Documento eliminado.");
 
-        setConfirmandoEliminar(false);
-    
-    };
-
-    //==============================
-    // VER PDF
-    //==============================
-
-    const verPDF = () => {
-
-    if (!datosAlumno.expediente_pdf) return;
-
-    const { data } = supabase.storage
-        .from("expedientes")
-        .getPublicUrl(datosAlumno.expediente_pdf);
-
-    const enlace = document.createElement("a");
-    enlace.href = data.publicUrl;
-    enlace.target = "_blank";
-    enlace.rel = "noopener noreferrer";
-    enlace.click();
-};
-
-const guardarNEE = async (datos)=>{
-
-    const lista = [...(datosAlumno?.nee || [])];
-
-    if(indiceNEE===null){
-
-        lista.push(datos);
-
-    }else{
-
-        lista[indiceNEE]=datos;
+        setArchivos(data || []);
 
     }
 
-    const {error}=await supabase
+    async function cargarNotas(){
 
-        .from("alumnos")
+        const {data,error}=await supabase
 
-        .update({
+        .from("notas_psicologia")
 
-            nee:lista
+        .select("*")
+
+        .eq("alumno_id",alumno.id)
+
+        .order("fijada",{
+
+            ascending:false
 
         })
-        .eq("id",datosAlumno.id); 
-        const { data } = await supabase
-            .from("alumnos")
-            .select("*")
-            .eq("id",datosAlumno.id)
-            .single();
 
-            setStudents(prev=>
+        .order("created_at",{
 
-            prev.map(a=>
+            ascending:false
 
-            a.id===data.id
+        });
 
-            ? data
+        if(error){
 
-            : a
+            console.log(error);
 
-            )
+            return;
 
-            );
+        }
 
-        
-
-    if(error){
-
-        alert(error.message);
-
-        return;
+        setNotas(data || []);
 
     }
 
-    setDatosAlumno({
+    function cargarNEE(){
 
-        ...datosAlumno,
+        setNees(
 
-        nee:lista
+            datosAlumno?.nee || []
+
+        );
+
+    }
+
+    async function guardarSeguimiento(datos){
+
+    // Si viene de una cita programada
+    if(seguimientoEditar?.alumno_id && !seguimientoEditar?.intervencion){
+
+        await supabase
+        .from("citas_programadas")
+        .update({
+            fecha:datos.fecha,
+            hora:datos.hora,
+            tipo:datos.tipo
+        })
+        .eq("id",seguimientoEditar.id);
+
+    }
+
+    // Si viene del historial
+    else{
+
+        await supabase
+        .from("historial_psicologia")
+        .update({
+            fecha:datos.fecha,
+            hora:datos.hora,
+            tipo:datos.tipo,
+            motivo:datos.motivo,
+            intervencion:datos.intervencion,
+            acuerdos:datos.acuerdos
+        })
+        .eq("id",seguimientoEditar.id);
+
+    }
+
+    setSeguimientoEditar(null);
+    setModalSeguimiento(false);
+
+    if(setCitaActiva){
+        setCitaActiva(null);
+    }
+
+    cargarSeguimientos();
+    cargarHistorial();
+}
+
+async function cargarHistorial(){
+
+    const {data,error}=await supabase
+
+    .from("historial_psicologia")
+
+    .select("*")
+
+    .eq("alumno_id",datosAlumno.id)
+
+    .order("fecha",{
+
+        ascending:false
+
+    })
+
+    .order("hora",{
+
+        ascending:false
 
     });
 
-    setIndiceNEE(null);
-
-    setModalNEE(false);
-
-};
-
-const guardarNotaAlumno = async (datos) => {
-
-    if (notaEditar) {
-
-        const { error } = await supabase
-
-            .from("notas_psicologia")
-
-            .update({
-
-                titulo: datos.titulo,
-
-                nota: datos.nota,
-
-                color: datos.color
-
-            })
-
-            .eq("id", notaEditar.id);
-
-        if (error) {
-
-            console.log(error);
-
-            alert(error.message);
-
-            return;
-
-        }
-
-    } else {
-
-        const { error } = await supabase
-
-            .from("notas_psicologia")
-
-            .insert({
-
-                alumno_id: datosAlumno.id,
-
-                titulo: datos.titulo,
-
-                nota: datos.nota,
-
-                color: datos.color,
-
-                grupo: null
-
-            });
-
-        if (error) {
-
-            console.log(error);
-
-            alert(error.message);
-
-            return;
-
-        }
-
-    }
-
-    setModalNota(false);
-
-    setNotaEditar(null);
-
-    cargarNotasAlumno();
-
-};
-
-const eliminarNotaAlumno=async()=>{
-
-    const {error}=await supabase
-
-    .from("notas_psicologia")
-
-    .delete()
-
-    .eq("id",notaEliminar.id);
-
     if(error){
-
-    alert(error.message);
-
-    return;
-
-    }
-
-    setNotaEliminar(null);
-
-    cargarNotasAlumno();
-
-};
-
-const guardarCita = async (datos) => {
-
-    console.log("RECIBIDO EN PERFIL:", datos);
-
-    const lista = [...(datosAlumno.citas || [])];
-
-    if (indiceCita === null) {
-
-        lista.unshift(datos);
-
-    } else {
-
-        lista[indiceCita] = datos;
-
-    }
-
-    const { error } = await supabase
-        .from("alumnos")
-        .update({
-            citas: lista
-        })
-        .eq("id", datosAlumno.id);
-
-    if (error) {
-
-        console.error("ERROR AL GUARDAR CITA:", error);
-
-        alert(error.message);
-
-        return;
-
-    }
-
-    setDatosAlumno(prev => ({
-        ...prev,
-        citas: lista
-    }));
-
-    setIndiceCita(null);
-
-    setModalCita(false);
-
-};
-
-const eliminarNEE = async(index)=>{
-
-    console.log("Índice:", index);
-
-    console.log("NEE:", datosAlumno?.nee);
-
-    const lista=[...(datosAlumno?.nee || [])];
-
-    lista.splice(index,1);
-    console.log("Lista después:", lista);
-
-    const {error}=await supabase
-
-        .from("alumnos")
-
-        .update({
-
-            nee:lista
-
-        })
-        .eq("id", datosAlumno.id);
 
         console.log(error);
 
-        const { data } = await supabase
-        .from("alumnos")
-        .select("*")
-        .eq("id",datosAlumno.id)
-        .single();
+        return;
 
-        setStudents(prev=>
+    }
 
-        prev.map(a=>
+    setHistorial(data || []);
 
-        a.id===data.id
+}
 
-        ? data
+async function cargarSeguimientos(){
 
-        : a
+    const {data,error}=await supabase
 
-        )
+    .from("citas_programadas")
 
-        );
+    .select("*")
+
+    .eq("alumno_id",datosAlumno.id)
+
+    .order("fecha",{
+
+        ascending:true
+
+    })
+
+    .order("hora",{
+
+        ascending:true
+
+    });
+
+    if(error){
+
+        console.log(error);
+
+        return;
+
+    }
+
+    setSeguimientos(data || []);
+
+}
+
+function editarSeguimiento(registro){
+
+    setSeguimientoEditar(registro);
+
+    setModalSeguimiento(true);
+
+}
+
+async function eliminarSeguimiento(id){
+
+    if(
+        !window.confirm("¿Eliminar esta cita?")
+    ) return;
+
+    const {error}=await supabase
+
+    .from("citas_programadas")
+
+    .delete()
+
+    .eq("id",id);
 
     if(error){
 
@@ -657,21 +372,47 @@ const eliminarNEE = async(index)=>{
 
     }
 
-    setDatosAlumno({
+    cargarSeguimientos();
 
-        ...datosAlumno,
+}
 
-        nee:lista
+    async function subirExpediente(e){
 
-    });
+    const archivo=e.target.files?.[0];
 
-};
+    if(!archivo) return;
 
-const eliminarCita = async(index)=>{
+    const ruta=
 
-    const lista=[...(datosAlumno.citas || [])];
+        `${datosAlumno.grupo}/${datosAlumno.id}/FichaGeneral.pdf`;
 
-    lista.splice(index,1);
+    const {error:storageError}=
+
+        await supabase.storage
+
+        .from("expedientes")
+
+        .upload(
+
+            ruta,
+
+            archivo,
+
+            {
+
+                upsert:true
+
+            }
+
+        );
+
+    if(storageError){
+
+        alert(storageError.message);
+
+        return;
+
+    }
 
     const {error}=await supabase
 
@@ -679,7 +420,7 @@ const eliminarCita = async(index)=>{
 
         .update({
 
-            citas:lista
+            expediente_pdf:ruta
 
         })
 
@@ -697,229 +438,1797 @@ const eliminarCita = async(index)=>{
 
         ...datosAlumno,
 
-        citas:lista
+        expediente_pdf:ruta
 
     });
 
-};
+}
 
-        const cargarNotasAlumno = async()=>{
+    async function verExpediente(){
 
-            const {data,error}=await supabase
+    if(
 
-            .from("notas_psicologia")
+        !datosAlumno?.expediente_pdf
 
-            .select("*")
+    ) return;
 
-            .eq("alumno_id",datosAlumno.id)
+    const {data,error}=
 
-            .order("created_at",{ascending:false});
+        await supabase.storage
+
+        .from("expedientes")
+
+        .createSignedUrl(
+
+            datosAlumno.expediente_pdf,
+
+            300
+
+        );
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    window.open(
+
+        data.signedUrl,
+
+        "_blank"
+
+    );
+
+}
+
+async function eliminarExpediente(){
+
+    if(
+
+        !window.confirm(
+
+            "¿Eliminar expediente?"
+
+        )
+
+    ) return;
+
+    if(
+
+        datosAlumno.expediente_pdf
+
+    ){
+
+        await supabase.storage
+
+            .from("expedientes")
+
+            .remove([
+
+                datosAlumno.expediente_pdf
+
+            ]);
+
+    }
+
+    await supabase
+
+        .from("alumnos")
+
+        .update({
+
+            expediente_pdf:null
+
+        })
+
+        .eq("id",datosAlumno.id);
+
+    setDatosAlumno({
+
+        ...datosAlumno,
+
+        expediente_pdf:null
+
+    });
+
+}
+
+async function subirDocumentoExtra(e){
+
+    const archivo=e.target.files?.[0];
+
+    if(!archivo) return;
+
+    const ruta=
+
+    `${datosAlumno.grupo}/${datosAlumno.id}/archivos/${Date.now()}-${archivo.name}`;
+
+    const {error}=await supabase.storage
+
+    .from("expedientes")
+
+    .upload(
+
+        ruta,
+
+        archivo
+
+    );
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    cargarArchivosExtra();
+
+}
+
+async function verDocumentoExtra(nombre){
+
+    const ruta=
+
+    `${datosAlumno.grupo}/${datosAlumno.id}/archivos/${nombre}`;
+
+    const{
+
+        data,
+        error
+
+    }=await supabase.storage
+
+    .from("expedientes")
+
+    .createSignedUrl(
+
+        ruta,
+
+        300
+
+    );
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    window.open(
+
+        data.signedUrl,
+
+        "_blank"
+
+    );
+
+}
+
+async function eliminarDocumentoExtra(nombre){
+
+    if(
+
+        !window.confirm(
+
+            "¿Eliminar documento?"
+
+        )
+
+    ) return;
+
+    const ruta=
+
+    `${datosAlumno.grupo}/${datosAlumno.id}/archivos/${nombre}`;
+
+    const {error}=await supabase.storage
+
+    .from("expedientes")
+
+    .remove([
+
+        ruta
+
+    ]);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    cargarArchivosExtra();
+
+}
+
+    async function subirArchivo(e){
+
+        const archivo=e.target.files?.[0];
+
+        if(!archivo) return;
+
+        const nombre=
+
+            `${Date.now()}-${archivo.name}`;
+
+        const {error:storageError}=
+
+            await supabase.storage
+
+            .from("archivos-psicologia")
+
+            .upload(nombre,archivo);
+
+        if(storageError){
+
+            alert(storageError.message);
+
+            return;
+
+        }
+
+        const {
+
+            data:{publicUrl}
+
+        }=supabase.storage
+
+        .from("archivos-psicologia")
+
+        .getPublicUrl(nombre);
+
+        const {error}=await supabase
+
+        .from("archivos_alumno")
+
+        .insert({
+
+            alumno_id:datosAlumno.id,
+
+            nombre:archivo.name,
+
+            url:publicUrl,
+
+            tipo:archivo.type
+
+        });
+
+        if(error){
+
+            alert(error.message);
+
+            return;
+
+        }
+
+        cargarArchivos();
+
+    }
+
+    function abrirArchivo(url){
+
+        window.open(url,"_blank");
+
+    }
+
+    async function eliminarArchivo(id){
+
+        if(
+
+            !window.confirm(
+
+                "¿Eliminar este archivo?"
+
+            )
+
+        ) return;
+
+        const {error}=await supabase
+
+        .from("archivos_alumno")
+
+        .delete()
+
+        .eq("id",id);
+
+        if(error){
+
+            alert(error.message);
+
+            return;
+
+        }
+
+        cargarArchivos();
+
+    }
+
+    async function eliminarNota(id){
+
+        if(
+
+            !window.confirm(
+
+                "¿Eliminar esta nota?"
+
+            )
+
+        ) return;
+
+        await supabase
+
+        .from("notas_psicologia")
+
+        .delete()
+
+        .eq("id",id);
+
+        cargarNotas();
+
+    }
+
+        /*==================================================
+    NOTAS
+    ==================================================*/
+
+    async function guardarNota(datos){
+
+    if(notaEditar){
+
+        const {error}=await supabase
+
+        .from("notas_psicologia")
+
+        .update({
+
+            titulo:datos.titulo,
+
+            nota:datos.nota,
+
+            color:datos.color,
+
+            fijada:datos.fijada
+
+        })
+
+        .eq("id",notaEditar.id);
+
+        if(error){
+
+            alert(error.message);
+
+            return;
+
+        }
+
+    }else{
+
+        const {error}=await supabase
+
+        .from("notas_psicologia")
+
+        .insert({
+
+            alumno_id:datosAlumno.id,
+
+            grupo:datosAlumno.grupo,
+
+            titulo:datos.titulo,
+
+            nota:datos.nota,
+
+            color:datos.color,
+
+            fijada:false
+
+        });
+
+        if(error){
+
+            alert(error.message);
+
+            return;
+
+        }
+
+    }
+
+    await cargarNotas();
+
+    setModalNota(false);
+
+    setNotaEditar(null);
+
+}
+
+    async function eliminarNota(id){
+
+    if(
+
+        !window.confirm(
+
+            "¿Eliminar esta nota?"
+
+        )
+
+    ) return;
+
+    const {error}=await supabase
+
+    .from("notas_psicologia")
+
+    .delete()
+
+    .eq("id",id);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    cargarNotas();
+
+}
+
+     function nuevaNota(){
+
+        setNotaEditar(null);
+
+        setModalNota(true);
+
+    }
+
+    function editarNota(nota){
+
+        setNotaEditar(nota);
+
+        setModalNota(true);
+
+    }
+
+    /*==================================================
+    NEE
+    ==================================================*/
+
+    function editarNEE(indice){
+
+        setNeeEditar(
+
+            datosAlumno.nee[indice]
+
+        );
+
+        setModalNEE(true);
+
+    }
+
+    function nuevaNEE(){
+
+        setNeeEditar(null);
+
+        setModalNEE(true);
+
+    }
+
+    async function eliminarNEE(indice){
+
+    if(
+
+        !window.confirm(
+
+            "¿Eliminar esta NEE?"
+
+        )
+
+    ) return;
+
+    const nuevasNEE=[
+
+        ...(datosAlumno.nee || [])
+
+    ];
+
+    nuevasNEE.splice(
+
+        indice,
+
+        1
+
+    );
+
+    const {error}=await supabase
+
+            .from("alumnos")
+
+            .update({
+
+                nee:nuevasNEE
+
+            })
+
+            .eq("id",datosAlumno.id);
+
+        if(error){
+
+            alert(error.message);
+
+            return;
+
+        }
+
+        setDatosAlumno({
+
+            ...datosAlumno,
+
+            nee:nuevasNEE
+
+        });
+
+        const alumnoActualizado={
+
+            ...datosAlumno,
+
+            nee:nuevasNEE
+
+        };
+
+        setDatosAlumno(alumnoActualizado);
+
+        setAlumnoSeleccionado(alumnoActualizado);
+
+        const nuevos=[...students];
+
+        const pos=nuevos.findIndex(
+
+            a=>a.id===datosAlumno.id
+
+        );
+
+        if(pos!==-1){
+
+            nuevos[pos]=alumnoActualizado;
+
+            setStudents(nuevos);
+
+        }
+
+        const indiceAlumno = nuevos.findIndex(
+
+            a => a.id === datosAlumno.id
+
+        );
+
+        if(indiceAlumno !== -1){
+
+            nuevos[indiceAlumno] = {
+
+                ...nuevos[indiceAlumno],
+
+                nee: nuevasNEE
+
+            };
+
+            setStudents(nuevos);
+
+        }
+
+    }
+
+    async function guardarNEE(datos){
+
+    let lista=[
+
+        ...(datosAlumno.nee || [])
+
+    ];
+
+    if(neeEditar){
+
+        const indice=lista.findIndex(
+
+            n=>
+
+            n.diagnostico===neeEditar.diagnostico &&
+
+            n.observaciones===neeEditar.observaciones
+
+        );
+
+        if(indice!=-1){
+
+            lista[indice]=datos;
+
+        }
+
+    }else{
+
+        lista.unshift(datos);
+
+    }
+
+    const {error}=await supabase
+
+        .from("alumnos")
+
+        .update({
+
+            nee:lista
+
+        })
+
+        .eq("id",datosAlumno.id);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    const alumnoActualizado = {
+
+        ...datosAlumno,
+
+        nee:lista
+
+    };
+
+    setAlumnoSeleccionado(alumnoActualizado);
+
+    const nuevos=[...students];
+
+    const pos=nuevos.findIndex(
+
+        a=>a.id===datosAlumno.id
+
+    );
+
+    if(pos!==-1){
+
+        nuevos[pos]=alumnoActualizado;
+
+        setStudents(nuevos);
+
+    }
+
+    setDatosAlumno(alumnoActualizado);
+
+    setNees(lista);
+
+    setNeeEditar(null);
+
+    setModalNEE(false);
+
+}
+
+    /*==================================================
+    EXPEDIENTE
+    ==================================================*/
+
+    function visualizarArchivo(url){
+
+        abrirArchivo(url);
+
+    }
+
+    async function cargarArchivosExtra(){
+
+        const carpeta = `${datosAlumno.grupo}/${datosAlumno.id}`;
+
+        const { data, error } = await supabase.storage
+            .from("expedientes")
+            .list(carpeta);
+
+        if(error){
 
             console.log(error);
 
-            setNotasAlumno(data || []);
+            return;
 
-        };
-    //=====================================
-// GUARDAR PDF GENERADO POR EL ESCÁNER
-//=====================================
-console.log("DATOS ALUMNO");
-console.log(datosAlumno);
-console.log("NEE");
-console.log(datosAlumno?.nee);
-    return (
+        }
 
-        <>
+        const lista=(data || []).filter(
 
-            <div
-                className="app-background"
-                style={{
-                    backgroundImage: `url(${fondoPsicologia})`
+            archivo=>archivo.name!=="FichaGeneral.pdf"
+
+        );
+
+        setArchivosExtra(lista);
+
+    }
+
+    async function subirDocumentoExtra(e){
+
+        const archivo=e.target.files[0];
+
+        if(!archivo)return;
+
+        const ruta=
+
+            `${datosAlumno.grupo}/${datosAlumno.id}/${archivo.name}`;
+
+        const {error}=await supabase.storage
+
+            .from("expedientes")
+
+            .upload(
+
+                ruta,
+
+                archivo,
+
+                {
+
+                    upsert:true
+
+                }
+
+            );
+
+        if(error){
+
+            console.log(error);
+
+            return;
+
+        }
+
+        await cargarArchivosExtra();
+
+    }
+
+    async function verDocumentoExtra(nombre){
+
+        const ruta=
+
+            `${datosAlumno.grupo}/${datosAlumno.id}/${nombre}`;
+
+        const {data}=supabase.storage
+
+            .from("expedientes")
+
+            .getPublicUrl(ruta);
+
+        window.open(
+
+            data.publicUrl,
+
+            "_blank"
+
+        );
+
+    }
+
+    async function eliminarDocumentoExtra(nombre){
+
+        const ruta=
+
+            `${datosAlumno.grupo}/${datosAlumno.id}/${nombre}`;
+
+        const {error}=await supabase.storage
+
+            .from("expedientes")
+
+            .remove([ruta]);
+
+        if(error){
+
+            console.log(error);
+
+            return;
+
+        }
+
+        await cargarArchivosExtra();
+
+    }
+
+    async function finalizarCita(datos){
+
+    const registro={
+
+        alumno_id:datosAlumno.id,
+
+        cita_programada_id:citaActiva.id,
+
+        fecha:citaActiva.fecha,
+
+        hora:citaActiva.hora,
+
+        tipo:citaActiva.tipo,
+
+        motivo:citaActiva.motivo,
+
+        intervencion:datos.intervencion,
+
+        acuerdos:datos.acuerdos,
+
+        observaciones:datos.observaciones
+
+    };
+
+    const {error}=await supabase
+
+        .from("historial_psicologia")
+
+        .insert(registro);
+
+    if(error){
+
+        alert(error.message);
+
+        return;
+
+    }
+
+    await supabase
+
+        .from("citas_programadas")
+
+        .delete()
+
+        .eq("id",citaActiva.id);
+
+    setCitaActiva(null);
+
+    cambiarPantalla("grupoPsicologia");
+
+}   
+
+    /*==================================================
+    JSX
+    ==================================================*/
+
+    const contenido=(
+
+<div className="perfil-wrapper">
+
+    {/*=========================================
+    HEADER
+    =========================================*/}
+
+    <div className="perfil-header">
+
+        <button
+
+            className="back-btn"
+
+            onClick={()=>cambiarPantalla("grupoPsicologia")}
+
+        >
+
+            <ArrowLeft size={20}/>
+
+        </button>
+
+        <div className="perfil-header-title">
+
+            <h2>
+
+                Perfil
+
+            </h2>
+
+        </div>
+
+    </div>
+
+    {/*=========================================
+    SCROLL
+    =========================================*/}
+
+    <div className="perfil-scroll">
+
+        {/*=========================================
+        TARJETA DEL ALUMNO
+        =========================================*/}
+
+        <div className="pa-card-alumno">
+
+            <div className="pa-avatar">
+
+                <UserRound size={34}/>
+
+            </div>
+
+            <div className="pa-card-info">
+
+                <h2>
+
+                    {datosAlumno?.nombre}{" "}
+
+                    {datosAlumno?.apellido_paterno}{" "}
+
+                    {datosAlumno?.apellido_materno}
+
+                </h2>
+
+                <div className="pa-card-extra">
+
+                    <span>
+
+                        {datosAlumno?.grupo}
+
+                    </span>
+
+                    <div className="pa-separador"/>
+
+                    <span>
+
+                        {
+
+                            datosAlumno?.sexo==="M"
+
+                            ?
+
+                            "Masculino"
+
+                            :
+
+                            "Femenino"
+
+                        }
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {/*=========================================
+        MENÚ DE MÓDULOS
+        =========================================*/}
+
+        <div className="pa-toolbar">
+
+            <button
+
+                className={
+
+                    modulo==="archivos"
+
+                    ?
+
+                    "pa-tool activo"
+
+                    :
+
+                    "pa-tool"
+
+                }
+
+                onClick={()=>setModulo("archivos")}
+
+            >
+
+                <FolderOpen size={22}/>
+
+            </button>
+
+            <button
+
+                className={
+
+                    modulo==="nee"
+
+                    ?
+
+                    "pa-tool activo"
+
+                    :
+
+                    "pa-tool"
+
+                }
+
+                onClick={()=>setModulo("nee")}
+
+            >
+
+                <Brain size={22}/>
+
+            </button>
+
+            <button
+
+                className={
+
+                    modulo==="notas"
+
+                    ?
+
+                    "pa-tool activo"
+
+                    :
+
+                    "pa-tool"
+
+                }
+
+                onClick={()=>setModulo("notas")}
+
+            >
+
+                <FileText size={22}/>
+
+            </button>
+
+            <button
+
+                className={
+
+                    modulo==="seguimiento"
+
+                    ?
+
+                    "pa-tool activo"
+
+                    :
+
+                    "pa-tool"
+
+                }
+
+                onClick={()=>setModulo("seguimiento")}
+
+            >
+
+                <ClipboardList size={22}/>
+
+            </button>
+
+        </div>
+
+        {/*=========================================
+        CABECERA DEL MÓDULO
+        =========================================*/}
+
+        <div className="pa-module">
+
+            <div>
+
+                <h3>
+
+                    {
+
+                        modulo==="archivos"
+
+                        ?
+
+                        "Archivos"
+
+                        :
+
+                        modulo==="nee"
+
+                        ?
+
+                        "NEE"
+
+                        :
+
+                        modulo==="notas"
+
+                        ?
+
+                        "Notas"
+
+                        :
+
+                        "Seguimiento"
+
+                    }
+
+                </h3>
+
+            </div>
+
+            <button
+
+                className="pa-add-btn"
+
+                onClick={()=>{
+
+                    switch(modulo){
+
+                        case "archivos":
+
+                            documentoExtra.current.click();
+
+                            break;
+
+                        case "nee":
+
+                            setNeeEditar(null);
+
+                            setModalNEE(true);
+
+                            break;
+
+                        case "notas":
+
+                            setNotaEditar(null);
+
+                            setModalNota(true);
+
+                            break;
+
+                        case "seguimiento":
+
+                            setSeguimientoEditar(null);
+
+                            setModalSeguimiento(true);
+
+                            break;
+
+                        default:
+
+                            break;
+
+                    }
+
                 }}
-            />
 
-            <div className="ps-app">
+            >
 
-                <div className="ps-container">
+                <FilePlus2 size={18}/>
 
-                    <div className="sticky-header">
+            </button>
 
-                        <div className="page-top">
+        </div>
+                {/*=========================================
+        CONTENIDO DEL MÓDULO
+        =========================================*/}
 
-                            <button
-                                className="back-btn"
-                                onClick={() => cambiarPantalla("grupoPsicologia")}
-                            >
-                                <ArrowLeft size={22} />
-                            </button>
+        <div className="pa-module-body">
 
-                            <h1>
-                                Perfil
-                            </h1>
+            {
 
-                            <button
-                                className="home-btn"
-                                onClick={() => cambiarPantalla("psicologia")}
-                            >
-                                <House size={20} />
-                            </button>
+                modulo==="archivos"
+
+                &&
+
+                <>
+                        {/*=========================================
+                FICHA GENERAL
+                =========================================*/}
+
+                <div className="pa-card">
+
+                    <div className="pa-card-left">
+
+                        <div className="pa-card-icon">
+
+                            <FolderOpen size={20}/>
+
+                        </div>
+
+                        <div className="pa-card-text">
+
+                            <h4>
+
+                                Ficha General
+
+                            </h4>
 
                         </div>
 
                     </div>
 
-                    <div className="perfil-scroll">
+                    <div className="pa-card-actions">
 
-                        <div className="perfil-resumen">
+                        {
 
-                            <div className="perfil-avatar">
-                                <UserRound size={24}/>
-                            </div>
+                            datosAlumno?.expediente_pdf
 
-                            <div className="perfil-datos">
+                            ?
 
-                                <h2>
+                            <>
 
-                                    <span className="nombre">
+                                <button
 
-                                        {datosAlumno.nombre}
+                                    className="pa-circle-btn"
 
-                                    </span>
+                                    onClick={verExpediente}
 
-                                    <span className="apellidos">
+                                >
 
-                                        {datosAlumno.apellido_paterno}
+                                    <Eye size={16}/>
 
-                                        {" "}
+                                </button>
 
-                                        {datosAlumno.apellido_materno}
+                                <button
 
-                                    </span>
+                                    className="pa-circle-btn pa-delete"
 
-                                </h2>
+                                    onClick={eliminarExpediente}
 
-                                <p>
+                                >
 
-                                    {datosAlumno.grupo} • {datosAlumno.sexo === "M"
-                                        ? "Masculino"
-                                        : "Femenino"}
+                                    <Trash2 size={16}/>
 
-                                </p>
+                                </button>
 
-                            </div>
+                            </>
 
-                        </div>
-                        
+                            :
 
-                        <ExpedienteCard
+                            <button
 
-                            tieneExpediente={!!datosAlumno.expediente_pdf}
+                                className="pa-circle-btn"
 
-                            onOpen={verPDF}
+                                onClick={()=>inputArchivo.current.click()}
 
-                            onUpload={abrirSelector}
+                            >
 
-                            onDelete={eliminarExpediente}
+                                <Plus size={16}/>
 
-                        />
+                            </button>
 
-                            <NEECard
-                                nee={datosAlumno?.nee}
-                                onAgregar={() => setModalNEE(true)}
-                                onEditar={(index)=>{
-
-                                    setIndiceNEE(index);
-
-                                    setModalNEE(true);
-
-                                }}
-                                onEliminar={(index)=>{
-
-                                    setIndiceEliminarNEE(index);
-
-                                    setMostrarEliminarNEE(true);
-
-                                }}
-                            />
-
-                            <CitasCard
-
-                                citas={datosAlumno.citas || []}
-
-                                onAgregar={()=>{
-
-                                    setIndiceCita(null);
-
-                                    setModalCita(true);
-
-                                }}
-
-                                onEditar={(index)=>{
-
-                                    setIndiceCita(index);
-
-                                    setModalCita(true);
-
-                                }}
-
-                                onEliminar={(index)=>{
-
-                                    setIndiceEliminarCita(index);
-
-                                    setMostrarEliminarCita(true);
-
-                                }}
-
-                            />
-
-                            <NotasAlumnoCard
-
-                            notas={notasAlumno}
-
-                            onAgregar={()=>{
-
-                                setNotaEditar(null);
-
-                                setModalNota(true);
-
-                            }}
-
-                            onEditar={(nota)=>{
-
-                                setNotaEditar(nota);
-
-                                setModalNota(true);
-
-                            }}
-
-                            onEliminar={(nota)=>{
-
-                                setNotaEliminar(nota);
-
-                            }}
-
-                            onVer={(nota)=>{
-
-                                setNotaVista(nota);
-
-                            }}
-
-                        />
+                        }
 
                     </div>
 
                 </div>
 
-            </div>
+                <input
+
+                    hidden
+
+                    ref={inputArchivo}
+
+                    type="file"
+
+                    onChange={subirExpediente}
+
+                />
+
+                {/*=========================================
+                DOCUMENTOS ADICIONALES
+                =========================================*/}
+
+                {
+
+                    archivosExtra.length===0
+
+                    ?
+
+                    <div className="pa-empty">
+
+                        No existen documentos adicionales.
+
+                    </div>
+
+                    :
+                    
+                    
+                        archivosExtra.map((archivo)=>(
+
+                            <div
+                                key={archivo.name}
+                                className="pa-card"
+                            >
+
+                                <div className="pa-card-left">
+
+                                    <div className="pa-card-icon">
+
+                                        <FileText size={22}/>
+
+                                    </div>
+
+                                    <div className="pa-card-text">
+
+                                        <h4>
+
+                                            {archivo.name}
+
+                                        </h4>
+
+                                    </div>
+
+                                </div>
+
+                                <div className="pa-card-actions">
+
+                                    <button
+
+                                        className="pa-circle-btn"
+
+                                        onClick={()=>
+
+                                            verDocumentoExtra(
+
+                                                archivo.name
+
+                                            )
+
+                                        }
+
+                                    >
+
+                                        <Eye size={17}/>
+
+                                    </button>
+
+                                    <button
+
+                                        className="pa-circle-btn pa-delete"
+
+                                        onClick={()=>
+
+                                            eliminarDocumentoExtra(
+
+                                                archivo.name
+
+                                            )
+
+                                        }
+
+                                    >
+
+                                        <Trash2 size={17}/>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        ))
+                    }
+
+                <input
+
+                    ref={documentoExtra}
+
+                    hidden
+
+                    type="file"
+
+                    onChange={subirDocumentoExtra}
+
+                />
+
+                </>
+
+            }
+
+                        {
+
+                modulo==="nee"
+
+                &&
+
+                <>
+
+                    {
+
+                        nees.length===0
+
+                        ?
+
+                        <div className="pa-empty">
+
+                            No existen necesidades educativas especiales registradas.
+
+                        </div>
+
+                        :
+
+                        nees.map((nee,index)=>(
+
+                            <div
+                                key={index}
+                                className="pa-card"
+                                onClick={(e)=>{
+
+                                    if(e.target.closest(".pa-card-actions")){
+
+                                        return;
+
+                                    }
+
+                                    setNeeVista(nee);
+
+                                }}
+                            >
+
+                                <div className="pa-card-left">
+
+                                    <div className="pa-card-icon">
+
+                                        <Brain size={20}/>
+
+                                    </div>
+
+                                    <div className="pa-card-text">
+
+                                        <h4>
+
+                                            {nee.diagnostico}
+
+                                        </h4>
+
+                                        <span>
+
+                                            {nee.nivel}
+
+                                        </span>
+
+                                        {
+
+                                            nee.observaciones
+
+                                            &&
+
+                                            <p>
+
+                                                {nee.observaciones}
+
+                                            </p>
+
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                                <div className="pa-card-actions">
+
+                                    <button
+
+                                        className="pa-circle-btn"
+
+                                        onClick={()=>editarNEE(index)}
+
+                                    >
+
+                                        <Pencil size={16}/>
+
+                                    </button>
+
+                                    <button
+
+                                        className="pa-circle-btn pa-delete"
+
+                                        onClick={()=>eliminarNEE(index)}
+
+                                    >
+
+                                        <Trash2 size={16}/>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        ))
+
+                    }
+
+                </>
+
+            }
+
+                        {
+
+                modulo==="notas"
+
+                &&
+
+                <>
+
+                    {
+
+                        notas.length===0
+
+                        ?
+
+                        <div className="pa-empty">
+
+                            No existen notas registradas.
+
+                        </div>
+
+                        :
+
+                        notas.map((nota,index)=>(
+
+                            <div
+                                key={nota.id}
+                                className={`pa-card pa-note ${nota.color || "verde"}`}
+                                onClick={(e)=>{
+
+                                    if(e.target.closest(".pa-card-actions")){
+
+                                        return;
+
+                                    }
+
+                                    setNotaVista(nota);
+
+                                }}
+                            >
+
+                                <div className="pa-card-left">
+
+                                    <div className="pa-card-icon">
+
+                                        <FileText size={20}/>
+
+                                    </div>
+
+                                    <div className="pa-card-text">
+
+                                        <h4>
+
+                                            {nota.titulo}
+
+                                        </h4>
+
+                                        <p>
+
+                                            {nota.nota}
+
+                                        </p>
+
+                                        {
+
+                                            nota.created_at &&
+
+                                            <small>
+
+                                                {
+
+                                                    new Date(
+
+                                                        nota.created_at
+
+                                                    ).toLocaleDateString()
+
+                                                }
+
+                                            </small>
+
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                                <div className="pa-card-actions">
+
+                                    <button
+
+                                        className="pa-circle-btn"
+
+                                        onClick={()=>editarNota(nota)}
+
+                                    >
+
+                                        <Pencil size={16}/>
+
+                                    </button>
+
+                                    <button
+
+                                        className="pa-circle-btn pa-delete"
+
+                                        onClick={()=>eliminarNota(nota.id)}
+
+                                    >
+
+                                        <Trash2 size={16}/>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        ))
+
+                    }
+
+                </>
+
+            }                        
+
             {
-        
-        }
-            <input
-                type="file"
-                accept="application/pdf"
-                ref={inputArchivo}
-                style={{ display: "none" }}
-                onChange={subirExpediente}
+                modulo==="seguimiento"
+
+                &&
+
+                <>
+
+                    {
+
+                        historial.length===0
+
+                        ?
+
+                        <div className="pa-empty">
+
+                            No existen seguimientos registrados.
+
+                        </div>
+
+                        :
+
+                        historial.map((seguimiento)=>(
+
+                            <div
+
+                                key={seguimiento.id}
+
+                                className="pa-card"
+
+                            >
+
+                                <div
+                                    className="pa-card-left"
+                                    onClick={()=>setSeguimientoVista(seguimiento)}
+                                >
+
+                                    <div className="pa-card-icon">
+
+                                        <ClipboardList size={20}/>
+
+                                    </div>
+
+                                    <div className="pa-card-text">
+
+                                        <h4>
+
+                                            {seguimiento.tipo}
+
+                                        </h4>
+
+                                        <span>
+
+                                            {seguimiento.fecha}
+
+                                            {
+
+                                                seguimiento.hora
+
+                                                ?
+
+                                                ` • ${seguimiento.hora}`
+
+                                                :
+
+                                                ""
+
+                                            }
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                                <div className="pa-card-actions">
+
+                                    <button
+                                        className="pa-circle-btn"
+                                        onClick={()=>editarSeguimiento(seguimiento)}
+                                    >
+                                        <Pencil size={16}/>
+                                    </button>
+
+                                    <button
+
+                                        className="pa-circle-btn pa-delete"
+
+                                        onClick={()=>eliminarSeguimiento(seguimiento.id)}
+
+                                    >
+
+                                        <Trash2 size={16}/>
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        ))
+
+                    }
+
+                </>
+
+            }
+
+        </div>
+
+    </div>
+
+</div>
+
+);
+
+    return(
+
+        <>
+
+            {
+
+                !embebido && (
+
+                    <div
+
+                        className="app-background"
+
+                        style={{
+
+                            backgroundImage:
+
+                            `url(${fondoPsicologia})`
+
+                        }}
+
+                    />
+
+                )
+
+            }
+
+            {
+
+                embebido
+
+                ?
+
+                contenido
+
+                :
+
+                <div className="ps-app">
+
+                    <div className="ps-container">
+
+                        {contenido}
+
+                    </div>
+
+                </div>
+
+            }
+
+            <ModalCita
+
+                abierto={modalSeguimiento}
+
+                cerrar={()=>{
+
+                    setSeguimientoEditar(null);
+
+                    setModalSeguimiento(false);
+
+                }}
+
+                guardar={guardarSeguimiento}
+
+                citaActual={seguimientoEditar}
+
             />
 
             <ModalNEE
@@ -928,49 +2237,15 @@ console.log(datosAlumno?.nee);
 
                 cerrar={()=>{
 
-                    setIndiceNEE(null);
+                    setNeeEditar(null);
 
                     setModalNEE(false);
 
                 }}
 
-                neeActual={
-
-                    indiceNEE !== null
-
-                        ? datosAlumno?.nee[indiceNEE]
-
-                        : null
-
-                }
-
                 guardar={guardarNEE}
 
-            />
-
-            <ModalCita
-
-                abierto={modalCita}
-
-                cerrar={()=>{
-
-                    setIndiceCita(null);
-
-                    setModalCita(false);
-
-                }}
-
-                guardar={guardarCita}
-
-                citaActual={
-
-                    indiceCita!==null
-
-                    ? datosAlumno.citas[indiceCita]
-
-                    : null
-
-                }
+                nee={neeEditar}
 
             />
 
@@ -978,236 +2253,84 @@ console.log(datosAlumno?.nee);
 
                 abierto={modalNota}
 
-                cerrar={() => {
+                cerrar={()=>setModalNota(false)}
 
-                    setModalNota(false);
-
-                    setNotaEditar(null);
-
-                }}
-
-                guardar={guardarNotaAlumno}
-
-                students={[datosAlumno]}
+                guardar={guardarNota}
 
                 notaActual={notaEditar}
 
+                students={students}
+
                 ocultarAlumno={true}
+
+                soloIndividual={true}
+
+                soloPerfil={true}
 
             />
 
-            {
+            <VistaDetalleNota
 
-            notaVista&&(
+                abierta={notaVista!==null}
 
-                <div className="modal-opciones">
+                nota={notaVista}
 
-                <div
+                students={students}
 
-                className={`modal-contenido ${notaVista.color || "verde"}`}
+                cerrar={()=>setNotaVista(null)}
 
-                >
+                editar={(nota)=>{
 
-                <h2>
+                    setNotaVista(null);
 
-                {notaVista.titulo}
-
-                </h2>
-
-                <p>
-
-                <strong>
-
-                Alumno:
-
-                </strong>
-
-                {" "}
-
-                {datosAlumno.nombre}
-
-                {" "}
-
-                {datosAlumno.apellido_paterno}
-
-                </p>
-
-                <hr/>
-
-                <p
-
-                style={{
-
-                whiteSpace:"pre-wrap",
-
-                lineHeight:1.6,
-
-                marginTop:18
+                    editarNota(nota);
 
                 }}
 
-                >
+            />
 
-                {notaVista.nota}
+            <VistaDetalleNEE
 
-                </p>
+                abierta={neeVista!==null}
 
-                <div className="modal-botones">
+                nee={neeVista}
 
-                <button
+                cerrar={()=>setNeeVista(null)}
 
-                className="btn-guardar"
+                editar={(nee)=>{
 
-                onClick={()=>setNotaVista(null)}
+                    setNeeVista(null);
 
-                >
+                    setNeeEditar(nee);
 
-                Cerrar
+                    setModalNEE(true);
 
-                </button>
+                }}
 
-                </div>
+            />
 
-                </div>
+            <VistaDetalleCita
 
-                </div>
+                abierta={seguimientoVista!==null}
 
-                )
+                cita={seguimientoVista}
 
-            }
+                students={students}
 
-            {
+                cerrar={()=>setSeguimientoVista(null)}
 
-                mostrarEliminarNEE && (
+                editar={(cita)=>{
 
-                <div className="modal-opciones">
-               
-               <div className="modal-contenido eliminar-modal">
+                    setSeguimientoVista(null);
 
-                    <div className="eliminar-icono">
+                    setSeguimientoEditar(cita);
 
-                        <Trash2 size={34}/>
+                    setModalSeguimiento(true);
 
-                    </div>
+                }}
 
-                    <h2>
+            />
 
-                        Eliminar NEE
-
-                    </h2>
-
-                    <p>
-
-                        Esta acción eliminará permanentemente esta necesidad educativa.
-
-                    </p>
-
-                    <div className="eliminar-botones">
-
-                        <button
-
-                            className="btn-cancelar"
-
-                            onClick={()=>setMostrarEliminarNEE(false)}
-
-                        >
-
-                            Cancelar
-
-                        </button>
-
-                        <button
-
-                            className="btn-eliminar"
-
-                            onClick={()=>{
-
-                                eliminarNEE(indiceEliminarNEE);
-
-                                setMostrarEliminarNEE(false);
-
-                            }}
-
-                        >
-
-                            Eliminar
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-                </div>
-
-                )
-
-                }
-                {
-                    mostrarEliminarCita && (
-
-                        <div className="modal-opciones">
-
-                            <div className="modal-contenido eliminar-modal">
-
-                                <div className="eliminar-icono">
-
-                                    <Trash2 size={34}/>
-
-                                </div>
-
-                                <h2>
-
-                                    Eliminar seguimiento
-
-                                </h2>
-
-                                <p>
-
-                                    Esta acción eliminará permanentemente este seguimiento.
-
-                                </p>
-
-                                <div className="eliminar-botones">
-
-                                    <button
-
-                                        className="btn-cancelar"
-
-                                        onClick={()=>setMostrarEliminarCita(false)}
-
-                                    >
-
-                                        Cancelar
-
-                                    </button>
-
-                                    <button
-
-                                        className="btn-eliminar"
-
-                                        onClick={()=>{
-
-                                            eliminarCita(indiceEliminarCita);
-
-                                            setMostrarEliminarCita(false);
-
-                                        }}
-
-                                    >
-
-                                        Eliminar
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                    )
-                }
         </>
 
     );

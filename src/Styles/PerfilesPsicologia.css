@@ -404,3 +404,51 @@ color:#2A9855;
   transform:scale(.97);
 
 }
+
+/* ==========================================
+   PERFILES DENTRO DE PSICOLOGÍA
+========================================== */
+
+.perfiles-embebido{
+
+    padding-top:12px;
+
+}
+
+.perfiles-embebido .search-box{
+
+    margin-top:0;
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+
+}
+
+.perfiles-embebido .grupos-grid{
+
+    margin-top:18px;
+
+}
+
+.perfiles-embebido .grupo-card{
+
+    min-height:82px;
+
+    padding:16px;
+
+}
+
+.perfiles-embebido .grupo-card h2{
+
+    font-size:20px;
+
+}
+
+.perfiles-embebido .lista-perfiles{
+
+    margin-top:18px;
+
+}

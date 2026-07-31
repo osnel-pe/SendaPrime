@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "../../services/supabase";
 
 import Neuri from "./Neuri";
-
+import "../../Styles/FrasePsico.css";
 
 export default function FrasePsico() {
 
