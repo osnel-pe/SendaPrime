@@ -48,6 +48,8 @@ export default function Psicologia({
 
         useState("inicio");
 
+    const [historialPantallas,setHistorialPantallas]=useState(["inicio"]);
+
     const [mostrarConfirmarCerrar,setMostrarConfirmarCerrar]=
 
         useState(false);
@@ -72,6 +74,91 @@ export default function Psicologia({
 
     },[]);
 
+    useEffect(()=>{
+
+        const manejarAtras=()=>{
+
+            if(historial.length>1){
+
+                volverPantalla();
+
+                window.history.pushState(null,"");
+
+            }
+
+        };
+
+        window.history.pushState(null,"");
+
+        window.addEventListener(
+
+            "popstate",
+
+            manejarAtras
+
+        );
+
+        return()=>{
+
+            window.removeEventListener(
+
+                "popstate",
+
+                manejarAtras
+
+            );
+
+        };
+
+    },[historial]);
+
+    useEffect(()=>{
+
+        window.history.replaceState(
+
+            {psicologia:true},
+
+            ""
+
+        );
+
+    },[]);
+
+    function cambiarPantalla(nuevaPantalla){
+
+        setHistorialPantallas(historial=>[
+            ...historial,
+            nuevaPantalla
+        ]);
+
+        setPantallaActual(nuevaPantalla);
+
+    }
+
+    function volverPantalla(){
+
+    setHistorialPantallas(historial=>{
+
+        if(historial.length<=1){
+
+            return historial;
+
+        }
+
+        const nuevo=[...historial];
+
+        nuevo.pop();
+
+        setPantallaActual(
+            nuevo[nuevo.length-1]
+        );
+
+        return nuevo;
+
+    });
+
+}
+
     function renderContenido(){
 
     switch(pantallaActual){
@@ -86,7 +173,7 @@ export default function Psicologia({
 
                     students={students}
 
-                    cambiarPantalla={setPantallaActual}
+                    cambiarPantalla={cambiarPantallaInterna}
 
                     seleccionarAlumno={setAlumnoSeleccionado}
 
@@ -108,7 +195,7 @@ export default function Psicologia({
 
                 setStudents={setStudents}
 
-                cambiarPantalla={setPantallaActual}
+                cambiarPantalla={cambiarPantallaInterna}
 
             />
 
@@ -126,7 +213,7 @@ export default function Psicologia({
 
                     cargarAlumnos={cargarAlumnos}
 
-                    cambiarPantalla={setPantallaActual}
+                    cambiarPantalla={cambiarPantallaInterna}
 
                     seleccionarAlumno={setAlumnoSeleccionado}
 
@@ -150,7 +237,7 @@ export default function Psicologia({
 
                         students={students}
 
-                        cambiarPantalla={setPantallaActual}
+                        cambiarPantalla={cambiarPantallaInterna}
 
                     />
 
@@ -166,7 +253,7 @@ export default function Psicologia({
 
                     students={students}
 
-                    cambiarPantalla={setPantallaActual}
+                    cambiarPantalla={cambiarPantallaInterna}
 
                     setAlumnoSeleccionado={setAlumnoSeleccionado}
 
@@ -190,7 +277,7 @@ export default function Psicologia({
 
                         grupoSeleccionado={grupoSeleccionado}
 
-                        cambiarPantalla={setPantallaActual}
+                        cambiarPantalla={cambiarPantallaInterna}
 
                         seleccionarAlumno={setAlumnoSeleccionado}
 
@@ -212,7 +299,7 @@ export default function Psicologia({
 
                         setStudents={setStudents}
 
-                        cambiarPantalla={setPantallaActual}
+                        cambiarPantalla={cambiarPantallaInterna}
 
                         setAlumnoSeleccionado={setAlumnoSeleccionado}
 
@@ -292,7 +379,7 @@ export default function Psicologia({
 
                     pantalla={pantallaActual}
 
-                    cambiarPantalla={setPantallaActual}
+                    cambiarPantalla={cambiarPantallaInterna}
 
                 />
 

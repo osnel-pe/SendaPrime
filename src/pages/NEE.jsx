@@ -153,7 +153,7 @@ export default function NEE({
 
                     <button
                         className="back-btn"
-                        onClick={()=>cambiarPantalla("psicologia")}
+                        onClick={volverPantalla}
                     >
                         <ArrowLeft size={22}/>
                     </button>

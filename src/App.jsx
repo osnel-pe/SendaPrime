@@ -114,6 +114,44 @@ useEffect(()=>{
 
 },[]);
 
+useEffect(()=>{
+
+    const manejarAtras=()=>{
+
+        if(historialPantallas.length>1){
+
+            volverPantalla();
+
+            window.history.pushState(null,"");
+
+        }
+
+    };
+
+    window.history.pushState(null,"");
+
+    window.addEventListener(
+
+        "popstate",
+
+        manejarAtras
+
+    );
+
+    return()=>{
+
+        window.removeEventListener(
+
+            "popstate",
+
+            manejarAtras
+
+        );
+
+    };
+
+},[historialPantallas]);
+
   useEffect(() => {
     localStorage.setItem('pantalla', pantalla);
   }, [pantalla]);
