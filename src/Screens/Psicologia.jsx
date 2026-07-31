@@ -76,21 +76,31 @@ export default function Psicologia({
 
     useEffect(()=>{
 
-        const manejarAtras=()=>{
+    const manejarAtras=()=>{
 
-            if(historial.length>1){
+        if(historialPantallas.length>1){
 
-                volverPantalla();
+            volverPantalla();
 
-                window.history.pushState(null,"");
+            window.history.pushState(null,"");
 
-            }
+        }
 
-        };
+    };
 
-        window.history.pushState(null,"");
+    window.history.pushState(null,"");
 
-        window.addEventListener(
+    window.addEventListener(
+
+        "popstate",
+
+        manejarAtras
+
+    );
+
+    return()=>{
+
+        window.removeEventListener(
 
             "popstate",
 
@@ -98,19 +108,9 @@ export default function Psicologia({
 
         );
 
-        return()=>{
+    };
 
-            window.removeEventListener(
-
-                "popstate",
-
-                manejarAtras
-
-            );
-
-        };
-
-    },[historial]);
+},[historialPantallas]);
 
     useEffect(()=>{
 
@@ -124,7 +124,7 @@ export default function Psicologia({
 
     },[]);
 
-    function cambiarPantalla(nuevaPantalla){
+    function cambiarPantallaInterna(nuevaPantalla){
 
         setHistorialPantallas(historial=>[
             ...historial,
