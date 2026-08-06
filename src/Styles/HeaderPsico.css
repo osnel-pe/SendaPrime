@@ -1,83 +1,139 @@
-/*==================================
+/*==================================================
 HEADER PSICOLOGÍA
-==================================*/
+==================================================*/
 
-.ps-header{
+.psico-header{
 
-  display:flex;
+    display:flex;
 
-  align-items:center;
+    justify-content:space-between;
 
-  justify-content:space-between;
+    align-items:center;
 
-  margin-bottom:0;
-
-}
-
-.ps-header-left{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:18px;
+    margin-bottom:18px;
 
 }
 
-/*==============================
+.psico-header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+.psico-header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+/*==================================================
 LOGO
-==============================*/
+==================================================*/
 
-.ps-logo{
+.psico-logo{
 
-  width:50px;
+    width:52px;
 
-  height: 50px;
+    height:52px;
 
-  border-radius:18px;
+    min-width:52px;
 
-  display:flex;
+    min-height:52px;
 
-  justify-content:center;
+    border-radius:14px;
 
-  align-items:center;
+    overflow:hidden;
 
-  overflow:hidden;
+    display:flex;
 
-  background:rgba(255, 252, 252, 0.72);
+    justify-content:center;
 
-  backdrop-filter:blur(20px);
+    align-items:center;
 
-  border:1px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.18);
 
 }
 
-/*==============================
-TEXTOS
-==============================*/
+.psico-logo-img{
 
-.ps-header h1{
+    width:100%;
 
-  font-size:18px;
-  
-  font-weight:700;
-  
-  color:rgb(245, 244, 244);
-  
-  text-shadow:
-  
-  0 2px 8px rgba(0,0,0,.45);
-  
-  }
+    height:100%;
 
-.ps-header p{
+    object-fit:cover;
 
-  margin-top:4px;
+    display:block;
 
-  font-size:13px;
+}
 
-  font-weight:500;
+/*==================================================
+TEXTO
+==================================================*/
 
-  color:rgba(255,255,255,.82);
+.psico-header h2{
+
+    margin:0;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:white;
+
+    text-shadow:
+
+        0 2px 8px rgba(0,0,0,.35);
+
+}
+
+/*==================================================
+BOTÓN CERRAR SESIÓN
+==================================================*/
+
+.logout-btn{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    background:rgba(255,255,255,.15);
+
+    color:white;
+
+    backdrop-filter:blur(18px);
+
+    transition:.25s;
+
+}
+
+.logout-btn:hover{
+
+    background:#d93c3c;
+
+    transform:scale(1.06);
 
 }

@@ -1,0 +1,139 @@
+/*==================================================
+HEADER PSICOLOGÍA
+==================================================*/
+
+.psico-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.psico-header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:16px;
+
+}
+
+.psico-header-right{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+/*==================================================
+LOGO
+==================================================*/
+
+.psico-logo{
+
+    width:52px;
+
+    height:52px;
+
+    min-width:52px;
+
+    min-height:52px;
+
+    border-radius:14px;
+
+    overflow:hidden;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+}
+
+.psico-logo-img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+    display:block;
+
+}
+
+/*==================================================
+TEXTO
+==================================================*/
+
+.psico-header h2{
+
+    margin:0;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:white;
+
+    text-shadow:
+
+        0 2px 8px rgba(0,0,0,.35);
+
+}
+
+/*==================================================
+BOTÓN CERRAR SESIÓN
+==================================================*/
+
+.logout-btn{
+
+    width:42px;
+
+    height:42px;
+
+    border:none;
+
+    border-radius:50%;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    background:rgba(255,255,255,.15);
+
+    color:white;
+
+    backdrop-filter:blur(18px);
+
+    transition:.25s;
+
+}
+
+.logout-btn:hover{
+
+    background:#d93c3c;
+
+    transform:scale(1.06);
+
+}

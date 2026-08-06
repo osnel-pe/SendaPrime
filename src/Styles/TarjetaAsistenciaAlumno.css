@@ -1,0 +1,126 @@
+.card-asistencia{
+
+    background:rgba(255,255,255,.12);
+
+    backdrop-filter:blur(18px);
+
+    border-radius:20px;
+
+    padding:18px;
+
+    margin-top:18px;
+
+}
+
+.cabecera-asistencia{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:18px;
+
+}
+
+.cabecera-asistencia h3{
+
+    color:white;
+
+    margin:0;
+
+}
+
+.cabecera-asistencia select{
+
+    border:none;
+
+    border-radius:12px;
+
+    padding:6px 12px;
+
+    background:rgba(255,255,255,.18);
+
+    color:white;
+
+}
+
+.fila-asistencia{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    color:white;
+
+    margin:12px 0;
+
+}
+
+.fila-asistencia strong{
+
+    margin-left:auto;
+
+    font-size:20px;
+
+}
+
+.card-asistencia select{
+
+    color:#fff;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.25);
+    border-radius:10px;
+    padding:6px 10px;
+
+}
+
+.card-asistencia option{
+
+    color:#222;
+    background:#fff;
+
+}
+
+.ta-detalle-btn{
+
+    width:100%;
+
+    margin-top:16px;
+
+    padding:10px 14px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.72);
+
+    backdrop-filter:blur(10px);
+
+    color:#333;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:0 4px 14px rgba(0,0,0,.08);
+
+}
+
+.ta-detalle-btn:hover{
+
+    transform:translateY(-2px);
+
+    background:white;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
+
+}

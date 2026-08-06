@@ -56,7 +56,7 @@ export default function VistaDetalleNota({
 
                     >
 
-                        <ArrowLeft size={20}/>
+                        <ArrowLeft size={18}/>
 
                     </button>
 

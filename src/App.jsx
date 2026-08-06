@@ -21,6 +21,7 @@ import { supabase } from './services/supabase';
 import LoginAlumno from "./pages/LoginAlumno";
 import RankingProfesor from "./pages/RankingProfesor";
 import LoginPsicologia from "./pages/LoginPsicologia";
+import LoginPrefectura from "./pages/LoginPrefectura";
 import Psicologia from "./Screens/Psicologia.jsx";
 import ScanPsicologia from "./pages/ScanPsicologia";
 import { motion } from "framer-motion";
@@ -40,6 +41,8 @@ import CitasProgramadas from "./pages/CitasProgramadas";
 import NEE from "./pages/NEE";
 import Notas from "./pages/Notas";
 import AsistenteIA from "./pages/AsistenteIA";
+import Prefectura from "./Screens/Prefectura";
+
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -466,6 +469,52 @@ useEffect(() => {
             );
 
         break;
+
+        case "loginPrefectura":
+
+        contenido=(
+
+        <LoginPrefectura
+
+        cambiarPantalla={setPantalla}
+
+        setTipoUsuario={setTipoUsuario}
+
+        />
+
+        );
+
+        break;
+
+        case "prefectura":
+
+    contenido=(
+
+        <Prefectura
+
+            students={students}
+
+            setStudents={setStudents}
+
+            cargarAlumnos={cargarAlumnos}
+
+            alumnoSeleccionado={alumnoSeleccionado}
+
+            setAlumnoSeleccionado={setAlumnoSeleccionado}
+
+            grupoSeleccionado={grupoSeleccionado}
+
+            setGrupoSeleccionado={setGrupoSeleccionado}
+
+            cerrarSesion={cerrarSesion}
+
+            cambiarPantalla={setPantalla}
+
+        />
+
+    );
+
+    break;
           
           case "scanPsicologia":
 

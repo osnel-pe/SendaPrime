@@ -682,3 +682,30 @@ LAYOUT PRINCIPAL
     color:white;
 
 }
+
+.estado-vacio{
+
+    width:100%;
+    max-width:340px;
+
+    margin:40px auto;
+
+    padding:26px 20px;
+
+    text-align:center;
+
+    color:white;
+
+    font-size:15px;
+    font-weight:600;
+
+    border:2px dashed rgba(255,255,255,.28);
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,.10);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+}

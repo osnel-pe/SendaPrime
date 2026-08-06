@@ -1,14 +1,16 @@
 .perfil-header{
 
-  display:flex;
-  
-  align-items:center;
-  
-  gap:15px;
-  
-  margin-bottom:18px;
-  
-  }
+position:relative;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+height:54px;
+
+}
   
   .volver{
   
@@ -53,3 +55,25 @@
   color:#6D7A73;
   
   }
+
+  .back-btn{
+
+position:absolute;
+
+left:14px;
+
+top:50%;
+
+transform:translateY(-50%);
+
+}
+
+.perfil-header-title{
+
+position:absolute;
+
+left:50%;
+
+transform:translateX(-50%);
+
+}

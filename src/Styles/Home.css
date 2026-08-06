@@ -177,21 +177,21 @@
 
 .home-card{
 
-  width:100%;
+ width:min(390px,92vw);
 
   max-width:460px;
 
   background:rgba(255,255,255,.72);
 
-  border-radius:42px;
+  border-radius:28px;
 
-  padding:45px 34px;
+  padding:22px;
 
   box-shadow:
 
   0 25px 60px rgba(0,0,0,.18);
 
-  backdrop-filter:blur(22px);
+  backdrop-filter:blur(20px);
   -webkit-backdrop-filter:blur(22px);
 
   animation:fadeIn .8s ease;
@@ -210,21 +210,19 @@
 
   align-items:center;
 
+  margin-bottom:5px;
+
 }
   
-  .home-logo{
+.home-logo{
 
-    width:270px;
+width:150px;
 
-    display:block;
+height:150px;
 
-    margin:auto;
+object-fit:contain;
 
-    filter:
-
-        drop-shadow(0 20px 35px rgba(0,0,0,.20));
-
-    transition:.35s;
+margin-bottom:8px;
 
 }
 
@@ -283,7 +281,7 @@
 
   border:none;
 
-  border-radius:24px;
+  border-radius:18px;
 
   background:rgba(255,255,255,.88);
 
@@ -295,9 +293,9 @@
 
   align-items:center;
 
-  padding:0 24px;
+  padding:14px 18px;
 
-  margin-bottom:16px;
+  margin-bottom:10px;
 
   cursor:pointer;
 
@@ -607,5 +605,46 @@
   right:90px;
 
   font-size:42px;
+
+}
+
+.home-divider{
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+margin:18px 0 14px;
+
+}
+
+.home-divider::before,
+.home-divider::after{
+
+content:"";
+
+flex:1;
+
+height:1px;
+
+background:rgba(255,255,255,.22);
+
+}
+
+.home-divider span{
+
+padding:0 12px;
+
+font-size:12px;
+
+font-weight:700;
+
+letter-spacing:1px;
+
+text-transform:uppercase;
+
+color:rgba(255,255,255,.75);
 
 }

@@ -1,0 +1,203 @@
+@import "./Reportes.css";
+/*=========================================
+CONTENEDOR
+=========================================*/
+
+.rp-container{
+
+    width:100%;
+    height:100%;
+
+    display:flex;
+    flex-direction:column;
+
+    padding:2px;
+
+    box-sizing:border-box;
+
+}
+
+/*=========================================
+CABECERA
+=========================================*/
+
+.rp-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:5px;
+
+    gap:20px;
+
+}
+
+.rp-header select{
+
+    width:180px;
+
+    height:46px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(16px);
+
+    color:white;
+
+    font-size:15px;
+
+    padding:0 15px;
+
+    outline:none;
+
+    cursor:pointer;
+
+}
+
+.rp-header option{
+
+    color:#222;
+
+}
+
+/*=========================================
+BOTÓN NUEVO
+=========================================*/
+
+.rp-add{
+
+    height:46px;
+
+    padding:0 18px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#22c55e;
+
+    color:white;
+
+    display:flex;
+    align-items:center;
+    gap:10px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.2s;
+
+}
+
+.rp-add:hover{
+
+    transform:translateY(-2px);
+
+    background:#16a34a;
+
+}
+
+/*=========================================
+LISTA
+=========================================*/
+
+.rp-lista{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:5px;
+
+    overflow:auto;
+
+    padding-right:4px;
+
+}
+
+/*=========================================
+COLORES REPORTES
+=========================================*/
+
+.reporte-aviso{
+
+    border-left:6px solid #3498db;
+
+}
+
+.reporte-aviso-de-conducta{
+
+    border-left:6px solid #f59e0b;
+
+}
+
+.reporte-nota-de-conducta{
+
+    border-left:6px solid #9333ea;
+
+}
+
+.reporte-reporte-de-conducta{
+
+    border-left:6px solid #ef4444;
+
+}
+
+.reporte-suspension{
+
+    border-left:6px solid #64748b;
+
+}
+
+/*=========================================
+SCROLL
+=========================================*/
+
+.rp-lista::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.rp-lista::-webkit-scrollbar-thumb{
+
+    background:rgba(255,255,255,.28);
+
+    border-radius:20px;
+
+}
+
+/*=========================================
+ESTADO VACÍO
+=========================================*/
+
+.rp-vacio{
+
+    width:100%;
+    max-width:340px;
+
+    margin:40px auto;
+
+    padding:26px 20px;
+
+    text-align:center;
+
+    color:white;
+
+    font-size:15px;
+    font-weight:600;
+
+    border:2px dashed rgba(255,255,255,.28);
+    border-radius:22px;
+
+    background:rgba(255,255,255,.10);
+
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+
+}

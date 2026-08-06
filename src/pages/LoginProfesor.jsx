@@ -5,6 +5,7 @@ import { supabase } from "../services/supabase";
 import "../Styles/AppLayout.css";
 import "../Styles/Auth.css";
 import "../Styles/LoginProfesor.css";
+import fondoPsicologia from "../assets/fondo-psicologia1.webp";
 
 import {
   FaUserTie,
@@ -72,15 +73,12 @@ export default function LoginProfesor({
 
       {/* Fondo institucional */}
 
-      <div className="app-background">
-
-        <div className="bg-wave1"></div>
-
-        <div className="bg-wave2"></div>
-
-        <div className="bg-light"></div>
-
-      </div>
+      <div
+            className="app-background"
+            style={{
+            backgroundImage:`url(${fondoPsicologia})`
+            }}
+            ></div>
 
       {/* Pantalla */}
 

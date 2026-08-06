@@ -1,53 +1,30 @@
 import logo from "../assets/logo.png";
 
 import {
-  FaChalkboardTeacher,
-  FaUserGraduate,
-  FaUsers,
-  FaBrain,
-  FaSearch,
-  FaChevronRight,
-  
-  FaBook,
-  FaGraduationCap,
-  FaCalculator,
-  FaPencilAlt,
-  FaGlobe,
-  FaHeart
-  
-  } from "react-icons/fa";
+FaChalkboardTeacher,
+FaUserGraduate,
+FaUsers,
+FaBrain,
+FaSearch,
+FaChevronRight,
+FaSchool
+} from "react-icons/fa";
 
 import "../Styles/Home.css";
 import { motion } from "framer-motion";
+import fondoPsicologia from "../assets/fondo-psicologia1.webp";
 
 export default function Home({ cambiarPantalla }) {
 
   return (
 
     <>
-     <div className="app-background">
-
-      <div className="bg-wave1"></div>
-
-      <div className="bg-wave2"></div>
-
-      <div className="bg-light"></div>
-
-      <div className="bg-heart"></div>
-
-      <FaBook className="bg-icon icon-book"/>
-
-      <FaGraduationCap className="bg-icon icon-cap"/>
-
-      <FaCalculator className="bg-icon icon-calculator"/>
-
-      <FaPencilAlt className="bg-icon icon-pencil"/>
-
-      <FaGlobe className="bg-icon icon-world"/>
-
-      <FaHeart className="bg-icon icon-heart"/>
-
-      </div>
+     <div
+      className="app-background"
+      style={{
+      backgroundImage:`url(${fondoPsicologia})`
+      }}
+      ></div>
 
                 <motion.div
           className="home-screen"
@@ -198,33 +175,46 @@ export default function Home({ cambiarPantalla }) {
 
           </button>
 
-          {/* PREFECTURA */}
+          <div className="home-divider">
+
+          <span>
+
+          Coordinación
+
+          </span>
+
+          </div>
+
+          {/* Dirección */}
 
           <button
-            className="menu-button"
-            onClick={() => cambiarPantalla("prefectura")}
+          className="menu-button"
+          onClick={()=>cambiarPantalla("direccion")}
           >
 
-            <div className="menu-left">
-              <FaUsers className="menu-icon" />
-              <div>
+          <div className="menu-left">
 
-              <div className="menu-text">
+          <FaSchool className="menu-icon"/>
 
-              Prefectura
+          <div>
 
-              </div>
+          <div className="menu-text">
 
-              <div className="menu-subtext">
+          Dirección
 
-              Control escolar
+          </div>
 
-              </div>
+          <div className="menu-subtext">
 
-              </div>
-            </div>
+          Gestión escolar
 
-            <FaChevronRight className="menu-arrow" />
+          </div>
+
+          </div>
+
+          </div>
+
+          <FaChevronRight className="menu-arrow"/>
 
           </button>
 
@@ -258,33 +248,36 @@ export default function Home({ cambiarPantalla }) {
 
           </button>
 
-          {/* CONSULTA */}
+          {/* Prefectura */}
 
           <button
-            className="menu-button"
-            onClick={() => cambiarPantalla("consulta")}
+          className="menu-button"
+          onClick={() => cambiarPantalla("loginPrefectura")}
           >
 
-            <div className="menu-left">
-              <FaSearch className="menu-icon" />
-              <div>
+          <div className="menu-left">
 
-              <div className="menu-text">
+          <FaUsers className="menu-icon"/>
 
-              Consulta
+          <div>
 
-              </div>
+          <div className="menu-text">
 
-              <div className="menu-subtext">
+          Prefectura
 
-              Información
+          </div>
 
-              </div>
+          <div className="menu-subtext">
 
-              </div>
-            </div>
+          Control escolar
 
-            <FaChevronRight className="menu-arrow" />
+          </div>
+
+          </div>
+
+          </div>
+
+          <FaChevronRight className="menu-arrow"/>
 
           </button>
 

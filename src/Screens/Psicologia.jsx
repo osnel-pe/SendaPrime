@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { LogOut } from "lucide-react";
+import {
+
+    Bell,
+
+    Brain,
+
+    Users,
+
+    LogOut
+
+} from "lucide-react";
 
 import "../Styles/AppLayout.css";
 import "../Styles/Psicologia.css";
@@ -56,6 +66,9 @@ export default function Psicologia({
 
     const [citaActiva,setCitaActiva]=useState(null);
 
+    const [mostrarCerrarSesion,setMostrarCerrarSesion]=
+    useState(false);
+
     useEffect(()=>{
 
         pedirPermiso();
@@ -80,11 +93,18 @@ export default function Psicologia({
 
         if(historialPantallas.length>1){
 
-            volverPantalla();
+        volverPantalla();
 
-            window.history.pushState(null,"");
+        window.history.pushState(null,"");
 
-        }
+    }
+    else{
+
+        setMostrarConfirmarCerrar(true);
+
+        window.history.pushState(null,"");
+
+    }
 
     };
 
@@ -315,6 +335,134 @@ export default function Psicologia({
 
 }
 
+    {
+    mostrarConfirmarCerrar && (
+
+    <div className="modal-overlay">
+
+        <div className="modal-nee">
+
+            <h2>
+
+                Salir de Psicología
+
+            </h2>
+
+            <p>
+
+                ¿Deseas salir de este módulo?
+
+            </p>
+
+            <div className="modal-botones">
+
+                <button
+
+                    className="btn-cancelar"
+
+                    onClick={()=>
+
+                        setMostrarConfirmarCerrar(false)
+
+                    }
+
+                >
+
+                    Permanecer
+
+                </button>
+
+                <button
+
+                    className="btn-eliminar"
+
+                    onClick={()=>{
+
+                        setMostrarConfirmarCerrar(false);
+
+                        window.location.href="about:blank";
+
+                    }}
+
+                >
+
+                    Salir
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    )
+    }
+
+    {
+mostrarCerrarSesion && (
+
+<div className="modal-overlay">
+
+    <div className="modal-nee">
+
+        <h2>
+
+            Cerrar sesión
+
+        </h2>
+
+        <p>
+
+            ¿Deseas cerrar tu sesión?
+
+        </p>
+
+        <div className="modal-botones">
+
+            <button
+
+                className="btn-cancelar"
+
+                onClick={()=>
+
+                    setMostrarCerrarSesion(false)
+
+                }
+
+            >
+
+                Cancelar
+
+            </button>
+
+            <button
+
+                className="btn-eliminar"
+
+                onClick={()=>{
+
+                    setMostrarCerrarSesion(false);
+
+                    cerrarSesion();
+
+                }}
+
+            >
+
+                Cerrar sesión
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+)
+}
+
     return(
 
     <>
@@ -347,7 +495,11 @@ export default function Psicologia({
 
                 <div className="ps-fixed-top">
 
-                    <HeaderPsico/>
+                    <HeaderPsico
+
+                        cerrarSesion={cerrarSesion}
+
+                    />
 
                 </div>
 

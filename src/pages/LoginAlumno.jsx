@@ -15,6 +15,8 @@ import {
   FaShieldAlt
 } from "react-icons/fa";
 
+import fondoPsicologia from "../assets/fondo-psicologia1.webp";
+
 export default function LoginAlumno({
 
   students,
@@ -79,15 +81,12 @@ export default function LoginAlumno({
 
       {/* Fondo institucional */}
 
-      <div className="app-background">
-
-        <div className="bg-wave1"></div>
-
-        <div className="bg-wave2"></div>
-
-        <div className="bg-light"></div>
-
-      </div>
+      <div
+            className="app-background"
+            style={{
+            backgroundImage:`url(${fondoPsicologia})`
+            }}
+            ></div>
 
       <div className="app">
 

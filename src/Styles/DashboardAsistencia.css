@@ -1,0 +1,440 @@
+.dash-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:24px;
+
+    padding:8px;
+
+    margin-bottom:18px;
+
+    border-radius:24px;
+
+    background:rgba(255,255,255,.16);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.18);
+
+}
+
+.dash-grafico{
+
+    width:100px;
+
+    height:100px;
+
+    flex-shrink:0;
+
+}
+
+.dash-resumen{
+
+display:flex;
+
+flex-direction:column;
+
+gap:13px;
+
+margin-left:0;
+
+}
+
+.dash-item{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+}
+
+.dash-item strong{
+
+display:block;
+
+font-size:13px;
+
+color:white;
+
+}
+
+.dash-item span{
+
+display:block;
+
+font-size:13px;
+
+opacity:.8;
+
+color:white;
+
+}
+
+.dash-item.presente svg{
+
+color:#53d769;
+
+}
+
+.dash-item.tardanza svg{
+
+color:#ffcc00;
+
+}
+
+.dash-item.falta svg{
+
+color:#ff5d5d;
+
+}
+
+.dash-resumen div{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    color:white;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.dash-resumen svg{
+
+    width:22px;
+
+    height:22px;
+
+}
+
+.dash-cajas{
+
+display:grid;
+
+grid-template-columns:1fr 1fr;
+
+gap:12px;
+
+margin-top:18px;
+
+}
+
+.mini-card{
+
+    background:rgba(255,255,255,.16);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border-radius:22px;
+
+    padding:18px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,.15);
+
+}
+
+.mini-card.grupos.pendiente{
+
+border-left:6px solid #e53935;
+
+}
+
+.mini-card.grupos.completo{
+
+border-left:6px solid #43a047;
+
+}
+
+.mini-card.reportes.limpio{
+
+border-left:6px solid #43a047;
+
+}
+
+.mini-card.reportes.alerta{
+
+border-left:6px solid #e53935;
+
+}
+
+.mini-card svg{
+
+    width:18px;
+
+    height:18px;
+
+    margin-bottom:1px;
+
+}
+
+.mini-card h3{
+
+    margin:0;
+
+    font-size:22px;
+
+}
+
+.mini-card span{
+
+    margin-top:1px;
+
+    font-size:14px;
+
+    opacity:.85;
+
+}
+
+.dashboard-panel{
+
+    margin-top:8px;
+
+    padding:18px;
+
+    border-radius:22px;
+
+    background:rgba(255,255,255,.14);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+}
+
+.dashboard-panel h3{
+
+    margin:0 0 10px;
+
+    color:white;
+
+}
+
+.dashboard-panel p{
+
+    color:white;
+
+    margin:0;
+
+}
+
+.panel-item{
+
+    color:white;
+
+    padding:10px 12px;
+
+    border-bottom:1px solid rgba(255,255,255,.12);
+
+}
+
+.panel-item:last-child{
+
+    border-bottom:none;
+
+}
+
+.mini-card.grupos{
+
+border-left:10px solid #ff6b6b;
+
+}
+
+.mini-card.reportes{
+
+border-left:10px solid #ffd43b;
+
+}
+
+/*=========================================
+RESUMEN CRÍTICO
+=========================================*/
+
+.dashboard-subtitulo{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    margin-top:18px;
+    margin-bottom:10px;
+
+    color:white;
+
+    font-weight:700;
+
+    font-size:13px;
+
+}
+
+.dashboard-subtitulo:first-of-type{
+
+    margin-top:4px;
+
+}
+
+.dashboard-subtitulo svg{
+
+    color:#ffd54f;
+
+}
+
+.panel-click{
+
+    cursor:pointer;
+
+    transition:.18s;
+
+    border-radius:12px;
+
+    padding:10px 12px;
+
+}
+
+.panel-click:hover{
+
+    background:rgba(255,255,255,.08);
+
+    transform:translateX(4px);
+
+}
+
+.panel-vacio{
+
+    margin:0;
+
+    padding:4px;
+
+    text-align:center;
+
+    border-radius:14px;
+
+    border:2px dashed rgba(255,255,255,.18);
+
+    background:rgba(255,255,255,.05);
+
+    color:white;
+
+    opacity:.8;
+
+}
+
+.critico-card{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 14px;
+
+    margin-bottom:8px;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.08);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    transition:.18s;
+
+    cursor:pointer;
+
+}
+
+.critico-card:hover{
+
+    transform:translateX(4px);
+
+    background:rgba(255,255,255,.12);
+
+}
+
+.critico-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.critico-info strong{
+
+    color:white;
+
+    font-size:14px;
+
+}
+
+.critico-info small{
+
+    color:rgba(255,255,255,.72);
+
+}
+
+.critico-badges{
+
+    display:flex;
+
+    gap:8px;
+
+}
+
+.critico-badges span{
+
+    padding:4px 10px;
+
+    border-radius:999px;
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+.badge-falta{
+
+    background:#e53935;
+
+}
+
+.badge-tardanza{
+
+    background:#f9a825;
+
+}
+
+.badge-reporte{
+
+    background:#aa2424;
+
+}

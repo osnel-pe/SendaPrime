@@ -5,6 +5,7 @@ import { supabase } from '../services/supabase';
 import '../Styles/AppLayout.css';
 import '../Styles/Auth.css';
 import '../Styles/LoginPsicologia.css';
+import fondoPsicologia from "../assets/fondo-psicologia1.webp";
 
 import {
   FaBrain,
@@ -89,13 +90,12 @@ export default function LoginPsicologia({
 
   return (
     <>
-      <div className="app-background">
-        <div className="bg-wave1"></div>
-
-        <div className="bg-wave2"></div>
-
-        <div className="bg-light"></div>
-      </div>
+      <div
+            className="app-background"
+            style={{
+            backgroundImage:`url(${fondoPsicologia})`
+            }}
+            ></div>
 
       <div className="app">
         <motion.div
@@ -111,8 +111,6 @@ export default function LoginPsicologia({
 
             <div>
               <h1>Psicología</h1>
-
-              <p>Acceso al departamento psicopedagógico</p>
             </div>
           </div>
 

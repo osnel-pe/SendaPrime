@@ -1,0 +1,431 @@
+.guardar-asistencia{
+
+background:#2e7d32;
+
+color:white;
+
+border:none;
+
+border-radius:14px;
+
+padding:14px 34px;
+
+font-size:16px;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.guardar-asistencia:hover{
+
+transform:scale(1.03);
+
+}
+
+.lista-grupo-card{
+
+background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(98px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+
+border-radius:18px;
+
+margin:0px 1px;
+
+padding:10px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.lista-grupo-card:hover{
+
+transform:translateY(-2px);
+
+}
+
+.lista-grupo-card.completado{
+
+background:rgba(255,255,255,.18);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    box-shadow:0 10px 30px rgba(0,0,0,.18);
+
+border:5px solid #76c47f;
+
+}
+
+.grupo-header{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+margin-bottom:5px;
+
+}
+
+.grupo-header h3{
+
+margin:0;
+
+font-size:18px;
+
+color:white;
+
+
+}
+
+.grupo-nombre span{
+
+    color:rgba(255,255,255,.70);
+
+}
+
+.grupo-header span{
+
+font-size:13px;
+
+color:rgba(255,255,255,.70);
+
+}
+
+.grupo-info{
+
+display:flex;
+
+justify-content:space-between;
+
+}
+
+.info{
+
+display:flex;
+
+align-items:center;
+
+gap:6px;
+
+font-weight:600;
+
+}
+
+.info svg{
+    width:18px;
+    height:18px;
+}
+
+.info.presente svg{
+    color:#2e7d32;
+}
+
+.info.tardanza svg{
+    color:#f4a300;
+}
+
+.info.falta svg{
+    color:#d32f2f;
+}
+
+.info.presente{
+
+color:#2e7d32;
+
+}
+
+.info.tardanza{
+
+color:#e6a400;
+
+}
+
+.info.falta{
+
+color:#d32f2f;
+
+}
+
+.grupo-titulo{
+
+    position:sticky;
+
+    top:0;
+
+    z-index:20;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:8px 0;
+
+    background:rgba(255, 255, 255, 0);
+
+    backdrop-filter:blur(18px);
+
+    -webkit-backdrop-filter:blur(18px);
+
+    border-radius:18px;
+
+    margin-bottom:12px;
+
+}
+
+.back-btn{
+
+    position:absolute;
+
+    left:16px;
+
+    width:38px;
+
+    height:38px;
+
+}
+
+.grupo-titulo h2{
+
+    margin:0;
+
+    color:#fff !important;
+
+    font-size:20px;
+
+    font-weight:700;
+
+    text-align:center;
+
+}
+.alumno-card{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+background:white;
+
+    margin:3px 10px;
+
+    padding:4px 10px;
+
+    border-radius:18px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.datos-alumno strong{
+
+font-size:15px;
+
+font-weight:600;
+
+line-height:1.1;
+
+}
+
+.datos-alumno p{
+
+margin:0;
+
+font-size:13px;
+
+color:#666;
+
+}
+
+.alumno-info{
+
+display:flex;
+
+align-items:center;
+
+gap:10px;
+
+flex-direction:row;
+
+}
+
+.estado-botones{
+
+display:flex;
+
+gap:3px;
+
+}
+
+.estado{
+
+width:38px;
+
+height:38px;
+
+border:none;
+
+border-radius:50%;
+
+background:#ececec;
+
+cursor:pointer;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+transition:.2s;
+
+}
+
+.estado.activo.presente{
+
+background:#4caf50;
+
+color:white;
+
+}
+
+.estado.activo.tardanza{
+
+background:#fbc02d;
+
+color:white;
+
+}
+
+.estado.activo.falta{
+
+background:#d32f2f;
+
+color:white;
+
+}
+
+.lista-prefectura{
+
+    display:flex;
+    flex-direction:column;
+
+    gap:10px;
+
+    padding:14px 14px 6px;
+
+    height:calc(100vh - 165px);
+
+    overflow-y:auto;
+
+}
+
+.grupo-asistencia{
+
+height:100%;
+
+overflow-y:auto;
+
+padding-bottom:60px;
+
+display:flex;
+
+flex-direction:column;
+
+}
+
+.guardar-contenedor{
+
+position:fixed;
+
+left:0;
+
+right:0;
+
+bottom:115px;
+
+display:flex;
+
+justify-content:center;
+
+background:none;
+
+z-index:100;
+
+}
+
+.datos-alumno{
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.numero{
+
+    width:28px;
+
+    text-align:center;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:#6d6d6d;
+
+}
+
+.grupo-nombre{
+
+    display:flex;
+
+    align-items:baseline;
+
+    gap:8px;
+
+}
+
+.grupo-nombre h3{
+
+    margin:0;
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.grupo-nombre span{
+
+    font-size:13px;
+
+    opacity:.65;
+
+}
+
+.grupo-header svg{
+
+    color:white;
+
+}

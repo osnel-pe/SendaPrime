@@ -20,3 +20,58 @@ body{
   align-items:center;
   padding:24px;
 }
+
+.app{
+
+    width:100vw;
+    height:100vh;
+
+}
+
+.ps-app{
+
+    padding-top:env(safe-area-inset-top);
+
+    padding-bottom:env(safe-area-inset-bottom);
+
+}
+
+html,
+body{
+
+    overscroll-behavior:none;
+
+}
+
+body{
+
+    user-select:none;
+
+}
+
+input,
+textarea{
+
+    user-select:text;
+
+}
+
+*{
+
+    -webkit-tap-highlight-color:transparent;
+
+}
+
+input,
+textarea,
+select{
+
+    font-size:16px;
+
+}
+
+*{
+
+    scroll-behavior:smooth;
+
+}

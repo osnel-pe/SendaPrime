@@ -34,31 +34,15 @@ HEADER
 
 .perfil-header{
 
-    display:flex;
+position:relative;
 
-    align-items:center;
+display:flex;
 
-    gap:80px;
+justify-content:center;
 
-    padding:10px 16px 6px;
+align-items:center;
 
-    margin:10px;
-
-    margin-bottom:2px;
-
-    border-radius:24px;
-
-    background:rgba(255,255,255,.14);
-
-    backdrop-filter:blur(18px);
-
-    -webkit-backdrop-filter:blur(18px);
-
-    border:1px solid rgba(255,255,255,.16);
-
-    box-shadow:
-
-        0 10px 30px rgba(0,60,35,.12);
+height:54px;
 
 }
 
@@ -970,4 +954,106 @@ ARCHIVOS
 
     min-height:82px;
 
+}
+
+/*==========================
+COLORES REPORTES
+==========================*/
+
+.reporte-aviso{
+
+    border-left:6px solid #3498db;
+
+    background:rgba(52,152,219,.22);
+
+    backdrop-filter:blur(18px);
+
+}
+
+.reporte-aviso-de-conducta{
+
+    border-left:6px solid #f59e0b;
+
+    background:rgba(245,158,11,.22);
+
+    backdrop-filter:blur(18px);
+
+}
+
+.reporte-nota-de-conducta{
+
+    border-left:6px solid #9333ea;
+
+    background:rgba(147,51,234,.22);
+
+    backdrop-filter:blur(18px);
+
+}
+
+.reporte-reporte-de-conducta{
+
+    border-left:6px solid #ef4444;
+
+    background:rgba(239,68,68,.22);
+
+    backdrop-filter:blur(18px);
+
+}
+
+.reporte-suspension{
+
+    border-left:6px solid #475569;
+
+    background:rgba(71,85,105,.22);
+
+    backdrop-filter:blur(18px);
+
+}
+
+.reporte-aviso h4{
+    color:#2474b5;
+}
+
+.reporte-aviso-de-conducta h4{
+    color:#d88900;
+}
+
+.reporte-nota-de-conducta h4{
+    color:#8e44ad;
+}
+
+.reporte-reporte-de-conducta h4{
+    color:#c0392b;
+}
+
+.reporte-suspension h4{
+    color:#2c3e50;
+}
+
+.reporte-icon{
+    background:#ffffff;
+}
+
+.reporte-icon svg{
+    stroke:#444;
+}
+
+.reporte-icon.azul svg{
+    stroke:#3b82f6;
+}
+
+.reporte-icon.naranja svg{
+    stroke:#f59e0b;
+}
+
+.reporte-icon.morado svg{
+    stroke:#8b5cf6;
+}
+
+.reporte-icon.rojo svg{
+    stroke:#ef4444;
+}
+
+.reporte-icon.gris svg{
+    stroke:#6b7280;
 }
