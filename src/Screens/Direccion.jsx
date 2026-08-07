@@ -18,20 +18,19 @@ import "../Styles/HeaderPrefectura.css";
 
 import fondoPrefectura from "../assets/fondo-psicologia.jpg";
 
-import HeaderPrefectura from "../components/HeaderPrefectura";
-import BottomNavigationPrefectura from "../components/BottomNavigationPrefectura.jsx";
+import HeaderDireccion from "../components/HeaderDireccion";
+import BottomNavigationDireccion from "../components/BottomNavigationDireccion";
 import BotonIA from "../components/Psicologia/BotonIA";
 
 import ListaPrefectura from "../pages/ListaPrefectura";
 import GrupoAsistencia from "../components/Prefectura/GrupoAsistencia";
 
-import InicioPrefectura from "../pages/InicioPrefectura";
-import PerfilesPrefectura from "../pages/PerfilesPrefectura";
-import ReportesPrefectura from "../pages/ReportesPrefectura";
-import NotasPrefectura from "../pages/NotasPrefectura";
-import GrupoPrefectura from "../pages/GrupoPrefectura";
-import PerfilAlumnoPrefectura from "../pages/PerfilAlumnoPrefectura";
-import ResumenAsistencia from "../components/Prefectura/ResumenAsistencia";
+import InicioDireccion from "../pages/InicioDireccion";
+import PerfilesDireccion from "../components/Direccion/PerfilesDireccion";
+import ListaDireccion from "../components/Direccion/ListaDireccion";
+import GrupoDireccion from "../components/Direccion/GrupoDireccion";
+import PerfilAlumnoDireccion from "../pages/PerfilAlumnoDireccion.jsx";
+import ReportesDireccion from "../components/Direccion/ReportesDireccion";
 
 export default function Prefectura({
 
@@ -179,7 +178,7 @@ export default function Prefectura({
 
             return(
 
-                <PerfilesPrefectura
+                <PerfilesDireccion
 
                     embebido={true}
 
@@ -215,7 +214,7 @@ export default function Prefectura({
 
             :
 
-           <ListaPrefectura
+           <ListaDireccion
 
                 key={grupoSeleccionado===null?"lista":"grupo"}
 
@@ -231,7 +230,7 @@ export default function Prefectura({
 
             return(
 
-                <ReportesPrefectura
+                <ReportesDireccion
 
                     embebido={true}
 
@@ -272,7 +271,7 @@ export default function Prefectura({
 
             return(
 
-                <GrupoPrefectura
+                <GrupoDireccion
 
                     embebido={true}
 
@@ -290,25 +289,45 @@ export default function Prefectura({
 
             );
 
-case "perfilAlumnoPrefectura":
+            case "perfilAlumnoDireccion":
+
+                return(
+
+                    <PerfilAlumnoDireccion
+
+                        embebido={true}
+
+                        alumno={alumnoSeleccionado}
+
+                        students={students}
+
+                        setStudents={setStudents}
+
+                        cambiarPantalla={cambiarPantallaInterna}
+
+                        setAlumnoSeleccionado={setAlumnoSeleccionado}
+
+                        moduloInicial={moduloPerfil}
+
+                        volver={volverPantalla}
+
+                    />
+
+                );
+
+    case "neeReportes":
 
     return(
 
-        <PerfilAlumnoPrefectura
-
-            embebido={true}
-
-            alumno={alumnoSeleccionado}
+        <ReportesDireccion
 
             students={students}
-
-            setStudents={setStudents}
 
             cambiarPantalla={cambiarPantallaInterna}
 
             setAlumnoSeleccionado={setAlumnoSeleccionado}
 
-            moduloInicial={moduloPerfil}
+            setModuloPerfil={setModuloPerfil}
 
         />
 
@@ -330,7 +349,7 @@ case "perfilAlumnoPrefectura":
 
             return(
 
-                <InicioPrefectura
+                <InicioDireccion
 
                     students={students}
 
@@ -359,7 +378,7 @@ case "perfilAlumnoPrefectura":
 
             <h2>
 
-                Salir de Prefectura
+                Salir de Dirección
 
             </h2>
 
@@ -510,10 +529,8 @@ mostrarCerrarSesion && (
 
                 <div className="ps-fixed-top">
 
-                    <HeaderPrefectura
-
+                    <HeaderDireccion
                         cerrarSesion={cerrarSesion}
-
                     />
 
                 </div>
@@ -530,17 +547,17 @@ mostrarCerrarSesion && (
 
                 {/*
 
-                <BotonIA
-                    abrir={()=>
-                        cambiarPantalla(
-                            "asistenteIA"
-                        )
-                    }
-                />
+                    <BotonIA
+                        abrir={()=>
+                            cambiarPantalla(
+                                "asistenteIA"
+                            )
+                        }
+                    />
 
-                */}
+                    */}
 
-                <BottomNavigationPrefectura
+                <BottomNavigationDireccion
 
                     pantalla={pantallaActual}
 

@@ -42,7 +42,8 @@ import NEE from "./pages/NEE";
 import Notas from "./pages/Notas";
 import AsistenteIA from "./pages/AsistenteIA";
 import Prefectura from "./Screens/Prefectura";
-
+import LoginDireccion from "./pages/LoginDireccion";
+import Direccion from "./Screens/Direccion";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -175,6 +176,18 @@ useEffect(()=>{
       setPantalla("psicologia");
       
       }
+
+    if(tipoUsuario==="prefectura"){
+
+        setPantalla("prefectura");
+
+    }
+
+    if(tipoUsuario==="direccion"){
+
+        setPantalla("direccion");
+
+    }
   
   }, []);
 
@@ -486,11 +499,58 @@ useEffect(() => {
 
         break;
 
+        case "loginDireccion":
+
+        contenido=(
+
+            <LoginDireccion
+
+                cambiarPantalla={setPantalla}
+
+                setTipoUsuario={setTipoUsuario}
+
+            />
+
+        );
+
+        break;
+
         case "prefectura":
 
     contenido=(
 
         <Prefectura
+
+            students={students}
+
+            setStudents={setStudents}
+
+            cargarAlumnos={cargarAlumnos}
+
+            alumnoSeleccionado={alumnoSeleccionado}
+
+            setAlumnoSeleccionado={setAlumnoSeleccionado}
+
+            grupoSeleccionado={grupoSeleccionado}
+
+            setGrupoSeleccionado={setGrupoSeleccionado}
+
+            cerrarSesion={cerrarSesion}
+
+            cambiarPantalla={setPantalla}
+
+        />
+
+    );
+
+    break;
+
+
+    case "direccion":
+
+    contenido=(
+
+        <Direccion
 
             students={students}
 

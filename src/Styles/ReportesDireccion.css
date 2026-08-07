@@ -1,0 +1,198 @@
+.dr-tabs{
+
+    display:flex;
+
+    gap:10px;
+
+    margin-bottom:18px;
+
+}
+
+.dr-tabs button{
+
+    flex:1;
+
+    padding:12px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#23362b;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.dr-tabs button.activo{
+
+    background:#0f894e;
+
+}
+
+.dr-filtro{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-bottom:16px;
+
+}
+
+.dr-filtro select{
+
+    padding:8px 12px;
+
+    border-radius:10px;
+
+    border:none;
+
+    background:white;
+
+}
+
+.nee-badge{
+
+    display:inline-block;
+
+    margin-top:6px;
+
+    padding:4px 10px;
+
+    border-radius:999px;
+
+    background:#e8f1ff;
+
+    color:#2454a6;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+}
+
+.rp-lista{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+}
+
+.pa-card{
+
+    background:tr(22, 18, 18);
+
+    border-radius:12px;
+
+    padding:5px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.pa-card:hover{
+
+    transform:translateY(-2px);
+
+}
+
+.pa-card-left{
+
+    display:flex;
+
+    gap:14px;
+
+    align-items:center;
+
+}
+
+.pa-card-left svg{
+
+    color:#0c893a;
+
+}
+
+.pa-card-text h4{
+
+    margin:0;
+
+    color:#222;
+
+}
+
+.pa-card-text p{
+
+    margin:4px 0;
+
+    color:#666;
+
+}
+
+.rp-vacio{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    text-align:center;
+
+    color:#666;
+
+}
+
+.nee-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-top:1px;
+
+    padding:1px 10px;
+
+    border-radius:10px;
+
+    background:#eef5ff;
+
+}
+
+.nee-item strong{
+
+    color:#020406;
+
+    font-size:.9rem;
+
+}
+
+.nee-item span{
+
+    background:#0f8a3e;
+
+    color:white;
+
+    padding:2px 10px;
+
+    border-radius:999px;
+
+    font-size:.75rem;
+
+    font-weight:600;
+
+}
+

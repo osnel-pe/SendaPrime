@@ -1,0 +1,634 @@
+/*==================================================
+OVERLAY
+==================================================*/
+
+.modal-asistencia-overlay {
+    position: fixed;
+    inset: 0;
+
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 9999;
+
+    box-sizing: border-box;
+}
+
+
+/*==================================================
+MODAL
+==================================================*/
+
+.modal-asistencia {
+
+    width: min(700px, 100%);
+
+    max-height: 85vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, .30);
+
+    animation:
+        modalAsistenciaEntrada .2s ease-out;
+
+}
+
+
+@keyframes modalAsistenciaEntrada {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(15px)
+            scale(.98);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+
+    }
+
+}
+
+
+/*==================================================
+HEADER
+==================================================*/
+
+.modal-asistencia-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 22px 24px;
+
+    border-bottom:
+        1px solid #e8e8e8;
+
+}
+
+
+.modal-asistencia-header h2 {
+
+    margin: 0;
+
+    color: #263238;
+
+    font-size: 21px;
+
+    font-weight: 700;
+
+}
+
+
+.modal-asistencia-header p {
+
+    margin:
+        5px 0 0;
+
+    color: #7b858b;
+
+    font-size: 13px;
+
+}
+
+
+.modal-asistencia-cerrar {
+
+    width: 38px;
+
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #f1f3f4;
+
+    color: #59636a;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.modal-asistencia-cerrar:hover {
+
+    background: #e4e7e9;
+
+}
+
+
+/*==================================================
+RESUMEN
+==================================================*/
+
+.modal-asistencia-resumen {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 12px;
+
+    padding: 18px 24px;
+
+    background: #f8faf9;
+
+}
+
+
+.modal-resumen-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 13px 15px;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e8ece9;
+
+    border-radius: 14px;
+
+}
+
+
+.modal-resumen-item svg {
+
+    width: 22px;
+
+    height: 22px;
+
+    flex-shrink: 0;
+
+}
+
+
+.modal-resumen-item strong {
+
+    display: block;
+
+    font-size: 20px;
+
+    line-height: 1;
+
+}
+
+
+.modal-resumen-item span {
+
+    display: block;
+
+    margin-top: 4px;
+
+    color: #7a8489;
+
+    font-size: 12px;
+
+}
+
+
+.modal-resumen-item.tardanza {
+
+    color: #a86d12;
+
+}
+
+
+.modal-resumen-item.falta {
+
+    color: #c0392b;
+
+}
+
+
+/*==================================================
+LISTA
+==================================================*/
+
+.modal-asistencia-lista {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding: 20px 24px;
+
+}
+
+
+/*==================================================
+GRUPO
+==================================================*/
+
+.modal-grupo {
+
+    margin-bottom: 18px;
+
+    overflow: hidden;
+
+    background: #ffffff;
+
+    border:
+        1px solid #e5e8e9;
+
+    border-radius: 16px;
+
+}
+
+
+.modal-grupo:last-child {
+
+    margin-bottom: 0;
+
+}
+
+
+.modal-grupo-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 13px 16px;
+
+    background: #f5f7f6;
+
+    border-bottom:
+        1px solid #e5e8e9;
+
+}
+
+
+.modal-grupo-header h3 {
+
+    margin: 0;
+
+    color: #263238;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+}
+
+
+.modal-grupo-header span {
+
+    color: #7a8589;
+
+    font-size: 12px;
+
+}
+
+
+/*==================================================
+ALUMNOS
+==================================================*/
+
+.modal-alumnos {
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.modal-alumno {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding: 13px 16px;
+
+    border-bottom:
+        1px solid #edf0ef;
+
+}
+
+
+.modal-alumno:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.modal-alumno-info {
+
+    min-width: 0;
+
+}
+
+
+.modal-alumno-info strong {
+
+    display: block;
+
+    overflow: hidden;
+
+    color: #303b40;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+
+}
+
+
+/*==================================================
+BADGES
+==================================================*/
+
+.modal-badge-tardanza,
+.modal-badge-falta {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    flex-shrink: 0;
+
+    padding:
+        6px 9px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+}
+
+
+.modal-badge-tardanza {
+
+    background: #fff4dc;
+
+    color: #a86d12;
+
+}
+
+
+.modal-badge-falta {
+
+    background: #fde9e7;
+
+    color: #bd3429;
+
+}
+
+
+/*==================================================
+SIN INCIDENCIAS
+==================================================*/
+
+.modal-asistencia-vacio {
+
+    min-height: 180px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    color: #8a9498;
+
+}
+
+
+.modal-asistencia-vacio svg {
+
+    margin-bottom: 10px;
+
+    opacity: .55;
+
+}
+
+
+.modal-asistencia-vacio p {
+
+    max-width: 300px;
+
+    margin: 0;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+}
+
+
+/*==================================================
+FOOTER
+==================================================*/
+
+.modal-asistencia-footer {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding: 15px 24px;
+
+    background: #fafbfb;
+
+    border-top:
+        1px solid #e8e8e8;
+
+}
+
+
+.modal-asistencia-btn {
+
+    padding:
+        9px 20px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #344b40;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+}
+
+
+.modal-asistencia-btn:hover {
+
+    background: #283a32;
+
+}
+
+
+/*==================================================
+SCROLLBAR
+==================================================*/
+
+.modal-asistencia-lista::-webkit-scrollbar {
+
+    width: 7px;
+
+}
+
+
+.modal-asistencia-lista::-webkit-scrollbar-track {
+
+    background: transparent;
+
+}
+
+
+.modal-asistencia-lista::-webkit-scrollbar-thumb {
+
+    background: #cbd3cf;
+
+    border-radius: 10px;
+
+}
+
+
+/*==================================================
+RESPONSIVE
+==================================================*/
+
+@media (max-width: 600px) {
+
+    .modal-asistencia-overlay {
+
+        align-items: flex-end;
+
+        padding: 10px;
+
+    }
+
+
+    .modal-asistencia {
+
+        width: 100%;
+
+        max-height: 90vh;
+
+        border-radius:
+            20px 20px 0 0;
+
+    }
+
+
+    .modal-asistencia-header {
+
+        padding: 18px;
+
+    }
+
+
+    .modal-asistencia-resumen {
+
+        padding:
+            14px 18px;
+
+    }
+
+
+    .modal-asistencia-lista {
+
+        padding:
+            16px 18px;
+
+    }
+
+
+    .modal-alumno {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+    }
+
+
+    .modal-asistencia-footer {
+
+        padding:
+            13px 18px;
+
+    }
+
+}

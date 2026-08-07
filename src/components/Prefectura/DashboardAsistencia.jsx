@@ -1,23 +1,15 @@
 import { useEffect, useState } from "react";
 
 import {
-
     CheckCircle2,
-
     Clock3,
-
     CircleX,
-
     School,
-
     AlertTriangle,
-
     TriangleAlert
-
 } from "lucide-react";
 
 import { CircularProgressbar } from "react-circular-progressbar";
-
 import "react-circular-progressbar/dist/styles.css";
 
 import { supabase } from "../../services/supabase";
@@ -26,387 +18,708 @@ import "../../Styles/DashboardAsistencia.css";
 
 import { obtenerFechaLocal } from "../../utils/fechaLocal";
 
+import ModalAsistencia from "./ModalAsistencia";
+
+
 export default function DashboardAsistencia({
 
-    students=[],
+    students = [],
+
     setAlumnoSeleccionado,
+
     cambiarPantalla,
+
     setModuloPerfil,
+
     setResumenAsistencia
-}){
 
-    const [datos,setDatos]=useState({
+}) {
 
-        presentes:0,
+    /*==================================================
+    DATOS PRINCIPALES
+    ==================================================*/
 
-        tardanzas:0,
+    const [datos, setDatos] = useState({
 
-        faltas:0,
+        presentes: 0,
 
-        completos:0,
+        tardanzas: 0,
 
-        pendientes:0,
+        faltas: 0,
 
-        total:0,
+        completos: 0,
 
-        gruposPendientes:[],
+        pendientes: 0,
 
-        incidencias:[],
+        total: 0,
 
-        reportes:0
+        gruposPendientes: [],
 
-    });
+        incidencias: [],
 
-    const [resumenCritico,setResumenCritico]=useState({
-
-        asistencia:[],
-
-        reportes:[]
+        reportes: 0
 
     });
 
-    useEffect(()=>{
+
+    /*==================================================
+    RESUMEN CRÍTICO
+    ==================================================*/
+
+    const [resumenCritico, setResumenCritico] = useState({
+
+        asistencia: [],
+
+        reportes: []
+
+    });
+
+
+    /*==================================================
+    REGISTROS DE ASISTENCIA DEL DÍA
+
+    Se utilizan exclusivamente para el modal.
+
+    El modal filtrará:
+
+    - falta
+    - tardanza
+
+    Los presentes nunca se muestran.
+    ==================================================*/
+
+    const [registrosHoy, setRegistrosHoy] = useState([]);
+
+
+    /*==================================================
+    MODAL
+    ==================================================*/
+
+    const [
+        mostrarModalAsistencia,
+        setMostrarModalAsistencia
+    ] = useState(false);
+
+
+    /*==================================================
+    CARGAR DATOS
+    ==================================================*/
+
+    useEffect(() => {
 
         cargar();
 
-    },[students]);
+    }, [students]);
 
-    async function cargar(){
 
-    const hoy=obtenerFechaLocal();
+    async function cargar() {
 
-    const inicioMes=`${hoy.slice(0,7)}-01`;
+        const hoy = obtenerFechaLocal();
 
-    const grupos=[
-        ...new Set(
-            students.map(a=>a.grupo)
-        )
-    ].sort();
 
-    const {data}=await supabase
+        /*==================================================
+        GRUPOS
+        ==================================================*/
 
-    .from("asistencia_prefectura")
+        const grupos = [
 
-    .select("*")
+            ...new Set(
 
-    .eq("fecha",hoy);
+                students.map(
+                    alumno => alumno.grupo
+                )
 
-    const {data:reportesHoy}=await supabase
+            )
 
-    .from("reportes_prefectura")
+        ].sort();
 
-    .select("id")
 
-    .eq("fecha",hoy);
+        /*==================================================
+        ASISTENCIA DEL DÍA
+        ==================================================*/
 
-    const registros=data || [];
+        const {
+            data,
+            error
+        } = await supabase
 
-    const gruposPendientes=[];
+            .from("asistencia_prefectura")
 
-    const incidencias=[];
+            .select("*")
 
-    let completos=0;
+            .eq("fecha", hoy);
 
-    grupos.forEach(grupo=>{
 
-        const registrosGrupo=
+        if (error) {
 
-        registros.filter(
+            console.log(
+                "Error cargando asistencia:",
+                error
+            );
 
-            r=>r.grupo===grupo
-
-        );
-
-        if(registrosGrupo.length===0){
-
-            gruposPendientes.push(grupo);
+            return;
 
         }
 
-        else{
 
-            completos++;
+        const registros = data || [];
 
-        }
 
-        const faltas=
+        /*
+        Guardamos los registros del día.
 
-        registrosGrupo.filter(
+        El modal recibirá estos datos y posteriormente
+        solamente utilizará falta y tardanza.
+        */
 
-            r=>r.estatus==="falta"
+        setRegistrosHoy(registros);
 
-        ).length;
 
-        const tardanzas=
+        /*==================================================
+        REPORTES DEL DÍA
+        ==================================================*/
 
-        registrosGrupo.filter(
+        const {
+            data: reportesHoy
+        } = await supabase
 
-            r=>r.estatus==="tardanza"
+            .from("reportes_prefectura")
 
-        ).length;
+            .select("id")
 
-        if(faltas>0 || tardanzas>0){
+            .eq("fecha", hoy);
 
-            incidencias.push({
 
-                grupo,
+        /*==================================================
+        GRUPOS PENDIENTES
+        ==================================================*/
 
-                faltas,
+        const gruposPendientes = [];
 
-                tardanzas
+        const incidencias = [];
 
-            });
+        let completos = 0;
 
-        }
 
-    });
+        grupos.forEach(grupo => {
 
-    const fechaInicio=
+            const registrosGrupo =
+                registros.filter(
+                    registro =>
+                        registro.grupo === grupo
+                );
 
-    hoy.substring(0,8)+"01";
 
-    const {data:mesAsistencia}=await supabase
+            if (registrosGrupo.length === 0) {
 
-    .from("asistencia_prefectura")
+                gruposPendientes.push(grupo);
 
-    .select("alumno_id,estatus")
+            } else {
 
-    .gte("fecha",fechaInicio)
+                completos++;
 
-    .lte("fecha",hoy);
+            }
 
-    const {data:mesReportes}=await supabase
 
-    .from("reportes_prefectura")
+            const faltas =
+                registrosGrupo.filter(
+                    registro =>
+                        registro.estatus === "falta"
+                ).length;
 
-    .select("alumno_id")
 
-    .gte("fecha",fechaInicio)
+            const tardanzas =
+                registrosGrupo.filter(
+                    registro =>
+                        registro.estatus === "tardanza"
+                ).length;
 
-    .lte("fecha",hoy);
 
-    const mapaAsistencia={};
+            if (
+                faltas > 0 ||
+                tardanzas > 0
+            ) {
 
-    (mesAsistencia || []).forEach(reg=>{
+                incidencias.push({
 
-        if(!mapaAsistencia[reg.alumno_id]){
+                    grupo,
 
-            mapaAsistencia[reg.alumno_id]={
+                    faltas,
 
-                faltas:0,
+                    tardanzas
 
-                tardanzas:0
+                });
 
-            };
-
-        }
-
-        if(reg.estatus==="falta"){
-
-            mapaAsistencia[reg.alumno_id].faltas++;
-
-        }
-
-        if(reg.estatus==="tardanza"){
-
-            mapaAsistencia[reg.alumno_id].tardanzas++;
-
-        }
-
-    });
-
-    const mapaReportes={};
-
-    (mesReportes || []).forEach(rep=>{
-
-        mapaReportes[rep.alumno_id]=
-
-        (mapaReportes[rep.alumno_id] || 0)+1;
-
-    });
-
-    const alumnosAsistencia=students.filter(al=>{
-
-        const dato=mapaAsistencia[al.id];
-
-        if(!dato) return false;
-
-        return dato.faltas>=3 || dato.tardanzas>=3;
-
-    }).map(al=>({
-
-        ...al,
-
-        faltas:mapaAsistencia[al.id]?.faltas || 0,
-
-        tardanzas:mapaAsistencia[al.id]?.tardanzas || 0
-
-    }));
-
-    const alumnosReportes=students.filter(al=>
-
-        (mapaReportes[al.id] || 0)>=2
-
-    ).map(al=>({
-
-        ...al,
-
-        reportes:mapaReportes[al.id]
-
-    }));
-
-    setResumenCritico({
-
-        asistencia:alumnosAsistencia,
-
-        reportes:alumnosReportes
-
-    });
-
-    const resumen={};
-
-    registros.forEach(reg=>{
-
-        if(
-            reg.estatus!=="falta" &&
-            reg.estatus!=="tardanza"
-        ) return;
-
-        if(!resumen[reg.grupo]){
-
-            resumen[reg.grupo]=[];
-
-        }
-
-        const alumno=students.find(
-
-            a=>a.id===reg.alumno_id
-
-        );
-
-        if(!alumno) return;
-
-        resumen[reg.grupo].push({
-
-            ...alumno,
-
-            estatus:reg.estatus
+            }
 
         });
 
-    });
 
-    setResumenAsistencia(resumen);
+        /*==================================================
+        ASISTENCIA DEL MES
+        ==================================================*/
 
-    setDatos({
+        const fechaInicio =
+            hoy.substring(0, 8) + "01";
 
-        presentes:
 
-        registros.filter(
+        const {
+            data: mesAsistencia
+        } = await supabase
 
-            r=>r.estatus==="presente"
+            .from("asistencia_prefectura")
 
-        ).length,
+            .select(
+                "alumno_id,estatus"
+            )
 
-        tardanzas:
+            .gte(
+                "fecha",
+                fechaInicio
+            )
 
-        registros.filter(
+            .lte(
+                "fecha",
+                hoy
+            );
 
-            r=>r.estatus==="tardanza"
 
-        ).length,
+        /*==================================================
+        REPORTES DEL MES
+        ==================================================*/
 
-        faltas:
+        const {
+            data: mesReportes
+        } = await supabase
 
-        registros.filter(
+            .from("reportes_prefectura")
 
-            r=>r.estatus==="falta"
+            .select("alumno_id")
 
-        ).length,
+            .gte(
+                "fecha",
+                fechaInicio
+            )
 
-        completos,
+            .lte(
+                "fecha",
+                hoy
+            );
 
-        pendientes:
 
-        grupos.length-completos,
+        /*==================================================
+        MAPA DE ASISTENCIA
+        ==================================================*/
 
-        total:students.length,
+        const mapaAsistencia = {};
 
-        gruposPendientes,
 
-        incidencias,
+        (mesAsistencia || []).forEach(
+            registro => {
 
-        reportes:
+                if (
+                    !mapaAsistencia[
+                        registro.alumno_id
+                    ]
+                ) {
 
-        reportesHoy?.length || 0
+                    mapaAsistencia[
+                        registro.alumno_id
+                    ] = {
 
-    });
+                        faltas: 0,
 
-}
+                        tardanzas: 0
 
-    const porcentaje=
+                    };
 
-    students.length===0
+                }
 
-    ?
 
-    0
+                if (
+                    registro.estatus === "falta"
+                ) {
 
-    :
+                    mapaAsistencia[
+                        registro.alumno_id
+                    ].faltas++;
 
-    Math.round(
+                }
 
-        datos.presentes
 
-        / students.length
+                if (
+                    registro.estatus === "tardanza"
+                ) {
 
-        *100
+                    mapaAsistencia[
+                        registro.alumno_id
+                    ].tardanzas++;
 
-    );
+                }
 
-    return(
+            }
+        );
+
+
+        /*==================================================
+        MAPA DE REPORTES
+        ==================================================*/
+
+        const mapaReportes = {};
+
+
+        (mesReportes || []).forEach(
+            reporte => {
+
+                mapaReportes[
+                    reporte.alumno_id
+                ] =
+                    (
+                        mapaReportes[
+                            reporte.alumno_id
+                        ] || 0
+                    ) + 1;
+
+            }
+        );
+
+
+        /*==================================================
+        ALUMNOS CRÍTICOS DE ASISTENCIA
+        ==================================================*/
+
+        const alumnosAsistencia =
+
+            students
+
+                .filter(alumno => {
+
+                    const dato =
+                        mapaAsistencia[
+                            alumno.id
+                        ];
+
+
+                    if (!dato) {
+
+                        return false;
+
+                    }
+
+
+                    return (
+
+                        dato.faltas >= 3 ||
+
+                        dato.tardanzas >= 3
+
+                    );
+
+                })
+
+                .map(alumno => ({
+
+                    ...alumno,
+
+                    faltas:
+                        mapaAsistencia[
+                            alumno.id
+                        ]?.faltas || 0,
+
+                    tardanzas:
+                        mapaAsistencia[
+                            alumno.id
+                        ]?.tardanzas || 0
+
+                }));
+
+
+        /*==================================================
+        ALUMNOS CRÍTICOS DE REPORTES
+        ==================================================*/
+
+        const alumnosReportes =
+
+            students
+
+                .filter(alumno =>
+
+                    (
+                        mapaReportes[
+                            alumno.id
+                        ] || 0
+                    ) >= 2
+
+                )
+
+                .map(alumno => ({
+
+                    ...alumno,
+
+                    reportes:
+                        mapaReportes[
+                            alumno.id
+                        ]
+
+                }));
+
+
+        setResumenCritico({
+
+            asistencia:
+                alumnosAsistencia,
+
+            reportes:
+                alumnosReportes
+
+        });
+
+
+        /*==================================================
+        RESUMEN DE ASISTENCIA
+
+        Conservamos esta información porque puede seguir
+        siendo utilizada por otras partes de Prefectura.
+
+        IMPORTANTE:
+        solamente se guardan faltas y tardanzas.
+        ==================================================*/
+
+        const resumen = {};
+
+
+        registros.forEach(registro => {
+
+            if (
+
+                registro.estatus !== "falta" &&
+
+                registro.estatus !== "tardanza"
+
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                !resumen[registro.grupo]
+            ) {
+
+                resumen[
+                    registro.grupo
+                ] = [];
+
+            }
+
+
+            const alumno =
+                students.find(
+                    estudiante =>
+                        estudiante.id ===
+                        registro.alumno_id
+                );
+
+
+            if (!alumno) {
+
+                return;
+
+            }
+
+
+            resumen[
+                registro.grupo
+            ].push({
+
+                ...alumno,
+
+                estatus:
+                    registro.estatus
+
+            });
+
+        });
+
+
+        if (setResumenAsistencia) {
+
+            setResumenAsistencia(
+                resumen
+            );
+
+        }
+
+
+        /*==================================================
+        DATOS PRINCIPALES
+        ==================================================*/
+
+        setDatos({
+
+            presentes:
+
+                registros.filter(
+                    registro =>
+                        registro.estatus ===
+                        "presente"
+                ).length,
+
+
+            tardanzas:
+
+                registros.filter(
+                    registro =>
+                        registro.estatus ===
+                        "tardanza"
+                ).length,
+
+
+            faltas:
+
+                registros.filter(
+                    registro =>
+                        registro.estatus ===
+                        "falta"
+                ).length,
+
+
+            completos,
+
+            pendientes:
+                grupos.length -
+                completos,
+
+
+            total:
+                students.length,
+
+
+            gruposPendientes,
+
+            incidencias,
+
+            reportes:
+                reportesHoy?.length || 0
+
+        });
+
+    }
+
+
+    /*==================================================
+    PORCENTAJE
+    ==================================================*/
+
+    const porcentaje =
+
+        students.length === 0
+
+            ? 0
+
+            :
+
+            Math.round(
+
+                datos.presentes /
+
+                students.length *
+
+                100
+
+            );
+
+
+    /*==================================================
+    ABRIR MODAL
+    ==================================================*/
+
+    function abrirModalAsistencia() {
+
+        setMostrarModalAsistencia(true);
+
+    }
+
+
+    /*==================================================
+    CERRAR MODAL
+    ==================================================*/
+
+    function cerrarModalAsistencia() {
+
+        setMostrarModalAsistencia(false);
+
+    }
+
+
+    /*==================================================
+    RETURN
+    ==================================================*/
+
+    return (
 
         <>
+
+            {/*==================================================
+            DASHBOARD DE ASISTENCIA
+            ==================================================*/}
 
             <div
 
                 className="dash-card"
 
-                onClick={()=>cambiarPantalla("resumenAsistencia")}
+                onClick={
+                    abrirModalAsistencia
+                }
 
-                style={{cursor:"pointer"}}
+                style={{
+                    cursor: "pointer"
+                }}
 
             >
+
+                {/*=========================================
+                GRÁFICO
+                =========================================*/}
 
                 <div className="dash-grafico">
 
                     <CircularProgressbar
 
-                        value={porcentaje}
+                        value={
+                            porcentaje
+                        }
 
-                        text={`${porcentaje}%`}
+                        text={
+                            `${porcentaje}%`
+                        }
 
                         styles={{
 
-                            path:{
+                            path: {
 
-                                stroke:"#4caf50"
-
-                            },
-
-                            trail:{
-
-                                stroke:"rgba(255,255,255,.18)"
+                                stroke:
+                                    "#4caf50"
 
                             },
 
-                            text:{
+                            trail: {
 
-                                fill:"#fff",
+                                stroke:
+                                    "rgba(255,255,255,.18)"
 
-                                fontSize:"20px",
+                            },
 
-                                fontWeight:"700"
+                            text: {
+
+                                fill: "#fff",
+
+                                fontSize:
+                                    "20px",
+
+                                fontWeight:
+                                    "700"
 
                             }
 
@@ -416,45 +729,132 @@ export default function DashboardAsistencia({
 
                 </div>
 
+
+                {/*=========================================
+                RESUMEN
+                =========================================*/}
+
                 <div className="dash-resumen">
 
-                    <div className="dash-item presente">
+                    {/*=====================================
+                    PRESENTES
 
-                        <CheckCircle2 size={18}/>
+                    Al tocarlo también se abre el modal,
+                    pero el modal NO mostrará presentes.
+                    =====================================*/}
+
+                    <div
+                        className="dash-item presente"
+
+                        onClick={e => {
+
+                            e.stopPropagation();
+
+                            abrirModalAsistencia();
+
+                        }}
+
+                    >
+
+                        <CheckCircle2
+                            size={18}
+                        />
 
                         <div>
 
-                            <strong>{datos.presentes}</strong>
+                            <strong>
 
-                            <span>Presentes</span>
+                                {
+                                    datos.presentes
+                                }
+
+                            </strong>
+
+                            <span>
+                                Presentes
+                            </span>
 
                         </div>
 
                     </div>
 
-                    <div className="dash-item tardanza">
 
-                        <Clock3 size={18}/>
+                    {/*=====================================
+                    TARDANZAS
+                    =====================================*/}
+
+                    <div
+
+                        className="dash-item tardanza"
+
+                        onClick={e => {
+
+                            e.stopPropagation();
+
+                            abrirModalAsistencia();
+
+                        }}
+
+                    >
+
+                        <Clock3
+                            size={18}
+                        />
 
                         <div>
 
-                            <strong>{datos.tardanzas}</strong>
+                            <strong>
 
-                            <span>Tardanzas</span>
+                                {
+                                    datos.tardanzas
+                                }
+
+                            </strong>
+
+                            <span>
+                                Tardanzas
+                            </span>
 
                         </div>
 
                     </div>
 
-                    <div className="dash-item falta">
 
-                        <CircleX size={18}/>
+                    {/*=====================================
+                    AUSENCIAS
+                    =====================================*/}
+
+                    <div
+
+                        className="dash-item falta"
+
+                        onClick={e => {
+
+                            e.stopPropagation();
+
+                            abrirModalAsistencia();
+
+                        }}
+
+                    >
+
+                        <CircleX
+                            size={18}
+                        />
 
                         <div>
 
-                            <strong>{datos.faltas}</strong>
+                            <strong>
 
-                            <span>Ausentes</span>
+                                {
+                                    datos.faltas
+                                }
+
+                            </strong>
+
+                            <span>
+                                Ausentes
+                            </span>
 
                         </div>
 
@@ -463,254 +863,392 @@ export default function DashboardAsistencia({
                 </div>
 
             </div>
+
+
+            {/*==================================================
+            CAJAS INFERIORES
+            ==================================================*/}
 
             <div className="dash-cajas">
 
+                {/*=========================================
+                GRUPOS
+                =========================================*/}
+
                 <div
 
                     className={
 
-                        datos.pendientes===0
+                        datos.pendientes === 0
 
-                        ?
+                            ?
 
-                        "mini-card grupos completo"
+                            "mini-card grupos completo"
 
-                        :
+                            :
 
-                        "mini-card grupos pendiente"
+                            "mini-card grupos pendiente"
 
                     }
 
                 >
 
-                    <School size={18}/>
+                    <School
+                        size={18}
+                    />
 
                     <h3>
 
-                        {datos.completos}/{datos.completos + datos.pendientes}
+                        {
+                            datos.completos
+                        }
+
+                        /
+
+                        {
+                            datos.completos +
+                            datos.pendientes
+                        }
 
                     </h3>
 
                     <span>
-
                         Grupos listos
-
                     </span>
 
                 </div>
 
+
+                {/*=========================================
+                REPORTES
+                =========================================*/}
+
                 <div
 
                     className={
 
-                        datos.reportes===0
+                        datos.reportes === 0
 
-                        ?
+                            ?
 
-                        "mini-card reportes limpio"
+                            "mini-card reportes limpio"
 
-                        :
+                            :
 
-                        "mini-card reportes alerta"
+                            "mini-card reportes alerta"
 
                     }
 
                 >
 
-                    <AlertTriangle size={18}/>
+                    <AlertTriangle
+                        size={18}
+                    />
 
                     <h3>
 
-                        {datos.reportes}
+                        {
+                            datos.reportes
+                        }
 
                     </h3>
 
                     <span>
-
                         Reportes
-
                     </span>
 
                 </div>
 
             </div>
+
+
+            {/*==================================================
+            RESUMEN CRÍTICO
+            ==================================================*/}
 
             <div className="dashboard-panel">
 
-    <h3>
+                <h3>
+                    Resumen crítico
+                </h3>
 
-        Resumen crítico
 
-    </h3>
+                {/*=========================================
+                ASISTENCIA
+                =========================================*/}
 
-    <div className="dashboard-subtitulo">
+                <div className="dashboard-subtitulo">
 
-        <TriangleAlert size={16}/>
+                    <TriangleAlert
+                        size={16}
+                    />
 
-        <span>Tardanzas e inasistencias</span>
-
-    </div>
-
-    {
-
-        resumenCritico.asistencia.length===0
-
-        ?
-
-        <p className="panel-vacio">
-
-            No hay alumnos críticos este mes.
-
-        </p>
-
-        :
-
-        resumenCritico.asistencia.map(alumno=>(
-
-            <div
-
-                key={alumno.id}
-
-                className="critico-card"
-
-                onClick={()=>{
-
-                    setAlumnoSeleccionado(alumno);
-
-                    setModuloPerfil("asistencia");
-
-                    cambiarPantalla("perfilAlumnoPrefectura");
-
-                }}
-
-            >
-
-                <div className="critico-info">
-
-                    <strong>
-
-                        {alumno.nombre} {alumno.apellido_paterno}
-
-                    </strong>
-
-                    <small>
-
-                        {alumno.grupo}
-
-                    </small>
-
-                </div>
-
-                <div className="critico-badges">
-
-                    {
-
-                        alumno.faltas>0 &&
-
-                        <span className="badge-falta">
-
-                            {alumno.faltas} faltas
-
-                        </span>
-
-                    }
-
-                    {
-
-                        alumno.tardanzas>0 &&
-
-                        <span className="badge-tardanza">
-
-                            {alumno.tardanzas} tardanzas
-
-                        </span>
-
-                    }
-
-                </div>
-
-            </div>
-
-        ))
-
-    }
-
-    <div className="dashboard-subtitulo">
-
-        <AlertTriangle size={16}/>
-
-        <span>Reportes</span>
-
-    </div>
-
-    {
-
-        resumenCritico.reportes.length===0
-
-        ?
-
-        <p className="panel-vacio">
-
-            No hay alumnos críticos este mes.
-
-        </p>
-
-        :
-
-        resumenCritico.reportes.map(alumno=>(
-
-            <div
-
-                key={alumno.id}
-
-                className="critico-card"
-
-                onClick={()=>{
-
-                    setAlumnoSeleccionado(alumno);
-
-                    setModuloPerfil("reportes");
-
-                    cambiarPantalla("perfilAlumnoPrefectura");
-
-                }}
-
-            >
-
-                <div className="critico-info">
-
-                    <strong>
-
-                        {alumno.nombre} {alumno.apellido_paterno}
-
-                    </strong>
-
-                    <small>
-
-                        {alumno.grupo}
-
-                    </small>
-
-                </div>
-
-                <div className="critico-badges">
-
-                    <span className="badge-reporte">
-
-                        {alumno.reportes} reportes
-
+                    <span>
+                        Tardanzas e inasistencias
                     </span>
 
                 </div>
 
+
+                {
+
+                    resumenCritico.asistencia.length === 0
+
+                        ?
+
+                        <p className="panel-vacio">
+
+                            No hay alumnos críticos este mes.
+
+                        </p>
+
+                        :
+
+                        resumenCritico.asistencia.map(
+                            alumno => (
+
+                                <div
+
+                                    key={
+                                        alumno.id
+                                    }
+
+                                    className="critico-card"
+
+                                    onClick={() => {
+
+                                        setAlumnoSeleccionado(
+                                            alumno
+                                        );
+
+                                        setModuloPerfil(
+                                            "asistencia"
+                                        );
+
+                                        cambiarPantalla(
+                                            "perfilAlumnoPrefectura"
+                                        );
+
+                                    }}
+
+                                >
+
+                                    <div className="critico-info">
+
+                                        <strong>
+
+                                            {
+                                                alumno.nombre
+                                            }{" "}
+
+                                            {
+                                                alumno.apellido_paterno
+                                            }
+
+                                        </strong>
+
+                                        <small>
+
+                                            {
+                                                alumno.grupo
+                                            }
+
+                                        </small>
+
+                                    </div>
+
+
+                                    <div className="critico-badges">
+
+                                        {
+
+                                            alumno.faltas > 0 && (
+
+                                                <span className="badge-falta">
+
+                                                    {
+                                                        alumno.faltas
+                                                    }
+
+                                                    {" "}
+
+                                                    faltas
+
+                                                </span>
+
+                                            )
+
+                                        }
+
+
+                                        {
+
+                                            alumno.tardanzas > 0 && (
+
+                                                <span className="badge-tardanza">
+
+                                                    {
+                                                        alumno.tardanzas
+                                                    }
+
+                                                    {" "}
+
+                                                    tardanzas
+
+                                                </span>
+
+                                            )
+
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            )
+                        )
+
+                }
+
+
+                {/*=========================================
+                REPORTES
+                =========================================*/}
+
+                <div className="dashboard-subtitulo">
+
+                    <AlertTriangle
+                        size={16}
+                    />
+
+                    <span>
+                        Reportes
+                    </span>
+
+                </div>
+
+
+                {
+
+                    resumenCritico.reportes.length === 0
+
+                        ?
+
+                        <p className="panel-vacio">
+
+                            No hay alumnos críticos este mes.
+
+                        </p>
+
+                        :
+
+                        resumenCritico.reportes.map(
+                            alumno => (
+
+                                <div
+
+                                    key={
+                                        alumno.id
+                                    }
+
+                                    className="critico-card"
+
+                                    onClick={() => {
+
+                                        setAlumnoSeleccionado(
+                                            alumno
+                                        );
+
+                                        setModuloPerfil(
+                                            "reportes"
+                                        );
+
+                                        cambiarPantalla(
+                                            "perfilAlumnoPrefectura"
+                                        );
+
+                                    }}
+
+                                >
+
+                                    <div className="critico-info">
+
+                                        <strong>
+
+                                            {
+                                                alumno.nombre
+                                            }{" "}
+
+                                            {
+                                                alumno.apellido_paterno
+                                            }
+
+                                        </strong>
+
+                                        <small>
+
+                                            {
+                                                alumno.grupo
+                                            }
+
+                                        </small>
+
+                                    </div>
+
+
+                                    <div className="critico-badges">
+
+                                        <span className="badge-reporte">
+
+                                            {
+                                                alumno.reportes
+                                            }
+
+                                            {" "}
+
+                                            reportes
+
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            )
+                        )
+
+                }
+
             </div>
 
-        ))
 
-    }
+            {/*==================================================
+            MODAL DE ASISTENCIA
+            ==================================================*/}
 
-</div>
+            {
+
+                mostrarModalAsistencia && (
+
+                    <ModalAsistencia
+
+                        registros={
+                            registrosHoy
+                        }
+
+                        students={
+                            students
+                        }
+
+                        cerrar={
+                            cerrarModalAsistencia
+                        }
+
+                    />
+
+                )
+
+            }
 
         </>
 

@@ -41,65 +41,49 @@ export default function NEE({
 
     const [busqueda,setBusqueda]=useState("");
 
-    const guardarNEE=async(datos)=>{
+    const guardarNEE = async (datos) => {
 
-        const alumno=students.find(
+    const alumno = students.find(
+        a => a.id === datos.alumno_id
+    );
 
-            a=>a.id===datos.alumno_id
+    if(!alumno){
+        alert("No se encontró el alumno seleccionado.");
+        return;
+    }
 
-        );
+    const listaActual =
+        Array.isArray(alumno.nee)
+        ? alumno.nee
+        : [];
 
-        const listaActual=
-
-            Array.isArray(alumno.nee)
-
-            ? alumno.nee
-
-            : [];
-
-        const nuevaLista=[
-
-            ...listaActual,
-
-            {
-
-                diagnostico:datos.diagnostico,
-
-                nivel:datos.nivel,
-
-                observaciones:datos.observaciones
-
-            }
-
-        ];
-
-        const {error}=await supabase
-
-            .from("alumnos")
-
-            .update({
-
-                nee:lista
-
-            })
-
-            .eq("id",datosAlumno.id);
-
-            console.log(error);
-
-        if(error){
-
-            alert(error.message);
-
-            return;
-
+    const nuevaLista = [
+        ...listaActual,
+        {
+            diagnostico: datos.diagnostico,
+            nivel: datos.nivel,
+            observaciones: datos.observaciones
         }
+    ];
 
-        setModalNEE(false);
+    const { error } = await supabase
+        .from("alumnos")
+        .update({
+            nee: nuevaLista
+        })
+        .eq("id", alumno.id);
 
-        await cargarAlumnos();
+    console.log("ERROR NEE:", error);
 
-    };
+    if(error){
+        alert(error.message);
+        return;
+    }
+
+    setModalNEE(false);
+
+    await cargarAlumnos();
+};
 
     const normalizar=(texto="")=>
 

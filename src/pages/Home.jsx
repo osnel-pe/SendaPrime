@@ -189,7 +189,7 @@ export default function Home({ cambiarPantalla }) {
 
           <button
           className="menu-button"
-          onClick={()=>cambiarPantalla("direccion")}
+          onClick={()=>cambiarPantalla("loginDireccion")}
           >
 
           <div className="menu-left">

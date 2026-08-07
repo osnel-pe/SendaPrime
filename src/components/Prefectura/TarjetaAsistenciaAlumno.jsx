@@ -45,36 +45,65 @@ export default function TarjetaAsistenciaAlumno({ alumnoId }){
 
     async function cargar(){
 
-        const inicio = new Date(añoActual, mes-1, 1)
-        .toISOString()
-        .slice(0,10);
+    if(!alumnoId) return;
 
-        const fin = new Date(añoActual, mes, 0)
-        .toISOString()
-        .slice(0,10);
+    const inicio = `${añoActual}-${String(mes).padStart(2,"0")}-01`;
 
-        const { data, error } = await supabase
-            .from("asistencia_prefectura")
-            .select("fecha, estatus")
-            .eq("alumno_id", alumnoId)
-            .gte("fecha", inicio)
-            .lte("fecha", fin);
+    const ultimoDia = new Date(
+        añoActual,
+        mes,
+        0
+    ).getDate();
 
-        if(error){
-            console.log(error);
-            return;
-        }
+    const fin = `${añoActual}-${String(mes).padStart(2,"0")}-${String(ultimoDia).padStart(2,"0")}`;
 
-        const registros=data || [];
+    console.log("Alumno:", alumnoId);
+    console.log("Buscando asistencia:", inicio, "→", fin);
 
-        setAsistencias(registros);
+    const { data, error } = await supabase
 
-        setDatos({
-            tardanzas:registros.filter(r=>r.estatus==="tardanza").length,
-            faltas:registros.filter(r=>r.estatus==="falta").length
-        });
+        .from("asistencia_prefectura")
 
+        .select("alumno_id, fecha, estatus")
+
+        .eq("alumno_id", alumnoId)
+
+        .gte("fecha", inicio)
+
+        .lte("fecha", fin);
+
+    if(error){
+
+        console.error(
+            "Error cargando asistencia:",
+            error
+        );
+
+        return;
     }
+
+    const registros = data || [];
+
+    console.log(
+        "Registros encontrados:",
+        registros
+    );
+
+    setAsistencias(registros);
+
+    setDatos({
+
+        tardanzas: registros.filter(
+            r => r.estatus === "tardanza"
+        ).length,
+
+        faltas: registros.filter(
+            r => r.estatus === "falta"
+        ).length
+
+    });
+
+}
 
     const meses=[
 

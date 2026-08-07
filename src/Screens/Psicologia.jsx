@@ -513,19 +513,17 @@ mostrarCerrarSesion && (
 
                 </div>
 
-                <BotonIA
+                {/*
 
-                    abrir={()=>
+                    <BotonIA
+                        abrir={()=>
+                            cambiarPantalla(
+                                "asistenteIA"
+                            )
+                        }
+                    />
 
-                        cambiarPantalla(
-
-                            "asistenteIA"
-
-                        )
-
-                    }
-
-                />
+                    */}
 
                 <BottomNavigation
 

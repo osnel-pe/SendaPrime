@@ -3,21 +3,14 @@
 =========================== */
 
 .home-screen{
-
-  min-height:100vh;
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
-
-  padding:35px;
-
-  position:relative;
-
-  z-index:2;
-
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px;
+    position:relative;
+    z-index:2;
+    box-sizing:border-box;
 }
 
 .app-background{
@@ -176,26 +169,24 @@
 =========================== */
 
 .home-card{
+    width:min(360px,90vw);
+    max-width:360px;
 
- width:min(390px,92vw);
+    background:rgba(255,255,255,.72);
 
-  max-width:460px;
+    border-radius:24px;
 
-  background:rgba(255,255,255,.72);
+    padding:18px;
 
-  border-radius:28px;
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.18);
 
-  padding:22px;
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(22px);
 
-  box-shadow:
+    animation:fadeIn .8s ease;
 
-  0 25px 60px rgba(0,0,0,.18);
-
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(22px);
-
-  animation:fadeIn .8s ease;
-
+    box-sizing:border-box;
 }
 
 /* ===========================
@@ -237,17 +228,12 @@ margin-bottom:8px;
 =========================== */
 
 .home-title{
-
-  text-align:center;
-
-  font-size:46px;
-
-  font-weight:800;
-
-  color:#3A3A3A;
-
-  letter-spacing:-1px;
-
+    text-align:center;
+    font-size:34px;
+    font-weight:800;
+    color:#3A3A3A;
+    letter-spacing:-1px;
+    margin:4px 0 0;
 }
 
 .home-title span{
@@ -257,17 +243,11 @@ margin-bottom:8px;
 }
 
 .home-subtitle{
-
-  text-align:center;
-
-  color:#777;
-
-  margin-top:10px;
-
-  margin-bottom:35px;
-
-  font-size:18px;
-
+    text-align:center;
+    color:#777;
+    margin-top:6px;
+    margin-bottom:20px;
+    font-size:15px;
 }
 /* ===========================
    BOTONES
@@ -277,7 +257,7 @@ margin-bottom:8px;
 
   width:100%;
 
-  height:82px;
+  height:64px;
 
   border:none;
 
@@ -293,7 +273,7 @@ margin-bottom:8px;
 
   align-items:center;
 
-  padding:14px 18px;
+  padding:10px 14px;
 
   margin-bottom:10px;
 
@@ -339,17 +319,17 @@ margin-bottom:8px;
 
   align-items:center;
 
-  gap:18px;
+  gap:12px;
 
 }
 
 .menu-icon{
 
-  width:54px;
+  width:42px;
 
-  height:54px;
+  height:42px;
 
-  border-radius:18px;
+  border-radius:14px;
 
   display:flex;
 
@@ -376,23 +356,24 @@ margin-bottom:8px;
 
 .menu-text{
 
-  font-size:20px;
+  font-size:16px;
 
   font-weight:700;
 
-  letter-spacing:.3px;
+  letter-spacing:.2px;
 
 }
 
 .menu-arrow{
 
-  font-size:20px;
+  font-size:16px;
 
   opacity:.55;
 
   transition:.3s;
 
 }
+
 .menu-button:hover .menu-arrow{
 
   transform:translateX(6px);
@@ -406,7 +387,7 @@ margin-bottom:8px;
 
 .home-footer{
 
-  margin-top:28px;
+  margin-top:16px;
 
   display:flex;
 
@@ -468,9 +449,9 @@ margin-bottom:8px;
 }
 .menu-subtext{
 
-  font-size:13px;
+  font-size:12x;
 
-  margin-top:4px;
+  margin-top:3px;
 
   color:#7B8794;
 
@@ -647,4 +628,69 @@ text-transform:uppercase;
 
 color:rgba(255,255,255,.75);
 
+}
+
+@media (max-height:700px){
+
+    .home-card{
+        padding:14px;
+    }
+
+    .home-logo{
+        width:85px;
+        height:85px;
+    }
+
+    .home-title{
+        font-size:30px;
+    }
+
+    .home-subtitle{
+        margin-bottom:14px;
+        font-size:14px;
+    }
+
+    .menu-button{
+        height:56px;
+        padding:8px 12px;
+    }
+
+    .menu-icon{
+        width:38px;
+        height:38px;
+    }
+
+    .menu-text{
+        font-size:15px;
+    }
+
+    .home-footer{
+        margin-top:10px;
+    }
+}
+
+@media (max-width:400px){
+
+    .home-screen{
+        padding:12px;
+    }
+
+    .home-card{
+        width:100%;
+        padding:14px;
+        border-radius:20px;
+    }
+
+    .home-logo{
+        width:80px;
+        height:80px;
+    }
+
+    .home-title{
+        font-size:28px;
+    }
+
+    .menu-button{
+        height:56px;
+    }
 }

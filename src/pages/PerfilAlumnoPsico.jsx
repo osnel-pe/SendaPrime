@@ -124,23 +124,18 @@ const [neeVista,setNeeVista]=useState(null);
 
     },[alumno]);
 
-    useEffect(()=>{
+        useEffect(()=>{
 
-        if(!alumno) return;
+        if(!datosAlumno) return;
 
         cargarArchivos();
-
         cargarArchivosExtra();
-
         cargarNotas();
-
         cargarNEE();
-
         cargarSeguimientos();
-
         cargarHistorial();
 
-    },[alumno]);
+    },[datosAlumno]);
 
     useEffect(()=>{
 
@@ -232,46 +227,175 @@ const [neeVista,setNeeVista]=useState(null);
 
     async function guardarSeguimiento(datos){
 
-    // Si viene de una cita programada
-    if(seguimientoEditar?.alumno_id && !seguimientoEditar?.intervencion){
+    // ==========================================
+    // 1. VIENE DE UNA CITA PROGRAMADA
+    // ==========================================
 
-        await supabase
-        .from("citas_programadas")
-        .update({
-            fecha:datos.fecha,
-            hora:datos.hora,
-            tipo:datos.tipo
-        })
-        .eq("id",seguimientoEditar.id);
+    if(citaActiva?.id){
+
+        const registro = {
+
+            alumno_id: datosAlumno.id,
+
+            cita_programada_id: citaActiva.id,
+
+            fecha: datos.fecha,
+
+            hora: datos.hora,
+
+            tipo: datos.tipo,
+
+            motivo: datos.motivo,
+
+            intervencion: datos.intervencion,
+
+            acuerdos: datos.acuerdos
+
+        };
+
+        const { error: errorHistorial } = await supabase
+            .from("historial_psicologia")
+            .insert(registro);
+
+        if(errorHistorial){
+
+            console.log(
+                "ERROR GUARDANDO HISTORIAL:",
+                errorHistorial
+            );
+
+            alert(errorHistorial.message);
+
+            return;
+        }
+
+
+        // Eliminar la cita programada
+        // porque ya fue atendida
+
+        const { error: errorCita } = await supabase
+            .from("citas_programadas")
+            .delete()
+            .eq("id", citaActiva.id);
+
+        if(errorCita){
+
+            console.log(
+                "ERROR ELIMINANDO CITA:",
+                errorCita
+            );
+
+            alert(errorCita.message);
+
+            return;
+        }
+
+
+        setCitaActiva(null);
 
     }
 
-    // Si viene del historial
+    // ==========================================
+    // 2. EDITAR SEGUIMIENTO EXISTENTE
+    // ==========================================
+
+    else if(seguimientoEditar){
+
+        const { error } = await supabase
+            .from("historial_psicologia")
+            .update({
+
+                fecha: datos.fecha,
+
+                hora: datos.hora,
+
+                tipo: datos.tipo,
+
+                motivo: datos.motivo,
+
+                intervencion: datos.intervencion,
+
+                acuerdos: datos.acuerdos
+
+            })
+            .eq("id", seguimientoEditar.id);
+
+
+        if(error){
+
+            console.log(
+                "ERROR ACTUALIZANDO SEGUIMIENTO:",
+                error
+            );
+
+            alert(error.message);
+
+            return;
+        }
+
+    }
+
+    // ==========================================
+    // 3. NUEVO SEGUIMIENTO DESDE EL PERFIL
+    // ==========================================
+
     else{
 
-        await supabase
-        .from("historial_psicologia")
-        .update({
-            fecha:datos.fecha,
-            hora:datos.hora,
-            tipo:datos.tipo,
-            motivo:datos.motivo,
-            intervencion:datos.intervencion,
-            acuerdos:datos.acuerdos
-        })
-        .eq("id",seguimientoEditar.id);
+        const { error } = await supabase
+            .from("historial_psicologia")
+            .insert({
+
+                alumno_id: datosAlumno.id,
+
+                fecha: datos.fecha,
+
+                hora: datos.hora,
+
+                tipo: datos.tipo,
+
+                motivo: datos.motivo,
+
+                intervencion: datos.intervencion,
+
+                acuerdos: datos.acuerdos
+
+            });
+
+
+        if(error){
+
+            console.log(
+                "ERROR CREANDO SEGUIMIENTO:",
+                error
+            );
+
+            alert(error.message);
+
+            return;
+        }
 
     }
 
+
+    // ==========================================
+    // LIMPIAR
+    // ==========================================
+
     setSeguimientoEditar(null);
+
     setModalSeguimiento(false);
 
     if(setCitaActiva){
         setCitaActiva(null);
     }
 
-    cargarSeguimientos();
-    cargarHistorial();
+
+    // Recargar información
+
+    await cargarHistorial();
+
+    await cargarSeguimientos();
+
 }
 
 async function cargarHistorial(){
