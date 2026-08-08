@@ -196,3 +196,35 @@
 
 }
 
+/* =========================================
+   TARJETAS NEE - SOLO REPORTES DIRECCION
+   ========================================= */
+
+.rp-lista .rp-nee-card {
+    width: 100% !important;
+    min-height: 110px !important;
+
+    height: auto !important;
+    max-height: none !important;
+
+    flex: 0 0 auto !important;
+
+    box-sizing: border-box;
+
+    overflow: visible !important;
+}
+
+.rp-lista .rp-nee-card .pa-card-left {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+.rp-lista .rp-nee-card .pa-card-text {
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+.rp-lista .rp-nee-card .nee-item {
+    height: auto;
+    box-sizing: border-box;
+}

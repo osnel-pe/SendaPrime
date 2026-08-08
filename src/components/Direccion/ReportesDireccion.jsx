@@ -304,18 +304,14 @@ export default function ReportesDireccion({
                        nee.map(alumno=>(
 
                         <div
-
                             key={alumno.id}
-
-                            className="pa-card"
-
+                            className="pa-card rp-nee-card"
                             onClick={()=>{
                                 console.log("NEE", alumno);
                                 setAlumnoSeleccionado(alumno);
                                 setModuloPerfil("nee");
                                 cambiarPantalla("perfilAlumnoDireccion");
                             }}
-
                         >
 
                             <div className="pa-card-left">
