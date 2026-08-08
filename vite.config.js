@@ -19,11 +19,8 @@ export default defineConfig({
       registerType: "autoUpdate",
 
       includeAssets: [
-
         "favicon.ico",
-
         "apple-touch-icon.png"
-
       ],
 
       manifest: {
@@ -43,6 +40,7 @@ export default defineConfig({
         orientation: "portrait",
 
         start_url: "/",
+
         share_target: {
           action: "/share",
           method: "POST",
@@ -60,35 +58,22 @@ export default defineConfig({
         icons: [
 
           {
-
             src: "icon-192.png",
-
             sizes: "192x192",
-
             type: "image/png"
-
           },
 
           {
-
             src: "icon-512.png",
-
             sizes: "512x512",
-
             type: "image/png"
-
           },
 
           {
-
             src: "maskable-icon-512.png",
-
             sizes: "512x512",
-
             type: "image/png",
-
             purpose: "maskable"
-
           }
 
         ]
