@@ -1,35 +1,20 @@
-import { useState,useEffect,useRef } from "react";
+import {
+    useState,
+    useEffect,
+    useRef
+} from "react";
 
 import {
-
     ArrowLeft,
-
     UserRound,
-
     FolderOpen,
-
-    Upload,
-
     FileText,
-
     Eye,
-
     Trash2,
-
-    Brain,
-
-    ClipboardList,
-
     Pencil,
-
-    Plus,
-
     FilePlus2,
-
     ClipboardCheck,
-
     FileWarning
-
 } from "lucide-react";
 
 import "../Styles/AppLayout.css";
@@ -37,20 +22,39 @@ import "../Styles/Psicologia.css";
 import "../Styles/PerfilAlumnoPsico.css";
 import "../Styles/Reportes.css";
 
-import fondoPsicologia from "../assets/fondo-psicologia.jpg";
+import fondoPsicologia
+from "../assets/fondo-psicologia.jpg";
 
-import ModalSeguimiento from "../components/Psicologia/ModalSeguimientoGrupo";
-import ModalNEE from "../components/ModalNEE";
-import ModalNota from "../components/Psicologia/ModalNota";
-import ModalCita from "../components/Psicologia/ModalCita";
-import VistaDetalleNota from "../components/Psicologia/VistaDetalleNota";
-import VistaDetalleCita from "../components/Psicologia/VistaDetalleCita";
-import VistaDetalleNEE from "../components/Psicologia/VistaDetalleNEE";
-import TarjetaAsistenciaAlumno from "../components/Prefectura/TarjetaAsistenciaAlumno";
-import ModalReporte from "../components/Prefectura/ModalReporte";
-import VistaDetalleReporte from "../components/Prefectura/VistaDetalleReporte";
+import ModalNEE
+from "../components/ModalNEE";
 
-import { supabase } from "../services/supabase";
+import ModalNota
+from "../components/Psicologia/ModalNota";
+
+import ModalCita
+from "../components/Psicologia/ModalCita";
+
+import VistaDetalleNota
+from "../components/Psicologia/VistaDetalleNota";
+
+import VistaDetalleCita
+from "../components/Psicologia/VistaDetalleCita";
+
+import VistaDetalleNEE
+from "../components/Psicologia/VistaDetalleNEE";
+
+import TarjetaAsistenciaAlumno
+from "../components/Prefectura/TarjetaAsistenciaAlumno";
+
+import ModalReporte
+from "../components/Prefectura/ModalReporte";
+
+import VistaDetalleReporte
+from "../components/Prefectura/VistaDetalleReporte";
+
+import { supabase }
+from "../services/supabase";
+
 
 export default function PerfilAlumnoPrefectura({
 
@@ -64,7 +68,7 @@ export default function PerfilAlumnoPrefectura({
 
     cambiarPantalla,
 
-    embebido=false,
+    embebido = false,
 
     citaActiva,
 
@@ -72,1724 +76,2584 @@ export default function PerfilAlumnoPrefectura({
 
     moduloInicial
 
-}){
+}) {
 
-const [datosAlumno,setDatosAlumno]=useState(alumno);
-
-const [modulo,setModulo]=useState(moduloInicial || "archivos");
-
-const inputArchivo=useRef(null);
-
-const [archivos, setArchivos] = useState([]);
-/*=========================================
-NEE
-=========================================*/
-const [nees,setNees]=useState([]);
-
-const [modalNEE,setModalNEE]=useState(false);
-
-const [neeEditar,setNeeEditar]=useState(null);
-
-/*=========================================
-NOTAS
-=========================================*/
-
-const [notas,setNotas]=useState([]);
-
-const [modalNota,setModalNota]=useState(false);
-
-const [notaEditar,setNotaEditar]=useState(null);
-
-/*=========================================
-SEGUIMIENTO
-=========================================*/
-
-const [seguimientos,setSeguimientos]=useState([]);
-
-const [historial,setHistorial]=useState([]);
-
-const [reportes,setReportes]=useState([]);
-
-const [modalReporte,setModalReporte]=useState(false);
-
-const [reporteEditar,setReporteEditar]=useState(null);
-
-const [reporteVista,setReporteVista]=useState(null);
-
-const [modalSeguimiento,setModalSeguimiento]=useState(false);
-
-const [seguimientoEditar,setSeguimientoEditar]=useState(null);
-
-const [notaVista,setNotaVista]=useState(null);
-
-const [seguimientoVista,setSeguimientoVista]=useState(null);
-
-const [neeVista,setNeeVista]=useState(null);
-
-    useEffect(()=>{
-
-        setDatosAlumno(alumno);
-
-    },[alumno]);
-
-    useEffect(()=>{
-
-        if(!alumno) return;
-
-        cargarArchivos();
-
-        cargarNotas();
-
-        cargarNEE();
-
-        cargarSeguimientos();
-
-        cargarHistorial();
-
-        cargarReportes();
-
-    },[alumno]);
-
-    useEffect(()=>{
-
-        setNees(datosAlumno?.nee || []);
-
-    },[datosAlumno]);
-
-    useEffect(()=>{
-
-    if(!citaActiva) return;
-
-    setSeguimientoEditar(citaActiva);
-
-    setModalSeguimiento(true);
-
-},[citaActiva]);
-
-useEffect(()=>{
-
-    setModulo(moduloInicial || "archivos");
-
-},[alumno,moduloInicial]);
-
-async function cargarReportes(){
-
-    const {data,error}=await supabase
-
-    .from("reportes_prefectura")
-
-    .select("*")
-
-    .eq("alumno_id",datosAlumno.id)
-
-    .order("fecha",{
-
-        ascending:false
-
-    })
-
-    .order("created_at",{
-
-        ascending:false
-
-    });
-
-    if(error){
-
-        console.log(error);
-
-        return;
-
-    }
-
-    setReportes(data || []);
-
-}
-
-async function guardarReporte(){
-
-    setModalReporte(false);
-
-    setReporteEditar(null);
-
-    await cargarReportes();
-
-}
-
-function editarReporte(reporte){
-
-    setReporteEditar(reporte);
-
-    setModalReporte(true);
-
-}
-
-async function eliminarReporte(id){
-
-    if(
-
-        !window.confirm(
-
-            "¿Eliminar reporte?"
-
-        )
-
-    ) return;
-
-    const {error}=await supabase
-
-    .from("reportes_prefectura")
-
-    .delete()
-
-    .eq("id",id);
-
-    if(error){
-
-        alert(error.message);
-
-        return;
-
-    }
-
-    cargarReportes();
-
-}
-
-    async function cargarArchivos(){
-
-        const carpeta=
-
-    `${datosAlumno.grupo}/${datosAlumno.id}`;
-
-        const {data,error}=await supabase.storage
-
-            .from("archivos-prefectura")
-
-            .list(carpeta);
-
-        if(error){
-
-            console.log(error);
-
-            return;
-
-        }
-
-        setArchivos(data || []);
-
-    }
-
-    async function cargarNotas(){
-
-        const {data,error}=await supabase
-
-        .from("notas_prefectura")
-
-        .select("*")
-
-        .eq("alumno_id",alumno.id)
-
-        .order("fijada",{
-
-            ascending:false
-
-        })
-
-        .order("created_at",{
-
-            ascending:false
-
-        });
-
-        if(error){
-
-            console.log(error);
-
-            return;
-
-        }
-
-        setNotas(data || []);
-
-    }
-
-    function cargarNEE(){
-
-        setNees(
-
-            datosAlumno?.nee || []
-
-        );
-
-    }
-
-    async function guardarSeguimiento(datos){
-
-    // Si viene de una cita programada
-    if(seguimientoEditar?.alumno_id && !seguimientoEditar?.intervencion){
-
-        await supabase
-        .from("citas_programadas")
-        .update({
-            fecha:datos.fecha,
-            hora:datos.hora,
-            tipo:datos.tipo
-        })
-        .eq("id",seguimientoEditar.id);
-
-    }
-
-    // Si viene del historial
-    else{
-
-        await supabase
-        .from("historial_psicologia")
-        .update({
-            fecha:datos.fecha,
-            hora:datos.hora,
-            tipo:datos.tipo,
-            motivo:datos.motivo,
-            intervencion:datos.intervencion,
-            acuerdos:datos.acuerdos
-        })
-        .eq("id",seguimientoEditar.id);
-
-    }
-
-    setSeguimientoEditar(null);
-    setModalSeguimiento(false);
-
-    if(setCitaActiva){
-        setCitaActiva(null);
-    }
-
-    cargarSeguimientos();
-    cargarHistorial();
-}
-
-async function cargarHistorial(){
-
-    const {data,error}=await supabase
-
-    .from("historial_psicologia")
-
-    .select("*")
-
-    .eq("alumno_id",datosAlumno.id)
-
-    .order("fecha",{
-
-        ascending:false
-
-    })
-
-    .order("hora",{
-
-        ascending:false
-
-    });
-
-    if(error){
-
-        console.log(error);
-
-        return;
-
-    }
-
-    setHistorial(data || []);
-
-}
-
-async function cargarSeguimientos(){
-
-    const {data,error}=await supabase
-
-    .from("citas_programadas")
-
-    .select("*")
-
-    .eq("alumno_id",datosAlumno.id)
-
-    .order("fecha",{
-
-        ascending:true
-
-    })
-
-    .order("hora",{
-
-        ascending:true
-
-    });
-
-    if(error){
-
-        console.log(error);
-
-        return;
-
-    }
-
-    setSeguimientos(data || []);
-
-}
-
-function editarSeguimiento(registro){
-
-    setSeguimientoEditar(registro);
-
-    setModalSeguimiento(true);
-
-}
-
-async function eliminarSeguimiento(id){
-
-    if(
-        !window.confirm("¿Eliminar esta cita?")
-    ) return;
-
-    const {error}=await supabase
-
-    .from("citas_programadas")
-
-    .delete()
-
-    .eq("id",id);
-
-    if(error){
-
-        alert(error.message);
-
-        return;
-
-    }
-
-    cargarSeguimientos();
-
-}
-
-async function abrirArchivo(nombre){
-
-    const ruta =
-`${datosAlumno.grupo}/${datosAlumno.id}/${nombre}`;
-
-    const { data, error } = await supabase.storage
-        .from("archivos-prefectura")
-        .createSignedUrl(ruta,300);
-
-    if(error){
-        alert(error.message);
-        return;
-    }
-
-    window.open(data.signedUrl,"_blank");
-}
-
-    async function subirArchivo(e){
-
-    const archivo=e.target.files?.[0];
-
-    if(!archivo) return;
-
-    const ruta=
-
-`${datosAlumno.grupo}/${datosAlumno.id}/${archivo.name}`;
-
-    const {error}=await supabase.storage
-
-        .from("archivos-prefectura")
-
-        .upload(
-
-            ruta,
-
-            archivo,
-
-            {
-
-                upsert:true
-
-            }
-
-        );
-
-    if(error){
-
-        alert(error.message);
-
-        return;
-
-    }
-
-    cargarArchivos();
-
-}
-
-    async function eliminarArchivo(nombre){
-
-    if(
-
-        !window.confirm(
-
-            "¿Eliminar documento?"
-
-        )
-
-    ) return;
-
-    const ruta=
-
-`${datosAlumno.grupo}/${datosAlumno.id}/${nombre}`;
-
-    const {error}=await supabase.storage
-
-        .from("archivos-prefectura")
-
-        .remove([ruta]);
-
-    if(error){
-
-        alert(error.message);
-
-        return;
-
-    }
-
-    cargarArchivos();
-
-}
-
-    async function eliminarNota(id){
-
-        if(
-
-            !window.confirm(
-
-                "¿Eliminar esta nota?"
-
-            )
-
-        ) return;
-
-        await supabase
-
-        .from("notas_prefectura")
-
-        .delete()
-
-        .eq("id",id);
-
-        cargarNotas();
-
-    }
-
-        /*==================================================
-    NOTAS
+    /*==================================================
+    ALUMNO
     ==================================================*/
 
-    async function guardarNota(datos){
+    const [datosAlumno, setDatosAlumno] =
+        useState(alumno);
 
-    if(notaEditar){
 
-        const {error}=await supabase
+    /*==================================================
+    MÓDULO
+    ==================================================*/
 
-        .from("notas_prefectura")
+    const [modulo, setModulo] =
+        useState(
+            moduloInicial || "archivos"
+        );
 
-        .update({
 
-            titulo:datos.titulo,
+    /*==================================================
+    ARCHIVOS
+    ==================================================*/
 
-            nota:datos.nota,
+    const inputArchivo =
+        useRef(null);
 
-            color:datos.color,
+    const [archivos, setArchivos] =
+        useState([]);
 
-            fijada:datos.fijada
-
-        })
-
-        .eq("id",notaEditar.id);
-
-        if(error){
-
-            alert(error.message);
-
-            return;
-
-        }
-
-    }else{
-
-        const {error}=await supabase
-
-        .from("notas_prefectura")
-
-        .insert({
-
-            alumno_id:datosAlumno.id,
-
-            grupo:datosAlumno.grupo,
-
-            titulo:datos.titulo,
-
-            nota:datos.nota,
-
-            color:datos.color,
-
-            fijada:false
-
-        });
-
-        if(error){
-
-            alert(error.message);
-
-            return;
-
-        }
-
-    }
-
-    await cargarNotas();
-
-    setModalNota(false);
-
-    setNotaEditar(null);
-
-}
-
-    async function eliminarNota(id){
-
-    if(
-
-        !window.confirm(
-
-            "¿Eliminar esta nota?"
-
-        )
-
-    ) return;
-
-    const {error}=await supabase
-
-    .from("notas_prefectura")
-
-    .delete()
-
-    .eq("id",id);
-
-    if(error){
-
-        alert(error.message);
-
-        return;
-
-    }
-
-    cargarNotas();
-
-}
-
-     function nuevaNota(){
-
-        setNotaEditar(null);
-
-        setModalNota(true);
-
-    }
-
-    function editarNota(nota){
-
-        setNotaEditar(nota);
-
-        setModalNota(true);
-
-    }
 
     /*==================================================
     NEE
     ==================================================*/
 
-    function editarNEE(indice){
+    const [nees, setNees] =
+        useState([]);
 
-        setNeeEditar(
+    const [modalNEE, setModalNEE] =
+        useState(false);
 
-            datosAlumno.nee[indice]
+    const [neeEditar, setNeeEditar] =
+        useState(null);
 
+    const [neeVista, setNeeVista] =
+        useState(null);
+
+
+    /*==================================================
+    NOTAS
+    ==================================================*/
+
+    const [notas, setNotas] =
+        useState([]);
+
+    const [modalNota, setModalNota] =
+        useState(false);
+
+    const [notaEditar, setNotaEditar] =
+        useState(null);
+
+    const [notaVista, setNotaVista] =
+        useState(null);
+
+
+    /*==================================================
+    SEGUIMIENTO
+    ==================================================*/
+
+    const [
+        seguimientos,
+        setSeguimientos
+    ] = useState([]);
+
+    const [
+        historial,
+        setHistorial
+    ] = useState([]);
+
+    const [
+        modalSeguimiento,
+        setModalSeguimiento
+    ] = useState(false);
+
+    const [
+        seguimientoEditar,
+        setSeguimientoEditar
+    ] = useState(null);
+
+    const [
+        seguimientoVista,
+        setSeguimientoVista
+    ] = useState(null);
+
+
+    /*==================================================
+    REPORTES
+    ==================================================*/
+
+    const [reportes, setReportes] =
+        useState([]);
+
+    const [
+        modalReporte,
+        setModalReporte
+    ] = useState(false);
+
+    const [
+        reporteEditar,
+        setReporteEditar
+    ] = useState(null);
+
+    const [
+        reporteVista,
+        setReporteVista
+    ] = useState(null);
+
+
+    /*==================================================
+    EFECTOS
+    ==================================================*/
+
+    useEffect(() => {
+
+        setDatosAlumno(
+            alumno
         );
 
-        setModalNEE(true);
+    }, [alumno]);
 
-    }
 
-    function nuevaNEE(){
+    useEffect(() => {
 
-        setNeeEditar(null);
+        if (!alumno?.id) return;
 
-        setModalNEE(true);
+        cargarArchivos(
+            alumno
+        );
 
-    }
+        cargarNotas(
+            alumno.id
+        );
 
-    async function eliminarNEE(indice){
+        cargarSeguimientos(
+            alumno.id
+        );
 
-    if(
+        cargarHistorial(
+            alumno.id
+        );
 
-        !window.confirm(
+        cargarReportes(
+            alumno.id
+        );
 
-            "¿Eliminar esta NEE?"
+    }, [alumno]);
 
-        )
 
-    ) return;
+    useEffect(() => {
 
-    const nuevasNEE=[
+        setNees(
+            datosAlumno?.nee || []
+        );
 
-        ...(datosAlumno.nee || [])
+    }, [datosAlumno]);
 
-    ];
 
-    nuevasNEE.splice(
+    useEffect(() => {
 
-        indice,
+        if (!citaActiva) return;
 
-        1
+        setSeguimientoEditar(
+            citaActiva
+        );
 
-    );
+        setModalSeguimiento(
+            true
+        );
 
-    const {error}=await supabase
+    }, [citaActiva]);
 
-            .from("alumnos")
 
-            .update({
+    useEffect(() => {
 
-                nee:nuevasNEE
+        setModulo(
+            moduloInicial
+            || "archivos"
+        );
 
-            })
+    }, [
+        alumno,
+        moduloInicial
+    ]);
 
-            .eq("id",datosAlumno.id);
 
-        if(error){
+    /*==================================================
+    REPORTES
+    ==================================================*/
 
-            alert(error.message);
+    async function cargarReportes(
+        alumnoId = datosAlumno?.id
+    ) {
+
+        if (!alumnoId) return;
+
+        const {
+            data,
+            error
+        } = await supabase
+
+            .from(
+                "reportes_prefectura"
+            )
+
+            .select("*")
+
+            .eq(
+                "alumno_id",
+                alumnoId
+            )
+
+            .order(
+                "fecha",
+                {
+                    ascending: false
+                }
+            )
+
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+        if (error) {
+
+            console.log(
+                "Error cargando reportes:",
+                error
+            );
 
             return;
 
         }
 
-        setDatosAlumno({
+
+        setReportes(
+            data || []
+        );
+
+    }
+
+
+    async function guardarReporte() {
+
+        setModalReporte(
+            false
+        );
+
+        setReporteEditar(
+            null
+        );
+
+        await cargarReportes();
+
+    }
+
+
+    function editarReporte(
+        reporte
+    ) {
+
+        setReporteEditar(
+            reporte
+        );
+
+        setModalReporte(
+            true
+        );
+
+    }
+
+
+    async function eliminarReporte(
+        id
+    ) {
+
+        if (
+            !window.confirm(
+                "¿Eliminar reporte?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const {
+            error
+        } = await supabase
+
+            .from(
+                "reportes_prefectura"
+            )
+
+            .delete()
+
+            .eq(
+                "id",
+                id
+            );
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        await cargarReportes();
+
+    }
+
+
+    /*==================================================
+    ARCHIVOS
+    ==================================================*/
+
+    async function cargarArchivos(
+        alumnoActual = datosAlumno
+    ) {
+
+        if (
+            !alumnoActual?.id
+            ||
+            !alumnoActual?.grupo
+        ) {
+
+            return;
+
+        }
+
+
+        const carpeta =
+            `${alumnoActual.grupo}/${alumnoActual.id}`;
+
+
+        const {
+            data,
+            error
+        } = await supabase.storage
+
+            .from(
+                "archivos-prefectura"
+            )
+
+            .list(
+                carpeta
+            );
+
+
+        if (error) {
+
+            console.log(
+                "Error cargando archivos:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        setArchivos(
+            data || []
+        );
+
+    }
+
+
+    async function abrirArchivo(
+        nombre
+    ) {
+
+        if (!datosAlumno) return;
+
+
+        const ruta =
+            `${datosAlumno.grupo}/${datosAlumno.id}/${nombre}`;
+
+
+        const {
+            data,
+            error
+        } = await supabase.storage
+
+            .from(
+                "archivos-prefectura"
+            )
+
+            .createSignedUrl(
+                ruta,
+                300
+            );
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        window.open(
+            data.signedUrl,
+            "_blank"
+        );
+
+    }
+
+
+    async function subirArchivo(
+        e
+    ) {
+
+        const archivo =
+            e.target.files?.[0];
+
+
+        if (
+            !archivo
+            ||
+            !datosAlumno
+        ) {
+
+            return;
+
+        }
+
+
+        const ruta =
+            `${datosAlumno.grupo}/${datosAlumno.id}/${archivo.name}`;
+
+
+        const {
+            error
+        } = await supabase.storage
+
+            .from(
+                "archivos-prefectura"
+            )
+
+            .upload(
+                ruta,
+                archivo,
+                {
+                    upsert: true
+                }
+            );
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        e.target.value = "";
+
+        await cargarArchivos();
+
+    }
+
+
+    async function eliminarArchivo(
+        nombre
+    ) {
+
+        if (
+            !window.confirm(
+                "¿Eliminar documento?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        if (!datosAlumno) return;
+
+
+        const ruta =
+            `${datosAlumno.grupo}/${datosAlumno.id}/${nombre}`;
+
+
+        const {
+            error
+        } = await supabase.storage
+
+            .from(
+                "archivos-prefectura"
+            )
+
+            .remove([
+                ruta
+            ]);
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        await cargarArchivos();
+
+    }
+
+
+    /*==================================================
+    NOTAS
+    ==================================================*/
+
+    async function cargarNotas(
+        alumnoId = datosAlumno?.id
+    ) {
+
+        if (!alumnoId) return;
+
+
+        const {
+            data,
+            error
+        } = await supabase
+
+            .from(
+                "notas_prefectura"
+            )
+
+            .select("*")
+
+            .eq(
+                "alumno_id",
+                alumnoId
+            )
+
+            .order(
+                "fijada",
+                {
+                    ascending: false
+                }
+            )
+
+            .order(
+                "created_at",
+                {
+                    ascending: false
+                }
+            );
+
+
+        if (error) {
+
+            console.log(
+                "Error cargando notas:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        setNotas(
+            data || []
+        );
+
+    }
+
+
+    async function guardarNota(
+        datos
+    ) {
+
+        if (!datosAlumno?.id) return;
+
+
+        if (notaEditar) {
+
+            const {
+                error
+            } = await supabase
+
+                .from(
+                    "notas_prefectura"
+                )
+
+                .update({
+
+                    titulo:
+                        datos.titulo,
+
+                    nota:
+                        datos.nota,
+
+                    color:
+                        datos.color,
+
+                    fijada:
+                        datos.fijada
+
+                })
+
+                .eq(
+                    "id",
+                    notaEditar.id
+                );
+
+
+            if (error) {
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+        }
+
+        else {
+
+            const {
+                error
+            } = await supabase
+
+                .from(
+                    "notas_prefectura"
+                )
+
+                .insert({
+
+                    alumno_id:
+                        datosAlumno.id,
+
+                    grupo:
+                        datosAlumno.grupo,
+
+                    titulo:
+                        datos.titulo,
+
+                    nota:
+                        datos.nota,
+
+                    color:
+                        datos.color,
+
+                    fijada:
+                        false
+
+                });
+
+
+            if (error) {
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        await cargarNotas();
+
+
+        setModalNota(
+            false
+        );
+
+        setNotaEditar(
+            null
+        );
+
+    }
+
+
+    async function eliminarNota(
+        id
+    ) {
+
+        if (
+            !window.confirm(
+                "¿Eliminar esta nota?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const {
+            error
+        } = await supabase
+
+            .from(
+                "notas_prefectura"
+            )
+
+            .delete()
+
+            .eq(
+                "id",
+                id
+            );
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        await cargarNotas();
+
+    }
+
+
+    function editarNota(
+        nota
+    ) {
+
+        setNotaEditar(
+            nota
+        );
+
+        setModalNota(
+            true
+        );
+
+    }
+
+
+    /*==================================================
+    NEE
+    ==================================================*/
+
+    function editarNEE(
+        indice
+    ) {
+
+        const nee =
+            datosAlumno?.nee?.[
+                indice
+            ];
+
+
+        if (!nee) return;
+
+
+        setNeeEditar(
+            nee
+        );
+
+        setModalNEE(
+            true
+        );
+
+    }
+
+
+    async function eliminarNEE(
+        indice
+    ) {
+
+        if (
+            !window.confirm(
+                "¿Eliminar esta NEE?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        if (!datosAlumno?.id) return;
+
+
+        const nuevasNEE = [
+
+            ...(
+                datosAlumno.nee
+                || []
+            )
+
+        ];
+
+
+        nuevasNEE.splice(
+            indice,
+            1
+        );
+
+
+        const {
+            error
+        } = await supabase
+
+            .from("alumnos")
+
+            .update({
+
+                nee:
+                    nuevasNEE
+
+            })
+
+            .eq(
+                "id",
+                datosAlumno.id
+            );
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        const alumnoActualizado = {
 
             ...datosAlumno,
 
-            nee:nuevasNEE
-
-        });
-
-        const alumnoActualizado={
-
-            ...datosAlumno,
-
-            nee:nuevasNEE
+            nee:
+                nuevasNEE
 
         };
 
-        setDatosAlumno(alumnoActualizado);
 
-        setAlumnoSeleccionado(alumnoActualizado);
-
-        const nuevos=[...students];
-
-        const pos=nuevos.findIndex(
-
-            a=>a.id===datosAlumno.id
-
+        setDatosAlumno(
+            alumnoActualizado
         );
 
-        if(pos!==-1){
+        setNees(
+            nuevasNEE
+        );
 
-            nuevos[pos]=alumnoActualizado;
+        setAlumnoSeleccionado?.(
+            alumnoActualizado
+        );
 
-            setStudents(nuevos);
+
+        if (
+            Array.isArray(students)
+            &&
+            setStudents
+        ) {
+
+            const nuevos =
+                students.map(
+                    estudiante =>
+
+                        estudiante.id
+                        === datosAlumno.id
+
+                            ?
+
+                            alumnoActualizado
+
+                            :
+
+                            estudiante
+                );
+
+
+            setStudents(
+                nuevos
+            );
 
         }
 
-        const indiceAlumno = nuevos.findIndex(
+    }
 
-            a => a.id === datosAlumno.id
 
-        );
+    async function guardarNEE(
+        datos
+    ) {
 
-        if(indiceAlumno !== -1){
+        if (!datosAlumno?.id) return;
 
-            nuevos[indiceAlumno] = {
 
-                ...nuevos[indiceAlumno],
+        const lista = [
 
-                nee: nuevasNEE
+            ...(
+                datosAlumno.nee
+                || []
+            )
 
-            };
+        ];
 
-            setStudents(nuevos);
+
+        if (neeEditar) {
+
+            const indice =
+                lista.findIndex(
+                    nee =>
+
+                        nee.diagnostico
+                        ===
+                        neeEditar.diagnostico
+
+                        &&
+
+                        nee.observaciones
+                        ===
+                        neeEditar.observaciones
+                );
+
+
+            if (
+                indice !== -1
+            ) {
+
+                lista[
+                    indice
+                ] = datos;
+
+            }
 
         }
 
-    }
+        else {
 
-    async function guardarNEE(datos){
-
-    let lista=[
-
-        ...(datosAlumno.nee || [])
-
-    ];
-
-    if(neeEditar){
-
-        const indice=lista.findIndex(
-
-            n=>
-
-            n.diagnostico===neeEditar.diagnostico &&
-
-            n.observaciones===neeEditar.observaciones
-
-        );
-
-        if(indice!=-1){
-
-            lista[indice]=datos;
+            lista.unshift(
+                datos
+            );
 
         }
 
-    }else{
 
-        lista.unshift(datos);
+        const {
+            error
+        } = await supabase
+
+            .from("alumnos")
+
+            .update({
+
+                nee:
+                    lista
+
+            })
+
+            .eq(
+                "id",
+                datosAlumno.id
+            );
+
+
+        if (error) {
+
+            alert(
+                error.message
+            );
+
+            return;
+
+        }
+
+
+        const alumnoActualizado = {
+
+            ...datosAlumno,
+
+            nee:
+                lista
+
+        };
+
+
+        setDatosAlumno(
+            alumnoActualizado
+        );
+
+        setNees(
+            lista
+        );
+
+        setAlumnoSeleccionado?.(
+            alumnoActualizado
+        );
+
+
+        if (
+            Array.isArray(students)
+            &&
+            setStudents
+        ) {
+
+            const nuevos =
+                students.map(
+                    estudiante =>
+
+                        estudiante.id
+                        === datosAlumno.id
+
+                            ?
+
+                            alumnoActualizado
+
+                            :
+
+                            estudiante
+                );
+
+
+            setStudents(
+                nuevos
+            );
+
+        }
+
+
+        setNeeEditar(
+            null
+        );
+
+        setModalNEE(
+            false
+        );
 
     }
 
-    const {error}=await supabase
-
-        .from("alumnos")
-
-        .update({
-
-            nee:lista
-
-        })
-
-        .eq("id",datosAlumno.id);
-
-    if(error){
-
-        alert(error.message);
-
-        return;
-
-    }
-
-    const alumnoActualizado = {
-
-        ...datosAlumno,
-
-        nee:lista
-
-    };
-
-    setAlumnoSeleccionado(alumnoActualizado);
-
-    const nuevos=[...students];
-
-    const pos=nuevos.findIndex(
-
-        a=>a.id===datosAlumno.id
-
-    );
-
-    if(pos!==-1){
-
-        nuevos[pos]=alumnoActualizado;
-
-        setStudents(nuevos);
-
-    }
-
-    setDatosAlumno(alumnoActualizado);
-
-    setNees(lista);
-
-    setNeeEditar(null);
-
-    setModalNEE(false);
-
-}
 
     /*==================================================
-    EXPEDIENTE
+    SEGUIMIENTOS
     ==================================================*/
 
-    async function finalizarCita(datos){
+    async function cargarSeguimientos(
+        alumnoId = datosAlumno?.id
+    ) {
 
-    const registro={
+        if (!alumnoId) return;
 
-        alumno_id:datosAlumno.id,
 
-        cita_programada_id:citaActiva.id,
+        const {
+            data,
+            error
+        } = await supabase
 
-        fecha:citaActiva.fecha,
+            .from(
+                "citas_programadas"
+            )
 
-        hora:citaActiva.hora,
+            .select("*")
 
-        tipo:citaActiva.tipo,
+            .eq(
+                "alumno_id",
+                alumnoId
+            )
 
-        motivo:citaActiva.motivo,
+            .order(
+                "fecha",
+                {
+                    ascending: true
+                }
+            )
 
-        intervencion:datos.intervencion,
+            .order(
+                "hora",
+                {
+                    ascending: true
+                }
+            );
 
-        acuerdos:datos.acuerdos,
 
-        observaciones:datos.observaciones
+        if (error) {
 
-    };
+            console.log(
+                "Error cargando seguimientos:",
+                error
+            );
 
-    const {error}=await supabase
+            return;
 
-        .from("historial_psicologia")
+        }
 
-        .insert(registro);
 
-    if(error){
-
-        alert(error.message);
-
-        return;
+        setSeguimientos(
+            data || []
+        );
 
     }
 
-    await supabase
 
-        .from("citas_programadas")
+    async function cargarHistorial(
+        alumnoId = datosAlumno?.id
+    ) {
 
-        .delete()
+        if (!alumnoId) return;
 
-        .eq("id",citaActiva.id);
 
-    setCitaActiva(null);
+        const {
+            data,
+            error
+        } = await supabase
 
-    cambiarPantalla("grupoPsicologia");
+            .from(
+                "historial_psicologia"
+            )
 
-}   
+            .select("*")
 
-function colorReporte(tipo){
+            .eq(
+                "alumno_id",
+                alumnoId
+            )
 
-    switch(tipo){
+            .order(
+                "fecha",
+                {
+                    ascending: false
+                }
+            )
 
-        case "Aviso":
-            return "reporte-aviso";
+            .order(
+                "hora",
+                {
+                    ascending: false
+                }
+            );
 
-        case "Aviso de conducta":
-            return "reporte-aviso-conducta";
 
-        case "Nota de conducta":
-            return "reporte-nota-conducta";
+        if (error) {
 
-        case "Reporte de conducta":
-            return "reporte-reporte-conducta";
+            console.log(
+                "Error cargando historial:",
+                error
+            );
 
-        case "Suspensión":
-            return "reporte-suspension";
+            return;
 
-        default:
-            return "";
+        }
+
+
+        setHistorial(
+            data || []
+        );
+
     }
 
-}
+
+    async function guardarSeguimiento(
+        datos
+    ) {
+
+        if (
+            !seguimientoEditar?.id
+        ) {
+
+            console.log(
+                "No existe seguimiento para editar."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            seguimientoEditar?.alumno_id
+            &&
+            !seguimientoEditar?.intervencion
+        ) {
+
+            const {
+                error
+            } = await supabase
+
+                .from(
+                    "citas_programadas"
+                )
+
+                .update({
+
+                    fecha:
+                        datos.fecha,
+
+                    hora:
+                        datos.hora,
+
+                    tipo:
+                        datos.tipo
+
+                })
+
+                .eq(
+                    "id",
+                    seguimientoEditar.id
+                );
+
+
+            if (error) {
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+        }
+
+        else {
+
+            const {
+                error
+            } = await supabase
+
+                .from(
+                    "historial_psicologia"
+                )
+
+                .update({
+
+                    fecha:
+                        datos.fecha,
+
+                    hora:
+                        datos.hora,
+
+                    tipo:
+                        datos.tipo,
+
+                    motivo:
+                        datos.motivo,
+
+                    intervencion:
+                        datos.intervencion,
+
+                    acuerdos:
+                        datos.acuerdos
+
+                })
+
+                .eq(
+                    "id",
+                    seguimientoEditar.id
+                );
+
+
+            if (error) {
+
+                alert(
+                    error.message
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        setSeguimientoEditar(
+            null
+        );
+
+        setModalSeguimiento(
+            false
+        );
+
+
+        if (setCitaActiva) {
+
+            setCitaActiva(
+                null
+            );
+
+        }
+
+
+        await cargarSeguimientos();
+
+        await cargarHistorial();
+
+    }
+
+
+    /*==================================================
+    COLOR REPORTE
+    ==================================================*/
+
+    function colorReporte(
+        tipo
+    ) {
+
+        switch (tipo) {
+
+            case "Aviso":
+
+                return "reporte-aviso";
+
+
+            case "Aviso de conducta":
+
+                return "reporte-aviso-conducta";
+
+
+            case "Nota de conducta":
+
+                return "reporte-nota-conducta";
+
+
+            case "Reporte de conducta":
+
+                return "reporte-reporte-conducta";
+
+
+            case "Suspensión":
+
+                return "reporte-suspension";
+
+
+            default:
+
+                return "";
+
+        }
+
+    }
+
+
+    /*==================================================
+    SIN ALUMNO
+    ==================================================*/
+
+    if (!datosAlumno) {
+
+        return null;
+
+    }
+
 
     /*==================================================
     JSX
     ==================================================*/
 
-    const contenido=(
+    const contenido = (
 
-<div className="perfil-wrapper">
+        <div className="perfil-wrapper">
 
-    {/*=========================================
-    HEADER
-    =========================================*/}
 
-    <div className="perfil-header">
+            {/*=========================================
+            HEADER
+            =========================================*/}
 
-        <button
+            <div className="perfil-header">
 
-            className="back-btn"
+                <button
 
-            onClick={()=>cambiarPantalla("grupoPrefectura")}
+                    className="back-btn"
 
-        >
+                    onClick={() =>
+                        cambiarPantalla(
+                            "grupoPrefectura"
+                        )
+                    }
 
-            <ArrowLeft size={20}/>
+                >
 
-        </button>
+                    <ArrowLeft
+                        size={20}
+                    />
 
-        <div className="perfil-header-title">
+                </button>
 
-            <h2>
 
-                Perfil
+                <div className="perfil-header-title">
 
-            </h2>
-
-        </div>
-
-    </div>
-
-    {/*=========================================
-    SCROLL
-    =========================================*/}
-
-    <div className="perfil-scroll">
-
-        {/*=========================================
-        TARJETA DEL ALUMNO
-        =========================================*/}
-
-        <div className="pa-card-alumno">
-
-            <div className="pa-avatar">
-
-                <UserRound size={34}/>
-
-            </div>
-
-            <div className="pa-card-info">
-
-                <h2>
-
-                    {datosAlumno?.nombre}{" "}
-
-                    {datosAlumno?.apellido_paterno}{" "}
-
-                    {datosAlumno?.apellido_materno}
-
-                </h2>
-
-                <div className="pa-card-extra">
-
-                    <span>
-
-                        {datosAlumno?.grupo}
-
-                    </span>
-
-                    <div className="pa-separador"/>
-
-                    <span>
-
-                        {
-
-                            datosAlumno?.sexo==="M"
-
-                            ?
-
-                            "Masculino"
-
-                            :
-
-                            "Femenino"
-
-                        }
-
-                    </span>
+                    <h2>
+                        Perfil
+                    </h2>
 
                 </div>
 
             </div>
 
-        </div>
 
-        {/*=========================================
-        MENÚ DE MÓDULOS
-        =========================================*/}
+            {/*=========================================
+            SCROLL
+            =========================================*/}
 
-        <div className="pa-toolbar">
+            <div className="perfil-scroll">
 
-    <button
 
-        className={
+                {/*=====================================
+                TARJETA ALUMNO
+                =====================================*/}
 
-            modulo==="archivos"
+                <div className="pa-card-alumno">
 
-            ?
+                    <div className="pa-avatar">
 
-            "pa-tool activo"
+                        <UserRound
+                            size={34}
+                        />
 
-            :
+                    </div>
 
-            "pa-tool"
 
-        }
+                    <div className="pa-card-info">
 
-        onClick={()=>setModulo("archivos")}
+                        <h2>
 
-    >
+                            {
+                                datosAlumno?.nombre
+                            }{" "}
 
-        <FolderOpen size={22}/>
+                            {
+                                datosAlumno
+                                    ?.apellido_paterno
+                            }{" "}
 
-    </button>
-
-    <button
-
-        className={
-
-            modulo==="asistencia"
-
-            ?
-
-            "pa-tool activo"
-
-            :
-
-            "pa-tool"
-
-        }
-
-        onClick={()=>setModulo("asistencia")}
-
-    >
-
-        <ClipboardCheck size={22}/>
-
-    </button>
-
-    <button
-        className={
-            modulo==="reportes"
-            ?
-            "pa-tool activo"
-            :
-            "pa-tool"
-        }
-        onClick={()=>setModulo("reportes")}
-    >
-        <FileWarning size={22}/>
-    </button>
-
-    <button
-        className={
-            modulo==="notas"
-            ?
-            "pa-tool activo"
-            :
-            "pa-tool"
-        }
-        onClick={()=>setModulo("notas")}
-    >
-        <FileText size={22}/>
-    </button>
-
-</div>
-
-        {/*=========================================
-        CABECERA DEL MÓDULO
-        =========================================*/}
-
-        <div className="pa-module">
-
-            <div>
-
-                <h3>
-
-                    {
-
-                        modulo==="archivos"
-
-                        ?
-
-                        "Archivos"
-
-                        :
-
-                        modulo==="asistencia"
-
-                        ?
-
-                        "Asistencia"
-
-                        :
-
-                        modulo==="reportes"
-
-                        ?
-
-                        "Reportes"
-
-                        :
-
-                        "Notas"
-
-                    }
-
-                </h3>
-
-            </div>
-
-            {
-                modulo!=="asistencia" && (
-
-                    <button
-
-                        className="pa-add-btn"
-
-                        onClick={()=>{
-
-                            switch(modulo){
-
-                                case "archivos":
-                                    inputArchivo.current.click();
-                                    break;
-
-                                case "reportes":
-
-                                    setReporteEditar(null);
-
-                                    setModalReporte(true);
-
-                                break;
-
-                                case "notas":
-                                    setNotaEditar(null);
-                                    setModalNota(true);
-                                    break;
-
+                            {
+                                datosAlumno
+                                    ?.apellido_materno
                             }
 
-                        }}
+                        </h2>
 
-                    >
 
-                        <FilePlus2 size={18}/>
+                        <div className="pa-card-extra">
 
-                    </button>
+                            <span>
 
-                )
-            }
+                                {
+                                    datosAlumno?.grupo
+                                }
 
-        </div>
-                {/*=========================================
-        CONTENIDO DEL MÓDULO
-        =========================================*/}
+                            </span>
 
-        <div className="pa-module-body">
-
-            {
-
-                modulo==="archivos"
-
-                &&                
-        
-                <>
-                    {
-                        archivos.length===0
-                        ?
-                        <div className="pa-empty">
-                            No existen documentos.
-                        </div>
-                        :
-                        archivos.map((archivo)=>(
 
                             <div
-                                key={archivo.name}
-                                className="pa-card"
-                            >
+                                className="pa-separador"
+                            />
 
-                                <div className="pa-card-left">
 
-                                    <div className="pa-card-icon">
-                                        <FileText size={20}/>
-                                    </div>
+                            <span>
 
-                                    <div className="pa-card-text">
-                                        <h4>{archivo.name}</h4>
-                                    </div>
+                                {
+                                    datosAlumno?.sexo
+                                    === "M"
 
-                                </div>
+                                        ?
 
-                                <div className="pa-card-actions">
+                                        "Masculino"
 
-                                    <button
-                                        className="pa-circle-btn"
-                                        onClick={()=>abrirArchivo(archivo.name)}
-                                    >
-                                        <Eye size={16}/>
-                                    </button>
+                                        :
 
-                                    <button
-                                        className="pa-circle-btn pa-delete"
-                                        onClick={()=>eliminarArchivo(archivo.name)}
-                                    >
-                                        <Trash2 size={16}/>
-                                    </button>
+                                        datosAlumno?.sexo
+                                        === "F"
 
-                                </div>
+                                            ?
 
-                            </div>
+                                            "Femenino"
 
-                        ))
-                    }
+                                            :
 
-                    <input
-                        ref={inputArchivo}
-                        hidden
-                        type="file"
-                        onChange={subirArchivo}
-                    />
-                </>
+                                            ""
+                                }
 
-                
-
-            }
-
-            {
-                modulo==="asistencia"
-
-                &&
-
-                <TarjetaAsistenciaAlumno
-                    key={datosAlumno.id}
-                    alumnoId={datosAlumno.id}
-                />
-
-            }
-
-                        {
-
-                modulo==="notas"
-
-                &&
-
-                <>
-
-                    {
-
-                        notas.length===0
-
-                        ?
-
-                        <div className="pa-empty">
-
-                            No existen notas registradas.
+                            </span>
 
                         </div>
-
-                        :
-
-                        notas.map((nota,index)=>(
-
-                            <div
-                                key={nota.id}
-                                className={`pa-card pa-note ${nota.color || "verde"}`}
-                                onClick={(e)=>{
-
-                                    if(e.target.closest(".pa-card-actions")){
-
-                                        return;
-
-                                    }
-
-                                    setNotaVista(nota);
-
-                                }}
-                            >
-
-                                <div className="pa-card-left">
-
-                                    <div className="pa-card-icon">
-
-                                        <FileText size={20}/>
-
-                                    </div>
-
-                                    <div className="pa-card-text">
-
-                                        <h4>
-
-                                            {nota.titulo}
-
-                                        </h4>
-
-                                        <p>
-
-                                            {nota.nota}
-
-                                        </p>
-
-                                        {
-
-                                            nota.created_at &&
-
-                                            <small>
-
-                                                {
-
-                                                    new Date(
-
-                                                        nota.created_at
-
-                                                    ).toLocaleDateString()
-
-                                                }
-
-                                            </small>
-
-                                        }
-
-                                    </div>
-
-                                </div>
-
-                                <div className="pa-card-actions">
-
-                                    <button
-
-                                        className="pa-circle-btn"
-
-                                        onClick={()=>editarNota(nota)}
-
-                                    >
-
-                                        <Pencil size={16}/>
-
-                                    </button>
-
-                                    <button
-
-                                        className="pa-circle-btn pa-delete"
-
-                                        onClick={()=>eliminarNota(nota.id)}
-
-                                    >
-
-                                        <Trash2 size={16}/>
-
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-                        ))
-
-                    }
-
-                </>
-
-            }                        
-
-            {
-                modulo==="reportes"
-
-                &&
-
-                <>
-
-                {
-
-                reportes.length===0
-
-                ?
-
-                <div className="pa-empty">
-
-                No existen reportes registrados.
-
-                </div>
-
-                :
-
-                reportes.map(reporte=>(
-
-                <div
-                className={`pa-card reporte-card ${colorReporte(reporte.tipo)}`}
-                onClick={(e)=>{
-
-                if(e.target.closest(".pa-card-actions")) return;
-
-                setReporteVista(reporte);
-
-                }}
-                >
-
-                <div
-
-                className="pa-card-left"
-
-                >
-
-                <div className="pa-card-icon reporte-icon">
-                    <FileWarning size={20}/>
-                </div>
-
-                <div className="pa-card-text">
-
-                    <h4>{reporte.tipo}</h4>
-
-                    <span>
-                        {reporte.motivo}
-                    </span>
-
-                    <small>
-                        {reporte.fecha}
-                    </small>
-
-                </div>
-
-                </div>
-
-                <div className="pa-card-actions">
-
-                <button
-
-                className="pa-circle-btn"
-
-                onClick={()=>editarReporte(reporte)}
-
-                >
-
-                <Pencil size={16}/>
-
-                </button>
-
-                <button
-
-                className="pa-circle-btn pa-delete"
-
-                onClick={()=>eliminarReporte(reporte.id)}
-
-                >
-
-                <Trash2 size={16}/>
-
-                </button>
-
-                </div>
-
-                </div>
-
-                ))
-
-                }
-
-                <ModalReporte
-
-                    abierto={modalReporte}
-
-                    cerrar={()=>{
-
-                        setReporteEditar(null);
-
-                        setModalReporte(false);
-
-                    }}
-
-                    guardar={guardarReporte}
-
-                    reporteActual={reporteEditar}
-
-                    alumno={datosAlumno}
-
-                />
-
-                </>
-
-            }
-
-        </div>
-
-    </div>
-
-</div>
-
-);
-
-    return(
-
-        <>
-
-            {
-
-                !embebido && (
-
-                    <div
-
-                        className="app-background"
-
-                        style={{
-
-                            backgroundImage:
-
-                            `url(${fondoPsicologia})`
-
-                        }}
-
-                    />
-
-                )
-
-            }
-
-            {
-
-                embebido
-
-                ?
-
-                contenido
-
-                :
-
-                <div className="ps-app">
-
-                    <div className="ps-container">
-
-                        {contenido}
 
                     </div>
 
                 </div>
 
+
+                {/*=====================================
+                TOOLBAR
+                =====================================*/}
+
+                <div className="pa-toolbar">
+
+
+                    <button
+
+                        className={
+                            modulo === "archivos"
+                                ?
+                                "pa-tool activo"
+                                :
+                                "pa-tool"
+                        }
+
+                        onClick={() =>
+                            setModulo(
+                                "archivos"
+                            )
+                        }
+
+                    >
+
+                        <FolderOpen
+                            size={22}
+                        />
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            modulo === "asistencia"
+                                ?
+                                "pa-tool activo"
+                                :
+                                "pa-tool"
+                        }
+
+                        onClick={() =>
+                            setModulo(
+                                "asistencia"
+                            )
+                        }
+
+                    >
+
+                        <ClipboardCheck
+                            size={22}
+                        />
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            modulo === "reportes"
+                                ?
+                                "pa-tool activo"
+                                :
+                                "pa-tool"
+                        }
+
+                        onClick={() =>
+                            setModulo(
+                                "reportes"
+                            )
+                        }
+
+                    >
+
+                        <FileWarning
+                            size={22}
+                        />
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            modulo === "notas"
+                                ?
+                                "pa-tool activo"
+                                :
+                                "pa-tool"
+                        }
+
+                        onClick={() =>
+                            setModulo(
+                                "notas"
+                            )
+                        }
+
+                    >
+
+                        <FileText
+                            size={22}
+                        />
+
+                    </button>
+
+
+                </div>
+
+
+                {/*=====================================
+                CABECERA MÓDULO
+                =====================================*/}
+
+                <div className="pa-module">
+
+                    <div>
+
+                        <h3>
+
+                            {
+                                modulo === "archivos"
+                                    ?
+                                    "Archivos"
+
+                                    :
+
+                                    modulo === "asistencia"
+                                        ?
+                                        "Asistencia"
+
+                                        :
+
+                                        modulo === "reportes"
+                                            ?
+                                            "Reportes"
+
+                                            :
+
+                                            "Notas"
+                            }
+
+                        </h3>
+
+                    </div>
+
+
+                    {
+                        modulo !== "asistencia"
+                        &&
+
+                        <button
+
+                            className="pa-add-btn"
+
+                            onClick={() => {
+
+                                switch (modulo) {
+
+                                    case "archivos":
+
+                                        inputArchivo
+                                            .current
+                                            ?.click();
+
+                                        break;
+
+
+                                    case "reportes":
+
+                                        setReporteEditar(
+                                            null
+                                        );
+
+                                        setModalReporte(
+                                            true
+                                        );
+
+                                        break;
+
+
+                                    case "notas":
+
+                                        setNotaEditar(
+                                            null
+                                        );
+
+                                        setModalNota(
+                                            true
+                                        );
+
+                                        break;
+
+
+                                    default:
+
+                                        break;
+
+                                }
+
+                            }}
+
+                        >
+
+                            <FilePlus2
+                                size={18}
+                            />
+
+                        </button>
+                    }
+
+                </div>
+
+
+                {/*=====================================
+                CONTENIDO
+                =====================================*/}
+
+                <div className="pa-module-body">
+
+
+                    {/* ARCHIVOS */}
+
+                    {
+                        modulo === "archivos"
+                        &&
+
+                        <>
+
+                            {
+                                archivos.length === 0
+
+                                    ?
+
+                                    <div className="pa-empty">
+
+                                        No existen documentos.
+
+                                    </div>
+
+                                    :
+
+                                    archivos.map(
+                                        archivo => (
+
+                                            <div
+
+                                                key={
+                                                    archivo.name
+                                                }
+
+                                                className="pa-card"
+
+                                            >
+
+                                                <div className="pa-card-left">
+
+                                                    <div className="pa-card-icon">
+
+                                                        <FileText
+                                                            size={20}
+                                                        />
+
+                                                    </div>
+
+
+                                                    <div className="pa-card-text">
+
+                                                        <h4>
+
+                                                            {
+                                                                archivo.name
+                                                            }
+
+                                                        </h4>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div className="pa-card-actions">
+
+                                                    <button
+
+                                                        className="pa-circle-btn"
+
+                                                        onClick={() =>
+                                                            abrirArchivo(
+                                                                archivo.name
+                                                            )
+                                                        }
+
+                                                    >
+
+                                                        <Eye
+                                                            size={16}
+                                                        />
+
+                                                    </button>
+
+
+                                                    <button
+
+                                                        className="pa-circle-btn pa-delete"
+
+                                                        onClick={() =>
+                                                            eliminarArchivo(
+                                                                archivo.name
+                                                            )
+                                                        }
+
+                                                    >
+
+                                                        <Trash2
+                                                            size={16}
+                                                        />
+
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+
+                                        )
+                                    )
+                            }
+
+
+                            <input
+
+                                ref={
+                                    inputArchivo
+                                }
+
+                                hidden
+
+                                type="file"
+
+                                onChange={
+                                    subirArchivo
+                                }
+
+                            />
+
+                        </>
+                    }
+
+
+                    {/* ASISTENCIA */}
+
+                    {
+                        modulo === "asistencia"
+                        &&
+
+                        <TarjetaAsistenciaAlumno
+
+                            key={
+                                datosAlumno.id
+                            }
+
+                            alumnoId={
+                                datosAlumno.id
+                            }
+
+                        />
+                    }
+
+
+                    {/* REPORTES */}
+
+                    {
+                        modulo === "reportes"
+                        &&
+
+                        <>
+
+                            {
+                                reportes.length === 0
+
+                                    ?
+
+                                    <div className="pa-empty">
+
+                                        No existen reportes registrados.
+
+                                    </div>
+
+                                    :
+
+                                    reportes.map(
+                                        reporte => (
+
+                                            <div
+
+                                                key={
+                                                    reporte.id
+                                                }
+
+                                                className={
+                                                    `pa-card reporte-card ${colorReporte(
+                                                        reporte.tipo
+                                                    )}`
+                                                }
+
+                                                onClick={
+                                                    e => {
+
+                                                        if (
+                                                            e.target.closest(
+                                                                ".pa-card-actions"
+                                                            )
+                                                        ) {
+
+                                                            return;
+
+                                                        }
+
+
+                                                        setReporteVista(
+                                                            reporte
+                                                        );
+
+                                                    }
+                                                }
+
+                                            >
+
+                                                <div className="pa-card-left">
+
+                                                    <div className="pa-card-icon reporte-icon">
+
+                                                        <FileWarning
+                                                            size={20}
+                                                        />
+
+                                                    </div>
+
+
+                                                    <div className="pa-card-text">
+
+                                                        <h4>
+
+                                                            {
+                                                                reporte.tipo
+                                                            }
+
+                                                        </h4>
+
+
+                                                        <span>
+
+                                                            {
+                                                                reporte.motivo
+                                                            }
+
+                                                        </span>
+
+
+                                                        <small>
+
+                                                            {
+                                                                reporte.fecha
+                                                            }
+
+                                                        </small>
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div className="pa-card-actions">
+
+                                                    <button
+
+                                                        className="pa-circle-btn"
+
+                                                        onClick={() =>
+                                                            editarReporte(
+                                                                reporte
+                                                            )
+                                                        }
+
+                                                    >
+
+                                                        <Pencil
+                                                            size={16}
+                                                        />
+
+                                                    </button>
+
+
+                                                    <button
+
+                                                        className="pa-circle-btn pa-delete"
+
+                                                        onClick={() =>
+                                                            eliminarReporte(
+                                                                reporte.id
+                                                            )
+                                                        }
+
+                                                    >
+
+                                                        <Trash2
+                                                            size={16}
+                                                        />
+
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+
+                                        )
+                                    )
+                            }
+
+
+                            <ModalReporte
+
+                                abierto={
+                                    modalReporte
+                                }
+
+                                cerrar={() => {
+
+                                    setReporteEditar(
+                                        null
+                                    );
+
+                                    setModalReporte(
+                                        false
+                                    );
+
+                                }}
+
+                                guardar={
+                                    guardarReporte
+                                }
+
+                                reporteActual={
+                                    reporteEditar
+                                }
+
+                                alumno={
+                                    datosAlumno
+                                }
+
+                            />
+
+                        </>
+                    }
+
+
+                    {/* NOTAS */}
+
+                    {
+                        modulo === "notas"
+                        &&
+
+                        <>
+
+                            {
+                                notas.length === 0
+
+                                    ?
+
+                                    <div className="pa-empty">
+
+                                        No existen notas registradas.
+
+                                    </div>
+
+                                    :
+
+                                    notas.map(
+                                        nota => (
+
+                                            <div
+
+                                                key={
+                                                    nota.id
+                                                }
+
+                                                className={
+                                                    `pa-card pa-note ${nota.color || "verde"}`
+                                                }
+
+                                                onClick={
+                                                    e => {
+
+                                                        if (
+                                                            e.target.closest(
+                                                                ".pa-card-actions"
+                                                            )
+                                                        ) {
+
+                                                            return;
+
+                                                        }
+
+
+                                                        setNotaVista(
+                                                            nota
+                                                        );
+
+                                                    }
+                                                }
+
+                                            >
+
+                                                <div className="pa-card-left">
+
+                                                    <div className="pa-card-icon">
+
+                                                        <FileText
+                                                            size={20}
+                                                        />
+
+                                                    </div>
+
+
+                                                    <div className="pa-card-text">
+
+                                                        <h4>
+
+                                                            {
+                                                                nota.titulo
+                                                            }
+
+                                                        </h4>
+
+
+                                                        <p>
+
+                                                            {
+                                                                nota.nota
+                                                            }
+
+                                                        </p>
+
+
+                                                        {
+                                                            nota.created_at
+                                                            &&
+
+                                                            <small>
+
+                                                                {
+                                                                    new Date(
+                                                                        nota.created_at
+                                                                    )
+                                                                        .toLocaleDateString()
+                                                                }
+
+                                                            </small>
+                                                        }
+
+                                                    </div>
+
+                                                </div>
+
+
+                                                <div className="pa-card-actions">
+
+                                                    <button
+
+                                                        className="pa-circle-btn"
+
+                                                        onClick={() =>
+                                                            editarNota(
+                                                                nota
+                                                            )
+                                                        }
+
+                                                    >
+
+                                                        <Pencil
+                                                            size={16}
+                                                        />
+
+                                                    </button>
+
+
+                                                    <button
+
+                                                        className="pa-circle-btn pa-delete"
+
+                                                        onClick={() =>
+                                                            eliminarNota(
+                                                                nota.id
+                                                            )
+                                                        }
+
+                                                    >
+
+                                                        <Trash2
+                                                            size={16}
+                                                        />
+
+                                                    </button>
+
+                                                </div>
+
+                                            </div>
+
+                                        )
+                                    )
+                            }
+
+                        </>
+                    }
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    );
+
+
+    /*==================================================
+    RETURN
+    ==================================================*/
+
+    return (
+
+        <>
+
+            {
+                !embebido
+                &&
+
+                <div
+
+                    className="app-background"
+
+                    style={{
+
+                        backgroundImage:
+                            `url(${fondoPsicologia})`
+
+                    }}
+
+                />
             }
+
+
+            {
+                embebido
+
+                    ?
+
+                    contenido
+
+                    :
+
+                    <div className="ps-app">
+
+                        <div className="ps-container">
+
+                            {contenido}
+
+                        </div>
+
+                    </div>
+            }
+
+
+            {/*=========================================
+            MODAL CITA
+            =========================================*/}
 
             <ModalCita
 
-                abierto={modalSeguimiento}
+                abierto={
+                    modalSeguimiento
+                }
 
-                cerrar={()=>{
+                cerrar={() => {
 
-                    setSeguimientoEditar(null);
+                    setSeguimientoEditar(
+                        null
+                    );
 
-                    setModalSeguimiento(false);
+                    setModalSeguimiento(
+                        false
+                    );
 
                 }}
 
-                guardar={guardarSeguimiento}
+                guardar={
+                    guardarSeguimiento
+                }
 
-                citaActual={seguimientoEditar}
+                citaActual={
+                    seguimientoEditar
+                }
 
             />
+
+
+            {/*=========================================
+            MODAL NEE
+            =========================================*/}
 
             <ModalNEE
 
-                abierto={modalNEE}
+                abierto={
+                    modalNEE
+                }
 
-                cerrar={()=>{
+                cerrar={() => {
 
-                    setNeeEditar(null);
+                    setNeeEditar(
+                        null
+                    );
 
-                    setModalNEE(false);
+                    setModalNEE(
+                        false
+                    );
 
                 }}
 
-                guardar={guardarNEE}
+                guardar={
+                    guardarNEE
+                }
 
-                nee={neeEditar}
+                nee={
+                    neeEditar
+                }
 
             />
+
+
+            {/*=========================================
+            MODAL NOTA
+            =========================================*/}
 
             <ModalNota
 
-                abierto={modalNota}
+                abierto={
+                    modalNota
+                }
 
-                cerrar={()=>setModalNota(false)}
+                cerrar={() => {
 
-                guardar={guardarNota}
+                    setNotaEditar(
+                        null
+                    );
 
-                notaActual={notaEditar}
+                    setModalNota(
+                        false
+                    );
 
-                students={students}
+                }}
 
-                ocultarAlumno={true}
+                guardar={
+                    guardarNota
+                }
 
-                soloIndividual={true}
+                notaActual={
+                    notaEditar
+                }
 
-                soloPerfil={true}
+                students={
+                    students
+                }
+
+                ocultarAlumno={
+                    true
+                }
+
+                soloIndividual={
+                    true
+                }
+
+                soloPerfil={
+                    true
+                }
 
             />
+
+
+            {/*=========================================
+            DETALLE NOTA
+            =========================================*/}
 
             <VistaDetalleNota
 
-                abierta={notaVista!==null}
+                abierta={
+                    notaVista !== null
+                }
 
-                nota={notaVista}
+                nota={
+                    notaVista
+                }
 
-                students={students}
+                students={
+                    students
+                }
 
-                cerrar={()=>setNotaVista(null)}
+                cerrar={() =>
+                    setNotaVista(
+                        null
+                    )
+                }
 
-                editar={(nota)=>{
+                editar={
+                    nota => {
 
-                    setNotaVista(null);
+                        setNotaVista(
+                            null
+                        );
 
-                    editarNota(nota);
+                        editarNota(
+                            nota
+                        );
 
-                }}
+                    }
+                }
 
             />
+
+
+            {/*=========================================
+            DETALLE NEE
+            =========================================*/}
 
             <VistaDetalleNEE
 
-                abierta={neeVista!==null}
+                abierta={
+                    neeVista !== null
+                }
 
-                nee={neeVista}
+                nee={
+                    neeVista
+                }
 
-                cerrar={()=>setNeeVista(null)}
+                cerrar={() =>
+                    setNeeVista(
+                        null
+                    )
+                }
 
-                editar={(nee)=>{
+                editar={
+                    nee => {
 
-                    setNeeVista(null);
+                        setNeeVista(
+                            null
+                        );
 
-                    setNeeEditar(nee);
+                        setNeeEditar(
+                            nee
+                        );
 
-                    setModalNEE(true);
+                        setModalNEE(
+                            true
+                        );
 
-                }}
+                    }
+                }
 
             />
+
+
+            {/*=========================================
+            DETALLE CITA
+            =========================================*/}
 
             <VistaDetalleCita
 
-                abierta={seguimientoVista!==null}
+                abierta={
+                    seguimientoVista !== null
+                }
 
-                cita={seguimientoVista}
+                cita={
+                    seguimientoVista
+                }
 
-                students={students}
+                students={
+                    students
+                }
 
-                cerrar={()=>setSeguimientoVista(null)}
+                cerrar={() =>
+                    setSeguimientoVista(
+                        null
+                    )
+                }
 
-                editar={(cita)=>{
+                editar={
+                    cita => {
 
-                    setSeguimientoVista(null);
+                        setSeguimientoVista(
+                            null
+                        );
 
-                    setSeguimientoEditar(cita);
+                        setSeguimientoEditar(
+                            cita
+                        );
 
-                    setModalSeguimiento(true);
+                        setModalSeguimiento(
+                            true
+                        );
 
-                }}
+                    }
+                }
 
             />
+
+
+            {/*=========================================
+            DETALLE REPORTE
+            =========================================*/}
 
             <VistaDetalleReporte
-                abierta={reporteVista!==null}
-                reporte={reporteVista}
-                cerrar={()=>setReporteVista(null)}
-                editar={(rep)=>{
 
-                    setReporteVista(null);
+                abierta={
+                    reporteVista !== null
+                }
 
-                    setReporteEditar(rep);
+                reporte={
+                    reporteVista
+                }
 
-                    setModalReporte(true);
+                cerrar={() =>
+                    setReporteVista(
+                        null
+                    )
+                }
 
-                }}
+                editar={
+                    reporte => {
+
+                        setReporteVista(
+                            null
+                        );
+
+                        setReporteEditar(
+                            reporte
+                        );
+
+                        setModalReporte(
+                            true
+                        );
+
+                    }
+                }
+
             />
+
 
         </>
 

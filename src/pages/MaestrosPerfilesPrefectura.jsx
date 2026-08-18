@@ -19,7 +19,14 @@ import "../Styles/MaestrosPerfilesPrefectura.css";
 export default function MaestrosPerfilesPrefectura({
 
     seleccionarMaestro,
-    cambiarPantalla
+
+    cambiarPantalla,
+
+    pantallaPerfil =
+        "perfilMaestroPrefectura",
+
+    pantallaVolver =
+        "perfiles"
 
 }) {
 
@@ -137,7 +144,9 @@ export default function MaestrosPerfilesPrefectura({
                 <button
                     className="back-btn"
                     onClick={() =>
-                        cambiarPantalla("perfiles")
+                        cambiarPantalla(
+                            pantallaVolver
+                        )
                     }
                 >
 
@@ -223,7 +232,7 @@ export default function MaestrosPerfilesPrefectura({
                                     );
 
                                     cambiarPantalla(
-                                        "perfilMaestroPrefectura"
+                                        pantallaPerfil
                                     );
 
                                 }}

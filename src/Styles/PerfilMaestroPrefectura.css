@@ -960,3 +960,10 @@ TOOLBAR PERFIL MAESTRO CENTRADA
     max-width:70px;
 
 }
+
+.pm-btn-cerrar-completo{
+
+    grid-column:
+        1 / -1;
+
+}

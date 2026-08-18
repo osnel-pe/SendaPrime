@@ -41,7 +41,12 @@ export default function PerfilMaestroPrefectura({
 
     cambiarPantalla,
 
-    embebido = false
+    embebido = false,
+
+    soloLectura = false,
+
+    pantallaVolver =
+        "maestrosPerfiles"
 
 }) {
 
@@ -1180,7 +1185,7 @@ export default function PerfilMaestroPrefectura({
 
                     onClick={() =>
                         cambiarPantalla(
-                            "maestrosPerfiles"
+                            pantallaVolver
                         )
                     }
 
@@ -1394,6 +1399,8 @@ export default function PerfilMaestroPrefectura({
 
 
                     {
+                        !soloLectura
+                        &&
                         modulo !== "asistencia"
                         &&
 
@@ -1421,9 +1428,7 @@ export default function PerfilMaestroPrefectura({
 
                         >
 
-                            <FilePlus2
-                                size={18}
-                            />
+                            <FilePlus2 size={18}/>
 
                         </button>
                     }
@@ -2894,61 +2899,85 @@ export default function PerfilMaestroPrefectura({
 
                         <div className="pm-modal-actions">
 
+                        {
+                            soloLectura
+
+                            ?
+
                             <button
 
                                 type="button"
 
-                                className="pm-btn-eliminar"
+                                className="pm-btn-guardar pm-btn-cerrar-completo"
 
                                 onClick={() =>
-                                    eliminarReporte(
-                                        reporteVista.id
-                                    )
+                                    setReporteVista(null)
                                 }
 
                             >
 
-                                <Trash2
-                                    size={16}
-                                />
-
-                                Eliminar
+                                Cerrar
 
                             </button>
 
+                            :
 
-                            <button
+                            <>
 
-                                type="button"
+                                <button
 
-                                className="pm-btn-guardar"
+                                    type="button"
 
-                                onClick={() => {
+                                    className="pm-btn-eliminar"
 
-                                    const reporte =
-                                        reporteVista;
+                                    onClick={() =>
+                                        eliminarReporte(
+                                            reporteVista.id
+                                        )
+                                    }
 
-                                    setReporteVista(
-                                        null
-                                    );
+                                >
 
-                                    editarReporte(
-                                        reporte
-                                    );
+                                    <Trash2 size={16}/>
 
-                                }}
+                                    Eliminar
 
-                            >
+                                </button>
 
-                                <Pencil
-                                    size={16}
-                                />
 
-                                Editar
+                                <button
 
-                            </button>
+                                    type="button"
 
-                        </div>
+                                    className="pm-btn-guardar"
+
+                                    onClick={() => {
+
+                                        const reporte =
+                                            reporteVista;
+
+                                        setReporteVista(
+                                            null
+                                        );
+
+                                        editarReporte(
+                                            reporte
+                                        );
+
+                                    }}
+
+                                >
+
+                                    <Pencil size={16}/>
+
+                                    Editar
+
+                                </button>
+
+                            </>
+                        }
+
+                    </div>
 
 
                     </div>

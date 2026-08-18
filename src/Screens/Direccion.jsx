@@ -25,6 +25,11 @@ import BotonIA from "../components/Psicologia/BotonIA";
 import ListaPrefectura from "../pages/ListaPrefectura";
 import GrupoAsistencia from "../components/Prefectura/GrupoAsistencia";
 
+import MaestrosPerfilesPrefectura
+from "../pages/MaestrosPerfilesPrefectura";
+
+import PerfilMaestroPrefectura
+from "../pages/PerfilMaestroPrefectura";
 import InicioDireccion from "../pages/InicioDireccion";
 import PerfilesDireccion from "../components/Direccion/PerfilesDireccion";
 import ListaDireccion from "../components/Direccion/ListaDireccion";
@@ -32,7 +37,7 @@ import GrupoDireccion from "../components/Direccion/GrupoDireccion";
 import PerfilAlumnoDireccion from "../pages/PerfilAlumnoDireccion.jsx";
 import ReportesDireccion from "../components/Direccion/ReportesDireccion";
 
-export default function Prefectura({
+export default function Direccion({
 
     cerrarSesion,
 
@@ -71,6 +76,11 @@ export default function Prefectura({
 
     const [moduloPerfil,setModuloPerfil]=useState("archivos");
 
+    const [
+        maestroSeleccionado,
+        setMaestroSeleccionado
+    ] = useState(null);
+
     useEffect(()=>{
 
     const manejarAtras=()=>{
@@ -80,7 +90,7 @@ export default function Prefectura({
         volverPantalla();
 
         window.history.pushState(null,"");
-
+        
     }
     else{
 
@@ -225,6 +235,53 @@ export default function Prefectura({
             />
 
         );
+
+        case "maestrosPerfilesDireccion":
+
+            return (
+
+                <MaestrosPerfilesPrefectura
+
+                    seleccionarMaestro={
+                        setMaestroSeleccionado
+                    }
+
+                    cambiarPantalla={
+                        cambiarPantallaInterna
+                    }
+
+                    pantallaPerfil="perfilMaestroDireccion"
+
+                    pantallaVolver="perfiles"
+
+                />
+
+            );
+
+
+        case "perfilMaestroDireccion":
+
+            return (
+
+                <PerfilMaestroPrefectura
+
+                    embebido={true}
+
+                    maestro={
+                        maestroSeleccionado
+                    }
+
+                    cambiarPantalla={
+                        cambiarPantallaInterna
+                    }
+
+                    soloLectura={true}
+
+                    pantallaVolver="maestrosPerfilesDireccion"
+
+                />
+
+            );
 
         case "reportes":
 

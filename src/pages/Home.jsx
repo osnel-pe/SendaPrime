@@ -80,101 +80,6 @@ export default function Home({ cambiarPantalla }) {
 
             </div>
 
-          {/* PROFESOR */}
-
-          <motion.button
-
-            className="menu-button profesor"
-            onClick={()=>cambiarPantalla("loginProfesor")}
-
-            whileHover={{
-
-            scale:1.02
-
-            }}
-
-            whileTap={{
-
-            scale:.96
-
-            }}
-
-            initial={{
-
-            x:-50,
-
-            opacity:0
-
-            }}
-
-            animate={{
-
-            x:0,
-
-            opacity:1
-
-            }}
-
-            transition={{
-
-            delay:.45
-
-            }}
-            >
-
-            <div className="menu-left">
-              <FaChalkboardTeacher className="menu-icon" />
-              <div>
-
-              <div className="menu-text">
-
-                  Profesor
-
-              </div>
-
-              <div className="menu-subtext">
-
-                  Administración
-
-              </div>
-
-          </div>
-            </div>
-
-            <FaChevronRight className="menu-arrow" />
-
-         </motion.button>
-
-          {/* ALUMNO */}
-
-          <button
-            className="menu-button"
-            onClick={() => cambiarPantalla("loginAlumno")}
-          >
-
-            <div className="menu-left">
-              <FaUserGraduate className="menu-icon" />
-              <div>
-
-              <div className="menu-text">
-
-              Alumno
-
-              </div>
-
-              <div className="menu-subtext">
-
-              Mi perfil escolar
-
-              </div>
-
-              </div>
-            </div>
-
-            <FaChevronRight className="menu-arrow" />
-
-          </button>
-
           <div className="home-divider">
 
           <span>
@@ -280,6 +185,71 @@ export default function Home({ cambiarPantalla }) {
           <FaChevronRight className="menu-arrow"/>
 
           </button>
+
+                    {/* PROFESOR */}
+
+          <motion.button
+
+            className="menu-button profesor"
+            onClick={()=>cambiarPantalla("loginProfesor")}
+
+            whileHover={{
+
+            scale:1.02
+
+            }}
+
+            whileTap={{
+
+            scale:.96
+
+            }}
+
+            initial={{
+
+            x:-50,
+
+            opacity:0
+
+            }}
+
+            animate={{
+
+            x:0,
+
+            opacity:1
+
+            }}
+
+            transition={{
+
+            delay:.45
+
+            }}
+            >
+
+            <div className="menu-left">
+              <FaChalkboardTeacher className="menu-icon" />
+              <div>
+
+              <div className="menu-text">
+
+                  Administrador
+
+              </div>
+
+              <div className="menu-subtext">
+
+                  SendaPrime
+
+              </div>
+
+          </div>
+            </div>
+
+            <FaChevronRight className="menu-arrow" />
+
+         </motion.button>
 
           <div className="home-footer">
 
