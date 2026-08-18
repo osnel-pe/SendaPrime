@@ -18,6 +18,7 @@ import "../Styles/HeaderPrefectura.css";
 
 import fondoPrefectura from "../assets/fondo-psicologia.jpg";
 
+import MaestrosPrefectura from "../pages/MaestrosPrefectura";
 import HeaderPrefectura from "../components/HeaderPrefectura";
 import BottomNavigationPrefectura from "../components/BottomNavigationPrefectura.jsx";
 import BotonIA from "../components/Psicologia/BotonIA";
@@ -32,6 +33,11 @@ import NotasPrefectura from "../pages/NotasPrefectura";
 import GrupoPrefectura from "../pages/GrupoPrefectura";
 import PerfilAlumnoPrefectura from "../pages/PerfilAlumnoPrefectura";
 import ResumenAsistencia from "../components/Prefectura/ResumenAsistencia";
+import MaestrosPerfilesPrefectura
+from "../pages/MaestrosPerfilesPrefectura";
+
+import PerfilMaestroPrefectura
+from "../pages/PerfilMaestroPrefectura";
 
 export default function Prefectura({
 
@@ -71,6 +77,11 @@ export default function Prefectura({
     const [resumenAsistencia,setResumenAsistencia]=useState({});
 
     const [moduloPerfil,setModuloPerfil]=useState("archivos");
+
+    const [
+        maestroSeleccionado,
+        setMaestroSeleccionado
+    ] = useState(null);
 
     useEffect(()=>{
 
@@ -252,6 +263,22 @@ export default function Prefectura({
 
             );
 
+        case "maestros":
+
+            return (
+
+                <MaestrosPrefectura
+
+                    embebido={true}
+
+                    cambiarPantalla={
+                        cambiarPantallaInterna
+                    }
+
+                />
+
+            );
+
         case "notas":
 
             return(
@@ -309,6 +336,45 @@ case "perfilAlumnoPrefectura":
             setAlumnoSeleccionado={setAlumnoSeleccionado}
 
             moduloInicial={moduloPerfil}
+
+        />
+
+    );
+
+    case "maestrosPerfiles":
+
+    return (
+
+        <MaestrosPerfilesPrefectura
+
+            seleccionarMaestro={
+                setMaestroSeleccionado
+            }
+
+            cambiarPantalla={
+                cambiarPantallaInterna
+            }
+
+        />
+
+    );
+
+
+case "perfilMaestroPrefectura":
+
+    return (
+
+        <PerfilMaestroPrefectura
+
+            embebido={true}
+
+            maestro={
+                maestroSeleccionado
+            }
+
+            cambiarPantalla={
+                cambiarPantallaInterna
+            }
 
         />
 

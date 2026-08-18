@@ -4,7 +4,7 @@ import {
     CheckCircle2,
     Clock3,
     CircleX,
-    School,
+    UsersRound,
     AlertTriangle,
     TriangleAlert
 } from "lucide-react";
@@ -876,44 +876,23 @@ export default function DashboardAsistencia({
                 =========================================*/}
 
                 <div
-
-                    className={
-
-                        datos.pendientes === 0
-
-                            ?
-
-                            "mini-card grupos completo"
-
-                            :
-
-                            "mini-card grupos pendiente"
-
+                    className="mini-card maestros"
+                    onClick={() =>
+                        cambiarPantalla("maestros")
                     }
-
+                    style={{
+                        cursor: "pointer"
+                    }}
                 >
 
-                    <School
-                        size={18}
-                    />
+                    <UsersRound size={18}/>
 
                     <h3>
-
-                        {
-                            datos.completos
-                        }
-
-                        /
-
-                        {
-                            datos.completos +
-                            datos.pendientes
-                        }
-
+                        Maestros
                     </h3>
 
                     <span>
-                        Grupos listos
+                        Control docente
                     </span>
 
                 </div>

@@ -1,0 +1,743 @@
+/*=========================================
+BOTÓN CAMPANA HEADER
+=========================================*/
+
+.header-notif-wrapper{
+
+    position:relative;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.header-notif-badge{
+
+    position:absolute;
+
+    top:-5px;
+
+    right:-5px;
+
+    min-width:17px;
+
+    height:17px;
+
+    padding:0 4px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:999px;
+
+    background:#ef4444;
+
+    color:white;
+
+    font-size:10px;
+
+    font-weight:800;
+
+    line-height:1;
+
+    border:2px solid #0b1712;
+
+    pointer-events:none;
+
+}
+
+
+/*=========================================
+OVERLAY
+=========================================*/
+
+.notif-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:9999;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:18px;
+
+    background:rgba(0,0,0,.64);
+
+    backdrop-filter:blur(6px);
+
+    -webkit-backdrop-filter:blur(6px);
+
+}
+
+
+/*=========================================
+PANEL
+=========================================*/
+
+.notif-panel{
+
+    width:min(420px, 100%);
+
+    max-height:min(720px, 88vh);
+
+    display:flex;
+
+    flex-direction:column;
+
+    overflow:hidden;
+
+    border-radius:24px;
+
+    background:
+
+        linear-gradient(
+            160deg,
+            rgba(31,56,46,.98),
+            rgba(13,28,22,.98)
+        );
+
+    border:1px solid
+        rgba(255,255,255,.10);
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.45);
+
+}
+
+
+/*=========================================
+HEADER
+=========================================*/
+
+.notif-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    padding:18px 18px 16px;
+
+    border-bottom:1px solid
+        rgba(255,255,255,.09);
+
+}
+
+.notif-header-left{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+}
+
+.notif-header-icon{
+
+    width:42px;
+
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:14px;
+
+    background:
+        rgba(46, 204, 113, .14);
+
+    color:#59d98e;
+
+}
+
+.notif-header h2{
+
+    margin:0;
+
+    font-size:20px;
+
+    color:white;
+
+}
+
+.notif-header span{
+
+    display:block;
+
+    margin-top:2px;
+
+    font-size:12px;
+
+    color:
+        rgba(255,255,255,.58);
+
+}
+
+.notif-close{
+
+    width:38px;
+
+    height:38px;
+
+    border:none;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    background:
+        rgba(255,255,255,.09);
+
+    color:white;
+
+    cursor:pointer;
+
+}
+
+
+/*=========================================
+CONTENIDO
+=========================================*/
+
+.notif-content{
+
+    flex:1;
+
+    overflow-y:auto;
+
+    padding:16px;
+
+}
+
+.notif-content::-webkit-scrollbar{
+
+    width:5px;
+
+}
+
+.notif-content::-webkit-scrollbar-thumb{
+
+    border-radius:10px;
+
+    background:
+        rgba(255,255,255,.20);
+
+}
+
+
+/*=========================================
+RESUMEN
+=========================================*/
+
+.notif-resumen{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    margin-bottom:12px;
+
+    padding:10px 13px;
+
+    border-radius:13px;
+
+    background:
+        rgba(255,193,7,.10);
+
+    border:
+        1px solid
+        rgba(255,193,7,.15);
+
+    color:#ffd54f;
+
+}
+
+.notif-resumen strong{
+
+    font-size:18px;
+
+}
+
+.notif-resumen span{
+
+    font-size:13px;
+
+    font-weight:600;
+
+}
+
+
+/*=========================================
+TARJETA
+=========================================*/
+
+.notif-card{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    gap:12px;
+
+    width:100%;
+
+    margin-bottom:12px;
+
+    padding:14px;
+
+    box-sizing:border-box;
+
+    border-radius:17px;
+
+    background:
+        rgba(255,255,255,.085);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+}
+
+.notif-card-icon{
+
+    width:40px;
+
+    height:40px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:
+        rgba(255,193,7,.13);
+
+    color:#ffd24a;
+
+}
+
+.notif-card-info{
+
+    flex:1;
+
+    min-width:0;
+
+}
+
+.notif-card-top{
+
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:10px;
+
+}
+
+.notif-card h3{
+
+    margin:0;
+
+    color:white;
+
+    font-size:15px;
+
+    line-height:1.2;
+
+}
+
+.notif-card-top span{
+
+    display:block;
+
+    margin-top:4px;
+
+    font-size:12px;
+
+    color:
+        rgba(255,255,255,.62);
+
+}
+
+
+/*=========================================
+BADGE TARDANZAS
+=========================================*/
+
+.notif-tardanzas{
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:4px;
+
+    padding:5px 8px;
+
+    border-radius:999px;
+
+    background:#d99f00;
+
+    color:white;
+
+    font-size:11px;
+
+    font-weight:800;
+
+}
+
+
+/*=========================================
+MENSAJE
+=========================================*/
+
+.notif-mensaje{
+
+    margin-top:11px;
+
+    padding:10px 11px;
+
+    border-radius:12px;
+
+    background:
+        rgba(0,0,0,.15);
+
+}
+
+.notif-mensaje strong{
+
+    display:block;
+
+    margin-bottom:5px;
+
+    color:#ffd65a;
+
+    font-size:12px;
+
+}
+
+.notif-mensaje p{
+
+    margin:0;
+
+    color:
+        rgba(255,255,255,.77);
+
+    font-size:12px;
+
+    line-height:1.5;
+
+}
+
+
+/*=========================================
+SIN NOTIFICACIONES
+=========================================*/
+
+.notif-vacio{
+
+    min-height:220px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    padding:30px;
+
+    text-align:center;
+
+    color:
+        rgba(255,255,255,.65);
+
+}
+
+.notif-vacio-icon{
+
+    width:58px;
+
+    height:58px;
+
+    margin-bottom:5px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:18px;
+
+    background:
+        rgba(46,204,113,.13);
+
+    color:#54d589;
+
+}
+
+.notif-vacio strong{
+
+    color:white;
+
+    font-size:16px;
+
+}
+
+.notif-vacio span{
+
+    max-width:240px;
+
+    font-size:12px;
+
+    line-height:1.5;
+
+}
+
+
+/*=========================================
+TELÉFONOS PEQUEÑOS
+=========================================*/
+
+@media(max-width:420px){
+
+    .notif-overlay{
+
+        padding:12px;
+
+    }
+
+    .notif-panel{
+
+        max-height:84vh;
+
+        border-radius:21px;
+
+    }
+
+    .notif-header{
+
+        padding:15px;
+
+    }
+
+    .notif-content{
+
+        padding:12px;
+
+    }
+
+}
+
+/*=========================================
+ALERTA URGENTE - 3 TARDANZAS
+=========================================*/
+
+.notif-card-urgente{
+
+    border:
+
+        1px solid
+        rgba(239,68,68,.42);
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(239,68,68,.15),
+            rgba(255,255,255,.065)
+        );
+
+}
+
+
+.notif-card-icon.urgente{
+
+    background:
+        rgba(239,68,68,.17);
+
+    color:#ff6565;
+
+}
+
+
+.notif-tardanzas.urgente{
+
+    background:#dc2626;
+
+    color:white;
+
+}
+
+
+.notif-mensaje.urgente{
+
+    background:
+        rgba(220,38,38,.12);
+
+    border:
+        1px solid
+        rgba(239,68,68,.22);
+
+}
+
+
+.notif-mensaje.urgente strong{
+
+    color:#ff7676;
+
+}
+
+
+/*=========================================
+BOTÓN ATENDIDA
+=========================================*/
+
+.notif-atendida-btn{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:9px 12px;
+
+    border:none;
+
+    border-radius:11px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    background:
+        rgba(61,191,115,.16);
+
+    color:#6be59d;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+
+}
+
+
+.notif-atendida-btn:hover{
+
+    background:
+        rgba(61,191,115,.26);
+
+}
+
+
+.notif-atendida-btn:active{
+
+    transform:scale(.98);
+
+}
+
+.notif-atendida-estado{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding:9px 12px;
+
+    box-sizing:border-box;
+
+    border-radius:11px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:6px;
+
+    background:
+        rgba(61,191,115,.11);
+
+    border:
+        1px solid
+        rgba(61,191,115,.18);
+
+    color:#69df9b;
+
+    font-size:11px;
+
+    font-weight:800;
+
+}
+
+.notif-dia{
+
+    margin-bottom:16px;
+
+}
+
+.notif-dia-titulo{
+
+    margin:
+        2px 0
+        8px;
+
+    padding-left:3px;
+
+    color:
+        rgba(255,255,255,.55);
+
+    font-size:11px;
+
+    font-weight:800;
+
+    text-transform:capitalize;
+
+}

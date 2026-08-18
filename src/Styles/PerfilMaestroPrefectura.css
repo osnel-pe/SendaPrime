@@ -1,0 +1,962 @@
+/*==================================================
+PERFIL MAESTRO - BASE
+==================================================*/
+
+.pm-mes-selector,
+.pm-resumen,
+.pm-guardia-resumen,
+.pm-subtitulo,
+.pm-dia-card,
+.pm-modal,
+.pm-modal *{
+    box-sizing:border-box;
+}
+
+
+/*==================================================
+SELECTOR DEL MES
+==================================================*/
+
+.pm-mes-selector{
+
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+    margin-bottom:14px;
+
+}
+
+.pm-mes-selector > span{
+
+    color:#ffffff;
+
+    font-size:15px;
+    font-weight:800;
+
+}
+
+.pm-mes-selector select{
+
+    width:118px;
+    height:38px;
+
+    padding:0 12px;
+
+    border:1px solid rgba(255,255,255,.10);
+
+    border-radius:11px;
+
+    outline:none;
+
+    background:#293a34;
+
+    color:#ffffff;
+
+    font-size:12px;
+    font-weight:700;
+
+}
+
+.pm-mes-selector select option{
+
+    background:#ffffff;
+    color:#222222;
+
+}
+
+
+/*==================================================
+RESUMEN DE ASISTENCIA
+==================================================*/
+
+.pm-resumen{
+
+    width:100%;
+
+    display:grid;
+
+    gap:10px;
+
+    margin-bottom:12px;
+
+}
+
+.pm-resumen-2{
+
+    grid-template-columns:repeat(2,1fr);
+
+}
+
+.pm-resumen-item{
+
+    min-width:0;
+    min-height:84px;
+
+    padding:12px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+
+    gap:4px;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(47,68,60,.96),
+            rgba(31,49,42,.96)
+        );
+
+    border:1px solid rgba(255,255,255,.09);
+
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.14);
+
+}
+
+.pm-resumen-item svg{
+
+    margin-bottom:2px;
+
+}
+
+.pm-resumen-item strong{
+
+    color:#ffffff;
+
+    font-size:22px;
+    line-height:1;
+
+}
+
+.pm-resumen-item span{
+
+    color:rgba(255,255,255,.68);
+
+    font-size:10px;
+    font-weight:700;
+
+}
+
+.pm-resumen-item.tardanza svg{
+
+    color:#ffd329;
+
+}
+
+.pm-resumen-item.falta svg{
+
+    color:#ff4d4d;
+
+}
+
+
+/*==================================================
+RESUMEN DE GUARDIAS
+==================================================*/
+
+.pm-guardia-resumen{
+
+    width:100%;
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:10px;
+
+    margin-bottom:20px;
+
+}
+
+.pm-guardia-resumen-card{
+
+    min-width:0;
+    min-height:92px;
+
+    padding:13px;
+
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+
+    border-radius:15px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(45,77,65,.98),
+            rgba(30,58,48,.98)
+        );
+
+    border:1px solid rgba(95,220,150,.18);
+
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.13);
+
+}
+
+.pm-guardia-titulo{
+
+    display:flex;
+    align-items:center;
+
+    gap:7px;
+
+}
+
+.pm-guardia-titulo svg{
+
+    color:#59df9b;
+
+}
+
+.pm-guardia-titulo span{
+
+    color:#ffffff;
+
+    font-size:12px;
+    font-weight:800;
+
+}
+
+.pm-guardia-incumplidas{
+
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+
+    gap:7px;
+
+    margin-top:12px;
+
+}
+
+.pm-guardia-incumplidas strong{
+
+    color:#ff6666;
+
+    font-size:25px;
+    line-height:1;
+
+}
+
+.pm-guardia-incumplidas span{
+
+    color:rgba(255,255,255,.63);
+
+    font-size:9px;
+    font-weight:700;
+
+    text-align:right;
+
+}
+
+
+/*==================================================
+SUBTÍTULO HISTORIAL
+==================================================*/
+
+.pm-subtitulo{
+
+    width:100%;
+
+    margin:
+        3px 0
+        10px;
+
+    color:#ffffff;
+
+    font-size:13px;
+    font-weight:800;
+
+}
+
+
+/*==================================================
+TARJETA DE INCIDENCIA
+==================================================*/
+
+.pm-dia-card{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:10px;
+
+    border-radius:16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(52,77,68,.97),
+            rgba(36,59,51,.97)
+        );
+
+    border:1px solid rgba(255,255,255,.09);
+
+    box-shadow:
+        0 7px 20px rgba(0,0,0,.15);
+
+}
+
+
+/*==================================================
+FECHA + ESTADO
+==================================================*/
+
+.pm-dia-top{
+
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+}
+
+.pm-dia-fecha strong{
+
+    color:#ffffff;
+
+    font-size:13px;
+    font-weight:800;
+
+}
+
+.pm-estado{
+
+    flex-shrink:0;
+
+    padding:5px 10px;
+
+    border-radius:999px;
+
+    font-size:9px;
+    font-weight:800;
+
+}
+
+.pm-estado.tardanza{
+
+    background:rgba(255,193,7,.16);
+
+    border:1px solid rgba(255,211,41,.28);
+
+    color:#ffd942;
+
+}
+
+.pm-estado.falta{
+
+    background:rgba(239,68,68,.18);
+
+    border:1px solid rgba(255,89,89,.28);
+
+    color:#ff7474;
+
+}
+
+
+/*==================================================
+SUPLENTE
+==================================================*/
+
+.pm-suplente{
+
+    width:100%;
+
+    display:flex;
+    align-items:center;
+
+    gap:7px;
+
+    margin-top:10px;
+
+    padding:9px 10px;
+
+    border-radius:11px;
+
+    background:rgba(0,0,0,.16);
+
+    color:rgba(255,255,255,.76);
+
+}
+
+.pm-suplente svg{
+
+    flex-shrink:0;
+
+    color:#5ce19a;
+
+}
+
+.pm-suplente span{
+
+    color:rgba(255,255,255,.70);
+
+    font-size:10px;
+
+}
+
+.pm-suplente strong{
+
+    color:#ffffff;
+
+    font-weight:800;
+
+}
+
+
+/*==================================================
+INCIDENCIAS DE GUARDIAS
+==================================================*/
+
+.pm-dia-guardias{
+
+    width:100%;
+
+    margin-top:10px;
+
+    padding-top:10px;
+
+    border-top:
+        1px solid rgba(255,255,255,.08);
+
+}
+
+.pm-dia-guardias > div{
+
+    width:100%;
+
+    display:grid;
+
+    grid-template-columns:
+        20px
+        minmax(0,1fr)
+        auto;
+
+    align-items:center;
+
+    gap:6px;
+
+    min-height:28px;
+
+}
+
+.pm-dia-guardias > div svg{
+
+    color:#8ab9a4;
+
+}
+
+.pm-dia-guardias > div span{
+
+    min-width:0;
+
+    color:rgba(255,255,255,.70);
+
+    font-size:10px;
+
+}
+
+.pm-dia-guardias > div strong{
+
+    color:#ff6b6b;
+
+    font-size:10px;
+    font-weight:800;
+
+}
+
+.pm-dia-guardias > div strong.no{
+
+    color:#ff6b6b;
+
+}
+
+.pm-dia-guardias small{
+
+    display:block;
+
+    margin:
+        3px 0
+        0 26px;
+
+    color:rgba(255,255,255,.48);
+
+    font-size:9px;
+
+}
+
+
+/*==================================================
+ESTADO VACÍO
+==================================================*/
+
+.pa-module-body .pa-empty{
+
+    width:100%;
+
+    padding:20px 16px;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.07);
+
+    color:rgba(255,255,255,.68);
+
+    text-align:center;
+
+    font-size:12px;
+
+}
+
+
+/*==================================================
+REPORTES Y NOTAS DEL MAESTRO
+==================================================*/
+
+.pa-module-body .pa-card{
+
+    color:#ffffff;
+
+}
+
+.pa-module-body .pa-card-text h4{
+
+    color:#ffffff;
+
+}
+
+.pa-module-body .pa-card-text span,
+.pa-module-body .pa-card-text p{
+
+    color:rgba(255,255,255,.72);
+
+}
+
+.pa-module-body .pa-card-text small{
+
+    color:rgba(255,255,255,.48);
+
+}
+
+
+/*==================================================
+MODAL OVERLAY
+==================================================*/
+
+.pm-modal-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:99999;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:18px;
+
+    background:rgba(0,0,0,.70);
+
+    backdrop-filter:blur(7px);
+    -webkit-backdrop-filter:blur(7px);
+
+}
+
+
+/*==================================================
+MODAL
+==================================================*/
+
+.pm-modal{
+
+    width:min(410px,100%);
+
+    max-height:86vh;
+
+    overflow-y:auto;
+
+    border-radius:22px;
+
+    background:
+        linear-gradient(
+            155deg,
+            #294137,
+            #13271f
+        );
+
+    border:1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.50);
+
+}
+
+
+/*==================================================
+HEADER MODAL
+==================================================*/
+
+.pm-modal-header{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:12px;
+
+    padding:17px;
+
+    border-bottom:
+        1px solid rgba(255,255,255,.08);
+
+}
+
+.pm-modal-header h2{
+
+    margin:0;
+
+    color:#ffffff;
+
+    font-size:18px;
+
+}
+
+.pm-modal-header span{
+
+    display:block;
+
+    margin-top:3px;
+
+    color:rgba(255,255,255,.55);
+
+    font-size:10px;
+
+}
+
+.pm-modal-header button{
+
+    width:36px;
+    height:36px;
+
+    flex-shrink:0;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border:none;
+
+    border-radius:11px;
+
+    background:rgba(255,255,255,.09);
+
+    color:#ffffff;
+
+    cursor:pointer;
+
+}
+
+
+/*==================================================
+BODY MODAL
+==================================================*/
+
+.pm-modal-body{
+
+    padding:16px;
+
+}
+
+.pm-modal-body label{
+
+    display:block;
+
+    margin-bottom:5px;
+
+    color:rgba(255,255,255,.76);
+
+    font-size:11px;
+    font-weight:700;
+
+}
+
+.pm-modal-body input,
+.pm-modal-body select,
+.pm-modal-body textarea{
+
+    width:100%;
+
+    margin-bottom:12px;
+
+    padding:10px 11px;
+
+    border:
+        1px solid rgba(255,255,255,.11);
+
+    border-radius:10px;
+
+    outline:none;
+
+    background:rgba(0,0,0,.18);
+
+    color:#ffffff;
+
+    font-family:inherit;
+    font-size:12px;
+
+}
+
+.pm-modal-body textarea{
+
+    resize:vertical;
+
+}
+
+.pm-modal-body select option{
+
+    background:#ffffff;
+
+    color:#222222;
+
+}
+
+.pm-modal-body input:focus,
+.pm-modal-body select:focus,
+.pm-modal-body textarea:focus{
+
+    border-color:
+        rgba(81,220,143,.60);
+
+}
+
+
+/*==================================================
+ACCIONES MODAL
+==================================================*/
+
+.pm-modal-actions{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:8px;
+
+    padding:
+        0 16px
+        16px;
+
+}
+
+.pm-modal-actions button{
+
+    min-height:43px;
+
+    border:none;
+
+    border-radius:11px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    gap:6px;
+
+    font-size:11px;
+    font-weight:800;
+
+    cursor:pointer;
+
+}
+
+.pm-btn-cancelar{
+
+    background:rgba(255,255,255,.09);
+
+    color:rgba(255,255,255,.78);
+
+}
+
+.pm-btn-guardar{
+
+    background:
+        linear-gradient(
+            135deg,
+            #159050,
+            #0b6538
+        );
+
+    color:#ffffff;
+
+}
+
+.pm-btn-eliminar{
+
+    background:
+        rgba(239,68,68,.18);
+
+    color:#ff7474;
+
+}
+
+
+/*==================================================
+DETALLE REPORTE / NOTA
+==================================================*/
+
+.pm-detalle-item{
+
+    width:100%;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+
+    gap:10px;
+
+    margin-bottom:10px;
+
+    padding:11px;
+
+    border-radius:11px;
+
+    background:
+        rgba(255,255,255,.06);
+
+}
+
+.pm-detalle-item span{
+
+    color:rgba(255,255,255,.55);
+
+    font-size:10px;
+
+}
+
+.pm-detalle-item strong{
+
+    color:#ffffff;
+
+    font-size:11px;
+
+}
+
+.pm-detalle-block{
+
+    width:100%;
+
+    margin-bottom:10px;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    background:
+        rgba(255,255,255,.06);
+
+}
+
+.pm-detalle-block span{
+
+    display:block;
+
+    margin-bottom:5px;
+
+    color:#65df9d;
+
+    font-size:10px;
+    font-weight:800;
+
+}
+
+.pm-detalle-block p{
+
+    margin:0;
+
+    white-space:pre-wrap;
+
+    color:rgba(255,255,255,.80);
+
+    font-size:12px;
+    line-height:1.5;
+
+}
+
+
+/*==================================================
+AJUSTES MÓVIL
+==================================================*/
+
+@media(max-width:390px){
+
+    .pm-resumen-item{
+
+        min-height:78px;
+
+    }
+
+    .pm-guardia-resumen-card{
+
+        padding:11px;
+
+    }
+
+    .pm-guardia-incumplidas strong{
+
+        font-size:21px;
+
+    }
+
+    .pm-guardia-incumplidas span{
+
+        font-size:8px;
+
+    }
+
+}
+
+/*==================================================
+TOOLBAR PERFIL MAESTRO CENTRADA
+==================================================*/
+
+.pm-toolbar{
+
+    width:100%;
+
+    display:flex !important;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:12px;
+
+}
+
+.pm-toolbar .pa-tool{
+
+    flex:0 0 70px;
+
+    width:70px;
+
+    max-width:70px;
+
+}

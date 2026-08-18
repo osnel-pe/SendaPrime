@@ -1,0 +1,779 @@
+/*=========================================
+CONTENEDOR
+=========================================*/
+
+.mp-container{
+
+    height:100%;
+
+    min-height:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    overflow:hidden;
+
+    padding:4px 0 0;
+
+    color:white;
+
+}
+
+.mp-header,
+.mp-tabs,
+.mp-acciones-superiores{
+
+    flex-shrink:0;
+
+}
+
+
+/*=========================================
+HEADER
+=========================================*/
+
+.mp-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    margin-bottom:16px;
+
+}
+
+.mp-header h2{
+
+    margin:0;
+
+    font-size:25px;
+
+    font-weight:800;
+
+    color:white;
+
+}
+
+.mp-header p{
+
+    margin:3px 0 0;
+
+    font-size:13px;
+
+    color:rgba(255,255,255,.62);
+
+}
+
+.mp-fecha{
+
+    padding:7px 11px;
+
+    border-radius:10px;
+
+    background:rgba(255,255,255,.10);
+
+    color:rgba(255,255,255,.82);
+
+    font-size:12px;
+
+    font-weight:700;
+
+}
+
+
+/*=========================================
+TABS
+=========================================*/
+
+.mp-tabs{
+
+    display:grid;
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+    gap:7px;
+
+    margin-bottom:15px;
+
+    padding:5px;
+
+    border-radius:16px;
+
+    background:
+        rgba(10,25,19,.72);
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+}
+
+.mp-tabs button{
+
+    min-width:0;
+
+    min-height:48px;
+
+    border:none;
+
+    border-radius:12px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:3px;
+
+    background:transparent;
+
+    color:
+        rgba(255,255,255,.62);
+
+    font-size:11px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+
+}
+
+.mp-tabs button.activo{
+
+    background:
+        linear-gradient(
+            145deg,
+            #147346,
+            #0b5533
+        );
+
+    color:white;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0,0,0,.22);
+
+}
+
+
+/*=========================================
+LISTA
+=========================================*/
+
+.mp-lista{
+
+    flex:1;
+
+    min-height:0;
+
+    overflow-y:auto;
+
+    overflow-x:hidden;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:3px;
+
+    padding-right:3px;
+
+    padding-bottom:16px;
+
+    -webkit-overflow-scrolling:touch;
+
+}
+
+.mp-lista::-webkit-scrollbar{
+
+    width:4px;
+
+}
+
+.mp-lista::-webkit-scrollbar-track{
+
+    background:transparent;
+
+}
+
+.mp-lista::-webkit-scrollbar-thumb{
+
+    background:
+        rgba(255,255,255,.25);
+
+    border-radius:999px;
+
+}
+
+
+/*=========================================
+TARJETA
+=========================================*/
+
+.mp-card{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:13px;
+
+    border-radius:17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(51,74,66,.94),
+            rgba(31,55,46,.94)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.08);
+
+    box-shadow:
+        0 7px 18px
+        rgba(0,0,0,.15);
+
+}
+
+
+/*=========================================
+MAESTRO
+=========================================*/
+
+.mp-maestro{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    margin-bottom:11px;
+
+}
+
+.mp-avatar{
+
+    width:38px;
+
+    height:38px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:12px;
+
+    background:
+        rgba(56,200,119,.14);
+
+    color:#58d990;
+
+}
+
+.mp-info{
+
+    min-width:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.mp-info strong{
+
+    color:white;
+
+    font-size:14px;
+
+    line-height:1.2;
+
+}
+
+.mp-info span{
+
+    margin-top:3px;
+
+    color:
+        rgba(255,255,255,.59);
+
+    font-size:11px;
+
+}
+
+
+/*=========================================
+BOTONES DE ESTADO
+=========================================*/
+
+.mp-opciones{
+
+    display:grid;
+
+    gap:6px;
+
+}
+
+.mp-opciones-3{
+
+    grid-template-columns:
+        repeat(3,1fr);
+
+}
+
+.mp-opciones-2{
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+}
+
+
+.mp-btn{
+
+    min-width:0;
+
+    height:41px;
+
+    padding:0 5px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    border-radius:11px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:5px;
+
+    background:
+        rgba(0,0,0,.13);
+
+    color:
+        rgba(255,255,255,.68);
+
+    font-size:11px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.18s ease;
+
+}
+
+
+.mp-btn.presente.activo{
+
+    background:
+        rgba(43,182,100,.24);
+
+    border-color:
+        rgba(71,221,133,.50);
+
+    color:#76eba7;
+
+}
+
+
+.mp-btn.tardanza.activo{
+
+    background:
+        rgba(255,193,7,.20);
+
+    border-color:
+        rgba(255,205,54,.45);
+
+    color:#ffd95c;
+
+}
+
+
+.mp-btn.falta.activo{
+
+    background:
+        rgba(239,68,68,.22);
+
+    border-color:
+        rgba(255,95,95,.48);
+
+    color:#ff8181;
+
+}
+
+
+/*=========================================
+SUPLENTE / RELEVO
+=========================================*/
+
+.mp-relevo{
+
+    margin-top:10px;
+
+    padding-top:10px;
+
+    border-top:
+        1px solid
+        rgba(255,255,255,.07);
+
+}
+
+.mp-relevo label{
+
+    display:block;
+
+    margin-bottom:5px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    color:
+        rgba(255,255,255,.70);
+
+}
+
+.mp-relevo input{
+
+    width:100%;
+
+    height:39px;
+
+    box-sizing:border-box;
+
+    padding:0 11px;
+
+    border:
+
+        1px solid
+        rgba(255,255,255,.10);
+
+    border-radius:10px;
+
+    outline:none;
+
+    background:
+        rgba(0,0,0,.17);
+
+    color:white;
+
+    font-size:12px;
+
+}
+
+.mp-relevo input::placeholder{
+
+    color:
+        rgba(255,255,255,.35);
+
+}
+
+.mp-relevo input:focus{
+
+    border-color:
+        rgba(64,203,122,.60);
+
+}
+
+
+/*=========================================
+GUARDAR
+=========================================*/
+
+.mp-guardar-wrapper{
+
+    position:sticky;
+
+    bottom:75px;
+
+    z-index:20;
+
+    padding-top:15px;
+
+}
+
+.mp-guardar{
+    position:sticky;
+
+    bottom:82px;
+
+    width:100%;
+
+    min-height:48px;
+
+    margin-top:16px;
+
+    padding:12px 18px;
+
+    border:none;
+    border-radius:14px;
+
+    background:#0f894e;
+    color:white;
+
+    font-size:14px;
+    font-weight:800;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    cursor:pointer;
+
+    z-index:20;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.25);
+}
+
+.mp-guardar:active{
+
+    transform:scale(.985);
+
+}
+
+.mp-guardar:disabled{
+
+    opacity:.60;
+
+    cursor:default;
+
+}
+
+
+/*=========================================
+VACÍO
+=========================================*/
+
+.mp-vacio{
+
+    width:100%;
+
+    box-sizing:border-box;
+
+    padding:30px 18px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,.08);
+
+    text-align:center;
+
+    color:
+        rgba(255,255,255,.63);
+
+    font-size:13px;
+
+}
+
+
+/*=========================================
+PANTALLAS MUY PEQUEÑAS
+=========================================*/
+
+@media(max-width:380px){
+
+    .mp-card{
+
+        padding:11px;
+
+    }
+
+    .mp-btn{
+
+        font-size:10px;
+
+        gap:3px;
+
+    }
+
+    .mp-tabs button{
+
+        font-size:10px;
+
+    }
+
+}
+
+/*=========================================
+MARCAR TODOS
+=========================================*/
+
+.mp-marcar-todos{
+
+    width:100%;
+
+    min-height:44px;
+
+    margin-bottom:13px;
+
+    padding:9px 14px;
+
+    border:none;
+
+    border-radius:13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    background:
+        rgba(53,190,111,.16);
+
+    border:
+        1px solid
+        rgba(74,222,128,.25);
+
+    color:#78e9a6;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    transition:.2s ease;
+
+}
+
+.mp-marcar-todos:hover{
+
+    background:
+        rgba(53,190,111,.24);
+
+}
+
+.mp-marcar-todos:active{
+
+    transform:scale(.985);
+
+}
+
+.mp-acciones-superiores{
+
+    display:grid;
+
+    grid-template-columns:
+        1fr auto;
+
+    gap:8px;
+
+    margin-bottom:13px;
+
+}
+
+
+.mp-marcar-todos{
+
+    min-height:44px;
+
+    margin:0;
+
+    padding:9px 13px;
+
+    border:
+        1px solid
+        rgba(74,222,128,.25);
+
+    border-radius:13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    background:
+        rgba(53,190,111,.16);
+
+    color:#78e9a6;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+}
+
+
+.mp-guardar-superior{
+
+    min-width:102px;
+
+    min-height:44px;
+
+    padding:9px 13px;
+
+    border:none;
+
+    border-radius:13px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #159050,
+            #0b6538
+        );
+
+    color:white;
+
+    font-size:12px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0,0,0,.20);
+
+}
+
+
+.mp-guardar-superior:disabled{
+
+    opacity:.55;
+
+    cursor:default;
+
+}

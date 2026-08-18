@@ -1,0 +1,283 @@
+.mpp-container{
+
+    height:100%;
+
+    min-height:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    color:white;
+
+}
+
+
+.mpp-buscador{
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    height:46px;
+
+    margin:4px 0 16px;
+
+    padding:0 15px;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(67,78,74,.96),
+            rgba(35,48,43,.96)
+        );
+
+    color:
+        rgba(255,255,255,.55);
+
+}
+
+
+.mpp-buscador input{
+
+    flex:1;
+
+    min-width:0;
+
+    border:none;
+
+    outline:none;
+
+    background:transparent;
+
+    color:white;
+
+    font-size:14px;
+
+}
+
+
+.mpp-buscador input::placeholder{
+
+    color:
+        rgba(255,255,255,.52);
+
+}
+
+
+.mpp-lista{
+
+    flex:1;
+
+    min-height:0;
+
+    overflow-y:auto;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+    padding-bottom:20px;
+
+    -webkit-overflow-scrolling:touch;
+
+}
+
+
+.mpp-card{
+
+    width:100%;
+
+    min-height:70px;
+
+    box-sizing:border-box;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:12px;
+
+    padding:12px 14px;
+
+    border:
+
+        1px solid
+        rgba(255,255,255,.13);
+
+    border-radius:17px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(54,73,66,.95),
+            rgba(29,47,40,.95)
+        );
+
+    color:white;
+
+    cursor:pointer;
+
+    text-align:left;
+
+}
+
+
+.mpp-avatar{
+
+    width:42px;
+
+    height:42px;
+
+    flex-shrink:0;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    border-radius:13px;
+
+    background:
+        rgba(42,195,105,.15);
+
+    color:#56db8d;
+
+}
+
+
+.mpp-info{
+
+    flex:1;
+
+    min-width:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:4px;
+
+}
+
+
+.mpp-info strong{
+
+    color:white;
+
+    font-size:14px;
+
+    line-height:1.2;
+
+}
+
+
+.mpp-info span{
+
+    color:
+        rgba(255,255,255,.58);
+
+    font-size:11px;
+
+}
+
+
+.mpp-arrow{
+
+    flex-shrink:0;
+
+    color:
+        rgba(255,255,255,.65);
+
+}
+
+
+.mpp-vacio{
+
+    padding:30px 15px;
+
+    border-radius:16px;
+
+    background:
+        rgba(255,255,255,.07);
+
+    text-align:center;
+
+    color:
+        rgba(255,255,255,.65);
+
+}
+
+.perfiles-maestros-btn{
+
+    width:100%;
+
+    min-height:48px;
+
+    margin-bottom:17px;
+
+    padding:0 16px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    border-radius:15px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:10px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(41,76,62,.95),
+            rgba(25,54,43,.95)
+        );
+
+    color:white;
+
+    font-size:14px;
+
+    font-weight:800;
+
+    cursor:pointer;
+
+}
+
+
+.perfiles-maestros-btn span{
+
+    flex:1;
+
+    text-align:left;
+
+}
+
+
+.perfiles-maestros-btn svg{
+
+    color:#63dda0;
+
+}
+
+
+.perfiles-maestros-btn svg:last-child{
+
+    color:
+        rgba(255,255,255,.65);
+
+}

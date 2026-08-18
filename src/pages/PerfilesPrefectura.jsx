@@ -111,6 +111,28 @@ export default function PerfilesPrefectura({
 
             </div>
 
+            <button
+
+                className="perfiles-maestros-btn"
+
+                onClick={() =>
+                    cambiarPantalla(
+                        "maestrosPerfiles"
+                    )
+                }
+
+            >
+
+                <UserRound size={19}/>
+
+                <span>
+                    Maestros
+                </span>
+
+                <ChevronRight size={18}/>
+
+            </button>
+
             {
 
                 busqueda===""
