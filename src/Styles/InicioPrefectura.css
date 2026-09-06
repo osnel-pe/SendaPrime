@@ -14,6 +14,20 @@
 
     margin-bottom:18px;
 
+    display:flex;
+
+    align-items:flex-start;
+
+    justify-content:space-between;
+
+    gap:14px;
+
+}
+
+.inicio-header-texto{
+
+    min-width:0;
+
 }
 
 .inicio-header h2{
@@ -26,15 +40,78 @@
 
     font-weight:700;
 
+    line-height:1.08;
+
 }
 
 .inicio-header p{
 
-    margin-top:4px;
+    margin:4px 0 0;
 
     color:rgba(255,255,255,.75);
 
     font-size:15px;
+
+}
+
+.inicio-horario-btn{
+
+    width:43px;
+
+    height:43px;
+
+    flex:0 0 43px;
+
+    border:none;
+
+    border-radius:14px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#f2fff8;
+
+    background:linear-gradient(
+        145deg,
+        rgba(54,190,112,.32),
+        rgba(255,255,255,.10)
+    );
+
+    border:1px solid rgba(255,255,255,.19);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.17);
+
+    backdrop-filter:blur(16px);
+
+    -webkit-backdrop-filter:blur(16px);
+
+    cursor:pointer;
+
+    transition:
+        transform .18s ease,
+        background .18s ease,
+        border-color .18s ease;
+
+}
+
+.inicio-horario-btn:active{
+
+    transform:scale(.94);
+
+}
+
+.inicio-horario-btn:hover{
+
+    background:linear-gradient(
+        145deg,
+        rgba(54,190,112,.42),
+        rgba(255,255,255,.14)
+    );
+
+    border-color:rgba(105,231,157,.42);
 
 }
 

@@ -1,5 +1,6 @@
 import {
     useEffect,
+    useMemo,
     useState
 } from "react";
 
@@ -9,11 +10,27 @@ import {
     X,
     UserRound,
     Check,
-    TriangleAlert
+    TriangleAlert,
+    CircleX,
+    FileWarning,
+    Coffee,
+    LogOut,
+    GraduationCap
 } from "lucide-react";
+
+import { createPortal }
+from "react-dom";
+
+import {
+    activarPushPrefectura
+} from "../../utils/pushNotifications";
 
 import { supabase }
 from "../../services/supabase";
+
+import {
+    sincronizarNotificacionesPrefectura
+} from "../../utils/notificacionesPrefectura";
 
 import "../../Styles/NotificacionesPrefectura.css";
 
@@ -28,10 +45,6 @@ export default function NotificacionesPrefectura({
 
 }) {
 
-    /*==================================================
-    ESTADOS
-    ==================================================*/
-
     const [
         notificaciones,
         setNotificaciones
@@ -40,357 +53,175 @@ export default function NotificacionesPrefectura({
     const [
         cargando,
         setCargando
-    ] = useState(true);
+    ] = useState(false);
+
+    const [
+        activandoPush,
+        setActivandoPush
+    ] = useState(false);
+
+    const [
+        pushActivo,
+        setPushActivo
+    ] = useState(false);
 
 
     /*==================================================
-    EFECTO AL ABRIR
+    ABRIR
     ==================================================*/
 
     useEffect(() => {
 
         if (!abierto) return;
 
-        prepararNotificaciones();
+        preparar();
 
     }, [abierto]);
 
+    useEffect(() => {
 
-    /*==================================================
-    PREPARAR
-    ==================================================*/
+    function actualizarPanel() {
 
-    async function prepararNotificaciones() {
-
-        setCargando(true);
-
-
-        /*
-        1. Revisamos las tardanzas del mes actual
-        y creamos las alertas nuevas necesarias.
-        */
-
-        await generarAlertasTardanzas();
-
-
-        /*
-        2. Cargamos TODO el historial,
-        incluyendo meses anteriores.
-        */
-
-        await cargarNotificaciones();
-
-
-        /*
-        3. Como la prefecta ya abrió
-        la pantalla, las nuevas del mes
-        actual pasan a estar vistas.
-        */
-
-        await marcarComoVistas();
-
-
-        setCargando(false);
-
-    }
-
-
-    /*==================================================
-    GENERAR ALERTAS AUTOMÁTICAS
-    ==================================================*/
-
-    async function generarAlertasTardanzas() {
-
-        const hoy = new Date();
-
-        const anio =
-            hoy.getFullYear();
-
-        const numeroMes =
-            hoy.getMonth() + 1;
-
-        const mesTexto =
-            String(
-                numeroMes
-            ).padStart(2, "0");
-
-
-        const ultimoDia =
-            new Date(
-                anio,
-                numeroMes,
-                0
-            ).getDate();
-
-
-        const inicio =
-            `${anio}-${mesTexto}-01`;
-
-        const fin =
-            `${anio}-${mesTexto}-${String(
-                ultimoDia
-            ).padStart(2, "0")}`;
-
-
-        const {
-            data,
-            error
-        } = await supabase
-
-            .from(
-                "asistencia_prefectura"
-            )
-
-            .select(`
-                alumno_id,
-                estatus,
-                fecha
-            `)
-
-            .eq(
-                "estatus",
-                "tardanza"
-            )
-
-            .gte(
-                "fecha",
-                inicio
-            )
-
-            .lte(
-                "fecha",
-                fin
-            );
-
-
-        if (error) {
-
-            console.log(
-                "Error leyendo tardanzas:",
-                error
-            );
+        if (!abierto) {
 
             return;
 
         }
 
+        cargarNotificaciones();
 
-        const contador = {};
+    }
 
+    window.addEventListener(
+        "prefectura-actualizada",
+        actualizarPanel
+    );
 
-        (data || []).forEach(
-            registro => {
+    return () => {
 
-                contador[
-                    registro.alumno_id
-                ] =
-                    (
-                        contador[
-                            registro.alumno_id
-                        ]
-                        || 0
-                    ) + 1;
-
-            }
+        window.removeEventListener(
+            "prefectura-actualizada",
+            actualizarPanel
         );
 
+    };
 
-        /*==============================================
-        CREAR ALERTAS
-        ==============================================*/
+}, [abierto]);
 
-        for (
-            const alumnoId
-            of Object.keys(contador)
-        ) {
+    async function activarNotificacionesTelefono() {
 
-            const total =
-                contador[alumnoId];
+    try {
 
+        setActivandoPush(true);
 
-            /*
-            SEGUNDA TARDANZA
-            */
+        await activarPushPrefectura();
 
-            if (total >= 2) {
-
-                await crearNotificacionSiNoExiste({
-
-                    alumnoId,
-
-                    tipo:
-                        "tardanza_2",
-
-                    tardanzas:
-                        2,
-
-                    mes:
-                        numeroMes,
-
-                    anio
-
-                });
-
-            }
-
-
-            /*
-            TERCERA TARDANZA
-            */
-
-            if (total >= 3) {
-
-                await crearNotificacionSiNoExiste({
-
-                    alumnoId,
-
-                    tipo:
-                        "tardanza_3",
-
-                    tardanzas:
-                        3,
-
-                    mes:
-                        numeroMes,
-
-                    anio
-
-                });
-
-            }
-
-        }
+        setPushActivo(true);
 
     }
 
+    catch (error) {
+
+        console.log(error);
+
+        alert(
+            error.message
+        );
+
+    }
+
+    finally {
+
+        setActivandoPush(false);
+
+    }
+
+}
+
+
+    async function preparar() {
+
+    setCargando(true);
+
+
+    console.log(
+        "Reconstruyendo historial de notificaciones..."
+    );
+
+
+    await sincronizarNotificacionesPrefectura({
+
+        historico: true
+
+    });
+
+
+    console.log(
+        "Cargando historial..."
+    );
+
+
+    await cargarNotificaciones();
+
+
+    setCargando(false);
+
+
+    actualizarContador?.();
+
+}
+
 
     /*==================================================
-    CREAR NOTIFICACIÓN SI NO EXISTE
+    CARGAR HISTORIAL
     ==================================================*/
 
-    async function crearNotificacionSiNoExiste({
+    async function comprobarPushActivo() {
 
-        alumnoId,
+    if (
+        !("serviceWorker" in navigator)
+        ||
+        !("PushManager" in window)
+    ) {
 
-        tipo,
+        setPushActivo(false);
 
-        tardanzas,
+        return;
 
-        mes,
+    }
 
-        anio
+    try {
 
-    }) {
+        const registro =
+            await navigator
+                .serviceWorker
+                .ready;
 
-        const {
-            data: existente,
-            error: errorBuscar
-        } = await supabase
+        const suscripcion =
+            await registro
+                .pushManager
+                .getSubscription();
 
-            .from(
-                "notificaciones_prefectura"
-            )
+        setPushActivo(
+            !!suscripcion
+        );
 
-            .select("id")
+    }
 
-            .eq(
-                "alumno_id",
-                alumnoId
-            )
+    catch (error) {
 
-            .eq(
-                "tipo",
-                tipo
-            )
-
-            .eq(
-                "mes",
-                mes
-            )
-
-            .eq(
-                "anio",
-                anio
-            )
-
-            .maybeSingle();
-
-
-        if (errorBuscar) {
-
-            console.log(
-                "Error buscando notificación:",
-                errorBuscar
-            );
-
-            return;
-
-        }
-
-
-        if (existente) {
-
-            return;
-
-        }
-
-
-        const {
+        console.log(
+            "Error comprobando Push:",
             error
-        } = await supabase
+        );
 
-            .from(
-                "notificaciones_prefectura"
-            )
-
-            .insert({
-
-                alumno_id:
-                    alumnoId,
-
-                tipo,
-
-                tardanzas,
-
-                mes,
-
-                anio,
-
-                atendida:
-                    false,
-
-                vista:
-                    false
-
-            });
-
-
-        if (error) {
-
-            console.log(
-                "Error creando notificación:",
-                error
-            );
-
-        }
+        setPushActivo(false);
 
     }
 
-
-    /*==================================================
-    CARGAR HISTORIAL COMPLETO
-    ==================================================*/
+}
 
     async function cargarNotificaciones() {
-
-        /*
-        IMPORTANTE:
-
-        Aquí NO filtramos por mes/año.
-
-        De esta manera siguen apareciendo
-        también las notificaciones anteriores.
-        */
 
         const {
             data,
@@ -402,6 +233,14 @@ export default function NotificacionesPrefectura({
             )
 
             .select("*")
+
+            .order(
+                "fecha_evento",
+                {
+                    ascending: false,
+                    nullsFirst: false
+                }
+            )
 
             .order(
                 "created_at",
@@ -427,229 +266,217 @@ export default function NotificacionesPrefectura({
             data || [];
 
 
-        if (
-            lista.length === 0
-        ) {
+        /*==========================================
+        IDS DE ALUMNOS
+        ==========================================*/
 
-            setNotificaciones([]);
-
-            actualizarContador?.();
-
-            return;
-
-        }
-
-
-        /*==============================================
-        CARGAR ALUMNOS
-        ==============================================*/
-
-        const ids = [
+        const alumnosIds = [
 
             ...new Set(
 
                 lista
-
+                    .filter(
+                        n =>
+                            n.alumno_id
+                    )
                     .map(
                         n =>
                             n.alumno_id
                     )
-
-                    .filter(Boolean)
 
             )
 
         ];
 
 
+        /*==========================================
+        IDS DE MAESTROS
+        ==========================================*/
+
+        const maestrosIds = [
+
+            ...new Set(
+
+                lista
+                    .filter(
+                        n =>
+                            n.maestro_id
+                    )
+                    .map(
+                        n =>
+                            String(
+                                n.maestro_id
+                            )
+                    )
+
+            )
+
+        ];
+
+
+        let alumnos = [];
+
+        let maestros = [];
+
+
         if (
-            ids.length === 0
+            alumnosIds.length > 0
         ) {
 
-            setNotificaciones(
-                lista
-            );
+            const {
+                data: datosAlumnos,
+                error: errorAlumnos
+            } = await supabase
 
-            return;
+                .from("alumnos")
 
-        }
+                .select(`
+                    id,
+                    nombre,
+                    apellido_paterno,
+                    apellido_materno,
+                    grupo
+                `)
 
-
-        const {
-            data: alumnos,
-            error: errorAlumnos
-        } = await supabase
-
-            .from("alumnos")
-
-            .select(`
-                id,
-                nombre,
-                apellido_paterno,
-                apellido_materno,
-                grupo
-            `)
-
-            .in(
-                "id",
-                ids
-            );
+                .in(
+                    "id",
+                    alumnosIds
+                );
 
 
-        if (errorAlumnos) {
+            if (errorAlumnos) {
 
-            console.log(
-                "Error cargando alumnos:",
-                errorAlumnos
-            );
+                console.log(
+                    errorAlumnos
+                );
 
-            return;
+            }
+
+            else {
+
+                alumnos =
+                    datosAlumnos || [];
+
+            }
 
         }
 
 
-        const mapa = {};
+        /*
+        maestro_id está guardado como texto,
+        por lo que cargamos maestros y después
+        relacionamos por String(id).
+        */
+
+        if (
+            maestrosIds.length > 0
+        ) {
+
+            const {
+                data: datosMaestros,
+                error: errorMaestros
+            } = await supabase
+
+                .from("maestros")
+
+                .select("*");
 
 
-        (alumnos || []).forEach(
+            if (errorMaestros) {
+
+                console.log(
+                    errorMaestros
+                );
+
+            }
+
+            else {
+
+                maestros =
+                    (datosMaestros || [])
+                        .filter(
+                            maestro =>
+                                maestrosIds.includes(
+                                    String(
+                                        maestro.id
+                                    )
+                                )
+                        );
+
+            }
+
+        }
+
+
+        const mapaAlumnos = {};
+
+        alumnos.forEach(
             alumno => {
 
-                mapa[
-                    alumno.id
+                mapaAlumnos[
+                    String(
+                        alumno.id
+                    )
                 ] = alumno;
 
             }
         );
 
 
-        const resultado =
+        const mapaMaestros = {};
+
+        maestros.forEach(
+            maestro => {
+
+                mapaMaestros[
+                    String(
+                        maestro.id
+                    )
+                ] = maestro;
+
+            }
+        );
+
+
+        setNotificaciones(
+
             lista.map(
                 notificacion => ({
 
                     ...notificacion,
 
                     alumno:
-                        mapa[
-                            notificacion.alumno_id
-                        ]
-                        || null
+                        notificacion.alumno_id
+                            ?
+                            mapaAlumnos[
+                                String(
+                                    notificacion.alumno_id
+                                )
+                            ]
+                            :
+                            null,
+
+                    maestro:
+                        notificacion.maestro_id
+                            ?
+                            mapaMaestros[
+                                String(
+                                    notificacion.maestro_id
+                                )
+                            ]
+                            :
+                            null
 
                 })
-            );
+            )
 
-
-        setNotificaciones(
-            resultado
         );
 
     }
 
 
     /*==================================================
-    MARCAR NUEVAS COMO VISTAS
-    ==================================================*/
-
-    async function marcarComoVistas() {
-
-        const hoy =
-            new Date();
-
-        const mesActual =
-            hoy.getMonth() + 1;
-
-        const anioActual =
-            hoy.getFullYear();
-
-
-        const {
-            error
-        } = await supabase
-
-            .from(
-                "notificaciones_prefectura"
-            )
-
-            .update({
-
-                vista:
-                    true,
-
-                vista_at:
-                    new Date()
-                        .toISOString()
-
-            })
-
-            .eq(
-                "vista",
-                false
-            )
-
-            .eq(
-                "mes",
-                mesActual
-            )
-
-            .eq(
-                "anio",
-                anioActual
-            );
-
-
-        if (error) {
-
-            console.log(
-                "Error marcando notificaciones como vistas:",
-                error
-            );
-
-            return;
-
-        }
-
-
-        /*
-        Actualizamos también localmente
-        para no depender de otra consulta.
-        */
-
-        setNotificaciones(
-            actuales =>
-                actuales.map(
-                    notificacion => {
-
-                        if (
-                            notificacion.mes === mesActual
-                            &&
-                            notificacion.anio === anioActual
-                        ) {
-
-                            return {
-
-                                ...notificacion,
-
-                                vista:
-                                    true
-
-                            };
-
-                        }
-
-
-                        return notificacion;
-
-                    }
-                )
-        );
-
-
-        actualizarContador?.();
-
-    }
-
-
-    /*==================================================
-    MARCAR COMO ATENDIDA
+    MARCAR ATENDIDA
     ==================================================*/
 
     async function marcarAtendida(
@@ -696,24 +523,16 @@ export default function NotificacionesPrefectura({
         }
 
 
-        /*
-        NO eliminamos la tarjeta.
-
-        Solo cambia su estado.
-        */
-
         setNotificaciones(
             actuales =>
                 actuales.map(
-                    notificacion => {
+                    notificacion =>
 
-                        if (
-                            notificacion.id
-                            === id
-                        ) {
+                        notificacion.id === id
 
-                            return {
+                            ?
 
+                            {
                                 ...notificacion,
 
                                 atendida:
@@ -721,15 +540,11 @@ export default function NotificacionesPrefectura({
 
                                 atendida_at:
                                     fecha
+                            }
 
-                            };
+                            :
 
-                        }
-
-
-                        return notificacion;
-
-                    }
+                            notificacion
                 )
         );
 
@@ -740,8 +555,21 @@ export default function NotificacionesPrefectura({
 
 
     /*==================================================
-    TÍTULO DE LA FECHA
+    FECHAS
     ==================================================*/
+
+    function obtenerFechaNotificacion(
+        notificacion
+    ) {
+
+        return (
+            notificacion.fecha_evento
+            ||
+            notificacion.created_at
+        );
+
+    }
+
 
     function tituloFecha(
         fecha
@@ -754,11 +582,37 @@ export default function NotificacionesPrefectura({
         }
 
 
+        /*
+        Evitamos problemas de timezone
+        con columnas DATE.
+        */
+
+        const soloFecha =
+            String(fecha)
+                .slice(0, 10);
+
+
+        const [
+            anio,
+            mes,
+            dia
+        ] =
+            soloFecha
+                .split("-")
+                .map(Number);
+
+
         const fechaNotificacion =
-            new Date(fecha);
+            new Date(
+                anio,
+                mes - 1,
+                dia
+            );
+
 
         const hoy =
             new Date();
+
 
         const ayer =
             new Date();
@@ -832,10 +686,14 @@ export default function NotificacionesPrefectura({
                             .getFullYear()
                         !==
                         hoy.getFullYear()
-                        ?
-                        "numeric"
-                        :
-                        undefined
+
+                            ?
+
+                            "numeric"
+
+                            :
+
+                            undefined
                 }
             );
 
@@ -843,62 +701,389 @@ export default function NotificacionesPrefectura({
 
 
     /*==================================================
-    AGRUPAR POR DÍA
+    AGRUPAR POR FECHA
     ==================================================*/
 
-    const notificacionesPorDia =
-        notificaciones.reduce(
-            (
-                grupos,
-                notificacion
-            ) => {
+    const grupos =
+        useMemo(() => {
 
-                const titulo =
-                    tituloFecha(
-                        notificacion.created_at
+            const resultado = [];
+
+
+            notificaciones.forEach(
+                notificacion => {
+
+                    const fecha =
+                        obtenerFechaNotificacion(
+                            notificacion
+                        );
+
+
+                    const clave =
+                        String(fecha)
+                            .slice(0, 10);
+
+
+                    let grupo =
+                        resultado.find(
+                            item =>
+                                item.clave === clave
+                        );
+
+
+                    if (!grupo) {
+
+                        grupo = {
+
+                            clave,
+
+                            titulo:
+                                tituloFecha(
+                                    fecha
+                                ),
+
+                            notificaciones:
+                                []
+
+                        };
+
+
+                        resultado.push(
+                            grupo
+                        );
+
+                    }
+
+
+                    grupo.notificaciones.push(
+                        notificacion
                     );
 
-
-                if (
-                    !grupos[titulo]
-                ) {
-
-                    grupos[titulo] = [];
-
                 }
+            );
 
 
-                grupos[titulo].push(
-                    notificacion
-                );
+            return resultado;
 
-
-                return grupos;
-
-            },
-            {}
-        );
+        }, [notificaciones]);
 
 
     /*==================================================
-    CONTADOR DE PENDIENTES
-
-    Este número NO es el badge rojo.
-
-    Solo sirve para informar dentro
-    de la pantalla cuántas siguen sin atender.
+    DATOS VISUALES
     ==================================================*/
+
+    function obtenerDatos(
+        notificacion
+    ) {
+
+        const cantidad =
+            notificacion.cantidad
+            ||
+            notificacion.tardanzas
+            ||
+            0;
+
+
+        switch (
+            notificacion.tipo
+        ) {
+
+            /*------------------------------------------
+            TARDANZAS ALUMNO
+            ------------------------------------------*/
+
+            case "tardanza_2":
+            case "alumno_tardanza_2":
+
+                return {
+
+                    icono:
+                        Clock3,
+
+                    urgente:
+                        false,
+
+                    titulo:
+                        "Avisar al tutor",
+
+                    mensaje:
+                        "2 tardanzas. La próxima impedirá el ingreso al salón.",
+
+                    badge:
+                        "2 tardanzas"
+
+                };
+
+
+            case "tardanza_3":
+            case "alumno_tardanza_reincidente":
+
+                return {
+
+                    icono:
+                        TriangleAlert,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "No ingresa al salón",
+
+                    mensaje:
+                        `${cantidad} tardanzas acumuladas este mes.`,
+
+                    badge:
+                        `${cantidad} tardanzas`
+
+                };
+
+
+            /*------------------------------------------
+            AUSENCIAS ALUMNO
+            ------------------------------------------*/
+
+            case "alumno_ausencia_2":
+
+                return {
+
+                    icono:
+                        CircleX,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Alumno reincidente",
+
+                    mensaje:
+                        "2 ausencias acumuladas este mes.",
+
+                    badge:
+                        "2 ausencias"
+
+                };
+
+
+            case "alumno_ausencia_reincidente":
+
+                return {
+
+                    icono:
+                        CircleX,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Nueva ausencia",
+
+                    mensaje:
+                        `${cantidad} ausencias acumuladas.`,
+
+                    badge:
+                        `${cantidad} ausencias`
+
+                };
+
+
+            case "alumno_reincidente_reporte":
+
+                return {
+
+                    icono:
+                        FileWarning,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Nuevo reporte (alumno reincidente)",
+
+                    mensaje:
+                        "Este alumno alcanzó el criterio de reincidencia por ausencias y acaba de recibir un nuevo reporte",
+
+                    badge:
+                        "Reporte"
+
+                };
+
+
+            /*------------------------------------------
+            FALTAS MAESTRO
+            ------------------------------------------*/
+
+            case "maestro_falta_2":
+
+                return {
+
+                    icono:
+                        CircleX,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Maestro reincidente",
+
+                    mensaje:
+                        "2 faltas acumuladas este mes.",
+
+                    badge:
+                        "2 faltas"
+
+                };
+
+
+            case "maestro_falta_reincidente":
+
+                return {
+
+                    icono:
+                        CircleX,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Nueva falta de maestro reincidente",
+
+                    mensaje:
+                        `El maestro acumula ${cantidad} faltas durante este mes.`,
+
+                    badge:
+                        `${cantidad} faltas`
+
+                };
+
+
+            /*------------------------------------------
+            RECREO
+            ------------------------------------------*/
+
+            case "maestro_recreo_2":
+
+                return {
+
+                    icono:
+                        Coffee,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Guardia de recreo",
+
+                    mensaje:
+                        "2 incumplimientos este mes.",
+
+                    badge:
+                        "2 incumplimientos"
+
+                };
+
+
+            case "maestro_recreo_reincidente":
+
+                return {
+
+                    icono:
+                        Coffee,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Nuevo incumplimiento de recreo",
+
+                    mensaje:
+                        `El maestro acumula ${cantidad} incumplimientos de guardia de recreo este mes.`,
+
+                    badge:
+                        `${cantidad} recreos`
+
+                };
+
+
+            /*------------------------------------------
+            SALIDA
+            ------------------------------------------*/
+
+            case "maestro_salida_2":
+
+                return {
+
+                    icono:
+                        LogOut,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Incumplimiento reincidente de guardia",
+
+                    mensaje:
+                        "El maestro acumula 2 incumplimientos de guardia de salida este mes. Los días en los que faltó no se contabilizan.",
+
+                    badge:
+                        "2 salidas"
+
+                };
+
+
+            case "maestro_salida_reincidente":
+
+                return {
+
+                    icono:
+                        LogOut,
+
+                    urgente:
+                        true,
+
+                    titulo:
+                        "Nuevo incumplimiento de salida",
+
+                    mensaje:
+                        `El maestro acumula ${cantidad} incumplimientos de guardia de salida este mes.`,
+
+                    badge:
+                        `${cantidad} salidas`
+
+                };
+
+
+            default:
+
+                return {
+
+                    icono:
+                        Bell,
+
+                    urgente:
+                        false,
+
+                    titulo:
+                        "Notificación",
+
+                    mensaje:
+                        "Existe una nueva alerta que requiere revisión.",
+
+                    badge:
+                        "Alerta"
+
+                };
+
+        }
+
+    }
+
 
     const pendientes =
         notificaciones.filter(
-            n =>
-                !n.atendida
+            notificacion =>
+                !notificacion.atendida
         ).length;
 
-
-    /*==================================================
-    NO RENDERIZAR
-    ==================================================*/
 
     if (!abierto) {
 
@@ -911,33 +1096,28 @@ export default function NotificacionesPrefectura({
     JSX
     ==================================================*/
 
-    return (
+    return createPortal(
+
+    <div
+
+        className="notif-overlay"
+
+        onClick={cerrar}
+
+    >
 
         <div
 
-            className="notif-overlay"
+            className="notif-panel"
 
-            onClick={
-                cerrar
+            onClick={e =>
+                e.stopPropagation()
             }
 
         >
 
-            <div
 
-                className="notif-panel"
-
-                onClick={
-                    e =>
-                        e.stopPropagation()
-                }
-
-            >
-
-
-                {/*=====================================
-                HEADER
-                =====================================*/}
+                {/* HEADER */}
 
                 <div className="notif-header">
 
@@ -962,12 +1142,11 @@ export default function NotificacionesPrefectura({
 
                             <span>
 
-                                Alertas de Prefectura
+                                Centro de alertas de Prefectura
 
                             </span>
 
                         </div>
-
 
                     </div>
 
@@ -993,10 +1172,41 @@ export default function NotificacionesPrefectura({
 
                 </div>
 
+                {
+                    !pushActivo
+                    &&
 
-                {/*=====================================
-                CONTENIDO
-                =====================================*/}
+                    <button
+
+                        type="button"
+
+                        className="notif-activar-push"
+
+                        onClick={
+                            activarNotificacionesTelefono
+                        }
+
+                        disabled={
+                            activandoPush
+                        }
+
+                    >
+
+                        <Bell size={16}/>
+
+                        {
+                            activandoPush
+                                ?
+                                "Activando..."
+                                :
+                                "Activar notificaciones del teléfono"
+                        }
+
+                    </button>
+                }
+
+
+                {/* CONTENT */}
 
                 <div className="notif-content">
 
@@ -1008,7 +1218,7 @@ export default function NotificacionesPrefectura({
 
                             <div className="notif-vacio">
 
-                                Cargando...
+                                Revisando alertas...
 
                             </div>
 
@@ -1039,8 +1249,7 @@ export default function NotificacionesPrefectura({
 
                                     <span>
 
-                                        Cuando se genere una alerta,
-                                        aparecerá aquí.
+                                        No existen alertas registradas.
 
                                     </span>
 
@@ -1051,10 +1260,6 @@ export default function NotificacionesPrefectura({
 
                                 <>
 
-
-                                    {/*=================================
-                                    RESUMEN
-                                    =================================*/}
 
                                     <div className="notif-resumen">
 
@@ -1070,14 +1275,10 @@ export default function NotificacionesPrefectura({
 
                                             {
                                                 pendientes === 1
-
                                                     ?
-
-                                                    "pendiente de atender"
-
+                                                    "alerta pendiente"
                                                     :
-
-                                                    "pendientes de atender"
+                                                    "alertas pendientes"
                                             }
 
                                         </span>
@@ -1085,25 +1286,14 @@ export default function NotificacionesPrefectura({
                                     </div>
 
 
-                                    {/*=================================
-                                    HISTORIAL AGRUPADO
-                                    =================================*/}
-
                                     {
-                                        Object.entries(
-                                            notificacionesPorDia
-                                        ).map(
-                                            (
-                                                [
-                                                    dia,
-                                                    lista
-                                                ]
-                                            ) => (
+                                        grupos.map(
+                                            grupo => (
 
-                                                <div
+                                                <section
 
                                                     key={
-                                                        dia
+                                                        grupo.clave
                                                     }
 
                                                     className="notif-dia"
@@ -1114,29 +1304,63 @@ export default function NotificacionesPrefectura({
                                                     <div className="notif-dia-titulo">
 
                                                         {
-                                                            dia
+                                                            grupo.titulo
                                                         }
 
                                                     </div>
 
 
                                                     {
-                                                        lista.map(
+                                                        grupo.notificaciones.map(
                                                             notificacion => {
 
-                                                                const alumno =
-                                                                    notificacion.alumno;
+                                                                const datos =
+                                                                    obtenerDatos(
+                                                                        notificacion
+                                                                    );
 
 
-                                                                const esTercera =
-                                                                    notificacion.tipo
-                                                                    ===
-                                                                    "tardanza_3";
+                                                                const Icono =
+                                                                    datos.icono;
+
+
+                                                                const persona =
+                                                                    notificacion.entidad_tipo
+                                                                    === "maestro"
+
+                                                                        ?
+
+                                                                        notificacion.maestro
+
+                                                                        :
+
+                                                                        notificacion.alumno;
+
+
+                                                                const nombre =
+                                                                    persona
+
+                                                                        ?
+
+                                                                        `${persona.nombre || ""} ${persona.apellido_paterno || ""} ${persona.apellido_materno || ""}`
+
+                                                                        :
+
+                                                                        notificacion.entidad_tipo
+                                                                        === "maestro"
+
+                                                                            ?
+
+                                                                            "Maestro"
+
+                                                                            :
+
+                                                                            "Alumno";
 
 
                                                                 return (
 
-                                                                    <div
+                                                                    <article
 
                                                                         key={
                                                                             notificacion.id
@@ -1144,7 +1368,7 @@ export default function NotificacionesPrefectura({
 
                                                                         className={
 
-                                                                            esTercera
+                                                                            datos.urgente
 
                                                                                 ?
 
@@ -1159,15 +1383,11 @@ export default function NotificacionesPrefectura({
                                                                     >
 
 
-                                                                        {/*=============================
-                                                                        ICONO
-                                                                        =============================*/}
-
                                                                         <div
 
                                                                             className={
 
-                                                                                esTercera
+                                                                                datos.urgente
 
                                                                                     ?
 
@@ -1181,28 +1401,12 @@ export default function NotificacionesPrefectura({
 
                                                                         >
 
-                                                                            {
-                                                                                esTercera
-
-                                                                                    ?
-
-                                                                                    <TriangleAlert
-                                                                                        size={22}
-                                                                                    />
-
-                                                                                    :
-
-                                                                                    <UserRound
-                                                                                        size={22}
-                                                                                    />
-                                                                            }
+                                                                            <Icono
+                                                                                size={22}
+                                                                            />
 
                                                                         </div>
 
-
-                                                                        {/*=============================
-                                                                        INFO
-                                                                        =============================*/}
 
                                                                         <div className="notif-card-info">
 
@@ -1215,19 +1419,7 @@ export default function NotificacionesPrefectura({
                                                                                     <h3>
 
                                                                                         {
-                                                                                            alumno?.nombre
-                                                                                            ||
-                                                                                            "Alumno"
-                                                                                        }{" "}
-
-                                                                                        {
-                                                                                            alumno?.apellido_paterno
-                                                                                            || ""
-                                                                                        }{" "}
-
-                                                                                        {
-                                                                                            alumno?.apellido_materno
-                                                                                            || ""
+                                                                                            nombre
                                                                                         }
 
                                                                                     </h3>
@@ -1236,9 +1428,26 @@ export default function NotificacionesPrefectura({
                                                                                     <span>
 
                                                                                         {
-                                                                                            alumno?.grupo
-                                                                                            ||
-                                                                                            "Sin grupo"
+                                                                                            notificacion.entidad_tipo
+                                                                                            === "maestro"
+
+                                                                                                ?
+
+                                                                                                (
+                                                                                                    persona?.grupo
+                                                                                                    ?
+                                                                                                    `Maestro · ${persona.grupo}`
+                                                                                                    :
+                                                                                                    "Maestro"
+                                                                                                )
+
+                                                                                                :
+
+                                                                                                (
+                                                                                                    persona?.grupo
+                                                                                                    ||
+                                                                                                    "Alumno"
+                                                                                                )
                                                                                         }
 
                                                                                     </span>
@@ -1250,7 +1459,7 @@ export default function NotificacionesPrefectura({
 
                                                                                     className={
 
-                                                                                        esTercera
+                                                                                        datos.urgente
 
                                                                                             ?
 
@@ -1264,12 +1473,8 @@ export default function NotificacionesPrefectura({
 
                                                                                 >
 
-                                                                                    <Clock3
-                                                                                        size={14}
-                                                                                    />
-
                                                                                     {
-                                                                                        notificacion.tardanzas
+                                                                                        datos.badge
                                                                                     }
 
                                                                                 </div>
@@ -1278,67 +1483,43 @@ export default function NotificacionesPrefectura({
                                                                             </div>
 
 
-                                                                            {/*=========================
-                                                                            MENSAJE
-                                                                            =========================*/}
+                                                                            <div
 
-                                                                            {
-                                                                                !esTercera
+                                                                                className={
 
-                                                                                    ?
+                                                                                    datos.urgente
 
-                                                                                    <div className="notif-mensaje">
+                                                                                        ?
 
-                                                                                        <strong>
+                                                                                        "notif-mensaje urgente"
 
-                                                                                            Avisar al padre o tutor
+                                                                                        :
 
-                                                                                        </strong>
+                                                                                        "notif-mensaje"
 
+                                                                                }
 
-                                                                                        <p>
+                                                                            >
 
-                                                                                            El alumno ha acumulado
-                                                                                            2 tardanzas este mes.
+                                                                                <strong>
 
-                                                                                            Informe al padre o tutor
-                                                                                            que, si vuelve a llegar
-                                                                                            tarde, no podrá ingresar
-                                                                                            a su salón de clases.
+                                                                                    {
+                                                                                        datos.titulo
+                                                                                    }
 
-                                                                                        </p>
-
-                                                                                    </div>
-
-                                                                                    :
-
-                                                                                    <div className="notif-mensaje urgente">
-
-                                                                                        <strong>
-
-                                                                                            Alerta: tercera tardanza
-
-                                                                                        </strong>
+                                                                                </strong>
 
 
-                                                                                        <p>
+                                                                                <p>
 
-                                                                                            El alumno ha acumulado
-                                                                                            3 tardanzas durante este mes.
+                                                                                    {
+                                                                                        datos.mensaje
+                                                                                    }
 
-                                                                                            De acuerdo con la medida
-                                                                                            establecida, no podrá ingresar
-                                                                                            a su salón de clases.
+                                                                                </p>
 
-                                                                                        </p>
+                                                                            </div>
 
-                                                                                    </div>
-                                                                            }
-
-
-                                                                            {/*=========================
-                                                                            ESTADO
-                                                                            =========================*/}
 
                                                                             {
                                                                                 notificacion.atendida
@@ -1384,7 +1565,7 @@ export default function NotificacionesPrefectura({
                                                                         </div>
 
 
-                                                                    </div>
+                                                                    </article>
 
                                                                 );
 
@@ -1393,7 +1574,7 @@ export default function NotificacionesPrefectura({
                                                     }
 
 
-                                                </div>
+                                                </section>
 
                                             )
                                         )
@@ -1409,9 +1590,10 @@ export default function NotificacionesPrefectura({
 
             </div>
 
+    </div>,
 
-        </div>
+    document.body
 
-    );
+);
 
 }

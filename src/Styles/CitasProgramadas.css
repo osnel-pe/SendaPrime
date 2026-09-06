@@ -1,102 +1,225 @@
+/*=========================================
+BARRA SUPERIOR
+NUEVA CITA + HORARIO
+=========================================*/
+
 .agenda-toolbar{
 
-display:flex;
+    width:100%;
 
-justify-content:center;
+    display:flex;
 
-margin:8px 0 14px;
+    align-items:center;
+
+    justify-content:space-between;
+
+    gap:12px;
+
+    margin:8px 0 14px;
 
 }
+
+
+/*=========================================
+NUEVA CITA
+=========================================*/
 
 .agenda-add{
 
-height:46px;
+    height:46px;
 
-padding:0 18px;
+    padding:0 18px;
 
-border:none;
+    border:none;
 
-border-radius:18px;
+    border-radius:18px;
 
-background:#228b52;
+    background:#228b52;
 
-color:white;
+    color:white;
 
-font-weight:700;
+    font-weight:700;
 
-display:flex;
+    display:flex;
 
-align-items:center;
+    align-items:center;
 
-gap:8px;
+    justify-content:center;
 
-cursor:pointer;
+    gap:8px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 8px 20px
+        rgba(0,0,0,.15);
+
+    transition:
+        transform .18s ease,
+        filter .18s ease;
 
 }
+
+
+.agenda-add:active{
+
+    transform:scale(.96);
+
+}
+
+
+/*=========================================
+BOTÓN HORARIO
+=========================================*/
+
+.agenda-horario{
+
+    width:46px;
+
+    height:46px;
+
+    flex:0 0 46px;
+
+    padding:0;
+
+    border:none;
+
+    border-radius:16px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    color:#effff5;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(34,139,82,.95),
+            rgba(58,176,108,.78)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.18);
+
+    box-shadow:
+        0 8px 20px
+        rgba(0,0,0,.16);
+
+    backdrop-filter:
+        blur(14px);
+
+    -webkit-backdrop-filter:
+        blur(14px);
+
+    cursor:pointer;
+
+    transition:
+        transform .18s ease,
+        filter .18s ease;
+
+}
+
+
+.agenda-horario:hover{
+
+    filter:brightness(1.08);
+
+}
+
+
+.agenda-horario:active{
+
+    transform:scale(.94);
+
+}
+
+
+/*=========================================
+LISTA
+=========================================*/
 
 .agenda-lista{
 
-display:flex;
+    display:flex;
 
-flex-direction:column;
+    flex-direction:column;
 
-flex:1;
+    flex:1;
 
-min-height:0;
+    min-height:0;
 
-padding:16px;
+    padding:16px;
 
-border-radius:28px;
+    border-radius:28px;
 
-background:linear-gradient(
-135deg,
-rgba(255,255,255,.14),
-rgba(255,255,255,.08)
-);
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255,255,255,.14),
+            rgba(255,255,255,.08)
+        );
 
-backdrop-filter:blur(22px);
+    backdrop-filter:
+        blur(22px);
 
--webkit-backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:
+        blur(22px);
 
-overflow-y:auto;
+    overflow-y:auto;
 
-box-sizing:border-box;
+    box-sizing:border-box;
 
 }
+
 
 .ps-container{
 
-height:100vh;
+    height:100vh;
 
-display:flex;
+    display:flex;
 
-flex-direction:column;
+    flex-direction:column;
 
 }
+
+
+/*=========================================
+SIN CITAS
+=========================================*/
 
 .agenda-vacia{
 
-flex:1;
+    flex:1;
 
-display:flex;
+    display:flex;
 
-justify-content:center;
+    justify-content:center;
 
-align-items:center;
+    align-items:center;
 
-font-size:18px;
+    font-size:18px;
 
-color:white;
+    color:white;
 
-opacity:.9;
+    opacity:.9;
 
 }
+
+
+/*=========================================
+DÍAS
+=========================================*/
 
 .agenda-dia{
 
-margin-bottom:10px;
+    margin-bottom:10px;
 
 }
+
 
 .agenda-fecha{
 
@@ -116,6 +239,7 @@ margin-bottom:10px;
 
 }
 
+
 .agenda-fecha::before{
 
     content:"";
@@ -132,6 +256,11 @@ margin-bottom:10px;
 
 }
 
+
+/*=========================================
+CITA
+=========================================*/
+
 .agenda-item{
 
     display:flex;
@@ -146,13 +275,23 @@ margin-bottom:10px;
 
     border-radius:18px;
 
-    background:rgba(255,255,255,.82);
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            .82
+        );
 
-    backdrop-filter:blur(18px);
+    backdrop-filter:
+        blur(18px);
 
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+    box-shadow:
+        0 8px 20px
+        rgba(0,0,0,.08);
 
 }
+
 
 .agenda-hora{
 
@@ -166,11 +305,13 @@ margin-bottom:10px;
 
 }
 
+
 .agenda-info{
 
-flex:1;
+    flex:1;
 
 }
+
 
 .agenda-info h3{
 
@@ -184,6 +325,7 @@ flex:1;
 
 }
 
+
 .agenda-info p{
 
     margin-top:2px;
@@ -194,70 +336,80 @@ flex:1;
 
 }
 
+
+/*=========================================
+EDITAR / ELIMINAR
+=========================================*/
+
 .agenda-acciones{
 
-display:flex;
+    display:flex;
 
-flex-direction:column;
+    flex-direction:column;
 
-gap:6px;
+    gap:6px;
 
 }
+
 
 .agenda-icon{
 
-width:30px;
+    width:30px;
 
-height:30px;
+    height:30px;
 
-border:none;
+    border:none;
 
-border-radius:50%;
+    border-radius:50%;
 
-display:flex;
+    display:flex;
 
-justify-content:center;
+    justify-content:center;
 
-align-items:center;
+    align-items:center;
 
-cursor:pointer;
+    cursor:pointer;
 
-transition:.25s;
+    transition:.25s;
 
 }
+
 
 .editar{
 
-background:#E8F7EE;
+    background:#E8F7EE;
 
-color:#20814B;
+    color:#20814B;
 
 }
+
 
 .editar:hover{
 
-background:#20814B;
+    background:#20814B;
 
-color:white;
+    color:white;
 
-transform:scale(1.08);
+    transform:scale(1.08);
 
 }
+
 
 .eliminar{
 
-background:#FFECEC;
+    background:#FFECEC;
 
-color:#D03C3C;
+    color:#D03C3C;
 
 }
 
+
 .eliminar:hover{
 
-background:#D03C3C;
+    background:#D03C3C;
 
-color:white;
+    color:white;
 
-transform:scale(1.08);
+    transform:scale(1.08);
 
 }

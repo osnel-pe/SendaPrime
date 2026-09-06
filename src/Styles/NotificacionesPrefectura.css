@@ -225,11 +225,12 @@ CONTENIDO
 
 .notif-content{
 
-    flex:1;
+    padding:12px;
 
     overflow-y:auto;
 
-    padding:16px;
+    max-height:
+        calc(88vh - 80px);
 
 }
 
@@ -299,24 +300,22 @@ TARJETA
 
 .notif-card{
 
-    display:flex;
+    display:grid;
 
-    align-items:flex-start;
+    grid-template-columns:
+        38px
+        minmax(0,1fr);
 
-    gap:12px;
+    gap:9px;
 
-    width:100%;
+    padding:10px;
 
-    margin-bottom:12px;
+    margin-bottom:7px;
 
-    padding:14px;
-
-    box-sizing:border-box;
-
-    border-radius:17px;
+    border-radius:13px;
 
     background:
-        rgba(255,255,255,.085);
+        rgba(255,255,255,.07);
 
     border:
         1px solid
@@ -326,11 +325,8 @@ TARJETA
 
 .notif-card-icon{
 
-    width:40px;
-
-    height:40px;
-
-    flex-shrink:0;
+    width:36px;
+    height:36px;
 
     display:flex;
 
@@ -338,12 +334,12 @@ TARJETA
 
     justify-content:center;
 
-    border-radius:13px;
+    border-radius:11px;
 
     background:
-        rgba(255,193,7,.13);
+        rgba(43,181,105,.13);
 
-    color:#ffd24a;
+    color:#66df9e;
 
 }
 
@@ -363,32 +359,29 @@ TARJETA
 
     justify-content:space-between;
 
-    gap:10px;
+    gap:8px;
 
 }
 
-.notif-card h3{
+.notif-card-top h3{
 
     margin:0;
 
-    color:white;
+    color:#fff;
 
-    font-size:15px;
+    font-size:12px;
 
     line-height:1.2;
 
 }
 
+
 .notif-card-top span{
 
-    display:block;
-
-    margin-top:4px;
-
-    font-size:12px;
+    font-size:9px;
 
     color:
-        rgba(255,255,255,.62);
+        rgba(255,255,255,.55);
 
 }
 
@@ -401,23 +394,18 @@ BADGE TARDANZAS
 
     flex-shrink:0;
 
-    display:flex;
-
-    align-items:center;
-
-    gap:4px;
-
-    padding:5px 8px;
+    padding:4px 7px;
 
     border-radius:999px;
 
-    background:#d99f00;
-
-    color:white;
-
-    font-size:11px;
+    font-size:8px;
 
     font-weight:800;
+
+    color:#ffd85a;
+
+    background:
+        rgba(255,193,7,.12);
 
 }
 
@@ -428,41 +416,44 @@ MENSAJE
 
 .notif-mensaje{
 
-    margin-top:11px;
+    margin-top:7px;
 
-    padding:10px 11px;
+    padding:7px 8px;
 
-    border-radius:12px;
+    border-radius:9px;
 
     background:
-        rgba(0,0,0,.15);
+        rgba(0,0,0,.12);
 
 }
+
 
 .notif-mensaje strong{
 
     display:block;
 
-    margin-bottom:5px;
+    margin-bottom:2px;
 
-    color:#ffd65a;
+    color:#fff;
 
-    font-size:12px;
+    font-size:10px;
 
 }
+
 
 .notif-mensaje p{
 
     margin:0;
 
     color:
-        rgba(255,255,255,.77);
+        rgba(255,255,255,.66);
 
-    font-size:12px;
+    font-size:9px;
 
-    line-height:1.5;
+    line-height:1.35;
 
 }
+
 
 
 /*=========================================
@@ -593,18 +584,19 @@ ALERTA URGENTE - 3 TARDANZAS
 .notif-card-icon.urgente{
 
     background:
-        rgba(239,68,68,.17);
+        rgba(239,68,68,.13);
 
-    color:#ff6565;
+    color:#ff7575;
 
 }
 
 
 .notif-tardanzas.urgente{
 
-    background:#dc2626;
+    color:#ff7777;
 
-    color:white;
+    background:
+        rgba(239,68,68,.12);
 
 }
 
@@ -719,25 +711,100 @@ BOTÓN ATENDIDA
 
 .notif-dia{
 
-    margin-bottom:16px;
+    margin-bottom:14px;
 
 }
 
 .notif-dia-titulo{
 
     margin:
-        2px 0
-        8px;
+        4px 0
+        7px;
 
     padding-left:3px;
+
+    font-size:10px;
+
+    font-weight:800;
 
     color:
         rgba(255,255,255,.55);
 
-    font-size:11px;
+    text-transform:
+        uppercase;
+
+}
+
+.notif-activar-push{
+
+    width:100%;
+
+    min-height:42px;
+
+    margin-bottom:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    gap:8px;
+
+    background:#166b43;
+
+    color:white;
+
+    font-size:12px;
 
     font-weight:800;
 
-    text-transform:capitalize;
+    cursor:pointer;
+
+}
+
+.notif-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:2147483000;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:16px;
+
+    background:
+        rgba(0,0,0,.62);
+
+    backdrop-filter:
+        blur(7px);
+
+    -webkit-backdrop-filter:
+        blur(7px);
+
+}
+
+.notif-atendida-btn,
+.notif-atendida-estado{
+
+    min-height:31px;
+
+    margin-top:7px;
+
+    padding:6px 9px;
+
+    border-radius:9px;
+
+    font-size:9px;
 
 }

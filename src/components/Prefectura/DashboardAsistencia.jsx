@@ -111,6 +111,74 @@ export default function DashboardAsistencia({
 
     }, [students]);
 
+    useEffect(() => {
+
+    const canal =
+        supabase
+
+            .channel(
+                "dashboard-asistencia"
+            )
+
+            .on(
+                "postgres_changes",
+                {
+                    event:
+                        "*",
+
+                    schema:
+                        "public",
+
+                    table:
+                        "asistencia_prefectura"
+                },
+
+                () => {
+
+                    cargar();
+
+                }
+            )
+
+            .subscribe();
+
+
+    return () => {
+
+        supabase
+            .removeChannel(
+                canal
+            );
+
+    };
+
+}, [students]);
+
+
+useEffect(() => {
+
+    function actualizarDashboard() {
+
+        cargar();
+
+    }
+
+    window.addEventListener(
+        "prefectura-actualizada",
+        actualizarDashboard
+    );
+
+    return () => {
+
+        window.removeEventListener(
+            "prefectura-actualizada",
+            actualizarDashboard
+        );
+
+    };
+
+}, [students]);
+
 
     async function cargar() {
 

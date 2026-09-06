@@ -62,3 +62,282 @@ async function handleShare(event) {
     return Response.redirect("/", 303);
 
 }
+
+/*==================================================
+PUSH NOTIFICATIONS
+==================================================*/
+
+self.addEventListener(
+    "push",
+    event => {
+
+        let datos = {};
+
+        try {
+
+            datos =
+                event.data
+                    ? event.data.json()
+                    : {};
+
+        }
+
+        catch {
+
+            datos = {
+                title: "SendaPrime",
+                body: "Tienes una nueva notificación."
+            };
+
+        }
+
+
+        const titulo =
+            datos.title
+            || "SendaPrime";
+
+
+        const opciones = {
+
+            body:
+                datos.body
+                || "Nueva alerta de Prefectura.",
+
+            icon:
+                "/icon-192.png",
+
+            badge:
+                "/icon-192.png",
+
+            data: {
+
+                url:
+                    datos.url
+                    || "/"
+
+            },
+
+            tag:
+                datos.tag
+                || "senda-prefectura",
+
+            renotify:
+                true
+
+        };
+
+
+        event.waitUntil(
+
+            self.registration
+                .showNotification(
+                    titulo,
+                    opciones
+                )
+
+        );
+
+    }
+);
+
+
+/*==================================================
+AL TOCAR LA NOTIFICACIÓN
+==================================================*/
+
+self.addEventListener(
+    "notificationclick",
+    event => {
+
+        event.notification.close();
+
+
+        const url =
+            event.notification
+                ?.data
+                ?.url
+            || "/";
+
+
+        event.waitUntil(
+
+            clients.matchAll({
+
+                type: "window",
+
+                includeUncontrolled:
+                    true
+
+            })
+            .then(
+                ventanas => {
+
+                    for (
+                        const ventana
+                        of ventanas
+                    ) {
+
+                        if (
+                            "focus"
+                            in ventana
+                        ) {
+
+                            ventana.navigate(
+                                url
+                            );
+
+                            return ventana.focus();
+
+                        }
+
+                    }
+
+
+                    return clients.openWindow(
+                        url
+                    );
+
+                }
+            )
+
+        );
+
+    }
+);
+
+/*==================================================
+PUSH
+==================================================*/
+
+self.addEventListener(
+    "push",
+    event => {
+
+        let datos = {};
+
+        try {
+
+            datos =
+                event.data
+                    ? event.data.json()
+                    : {};
+
+        }
+
+        catch {
+
+            datos = {};
+
+        }
+
+
+        const titulo =
+            datos.title
+            || "SendaPrime";
+
+
+        event.waitUntil(
+
+            self.registration
+                .showNotification(
+
+                    titulo,
+
+                    {
+
+                        body:
+                            datos.body
+                            || "Nueva alerta de Prefectura.",
+
+                        icon:
+                            "/icon-192.png",
+
+                        badge:
+                            "/icon-192.png",
+
+                        data: {
+
+                            url:
+                                datos.url
+                                || "/"
+
+                        },
+
+                        tag:
+                            datos.tag
+                            || `senda-${Date.now()}`
+
+                    }
+
+                )
+
+        );
+
+    }
+);
+
+
+/*==================================================
+TOCAR NOTIFICACIÓN
+==================================================*/
+
+self.addEventListener(
+    "notificationclick",
+    event => {
+
+        event.notification.close();
+
+
+        const destino =
+            event.notification
+                ?.data
+                ?.url
+            || "/";
+
+
+        event.waitUntil(
+
+            self.clients
+                .matchAll({
+
+                    type:
+                        "window",
+
+                    includeUncontrolled:
+                        true
+
+                })
+                .then(
+                    ventanas => {
+
+                        if (
+                            ventanas.length
+                            > 0
+                        ) {
+
+                            const ventana =
+                                ventanas[0];
+
+
+                            ventana.navigate(
+                                destino
+                            );
+
+
+                            return ventana.focus();
+
+                        }
+
+
+                        return self.clients
+                            .openWindow(
+                                destino
+                            );
+
+                    }
+                )
+
+        );
+
+    }
+);

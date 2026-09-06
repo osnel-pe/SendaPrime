@@ -1,34 +1,65 @@
+import { useState } from "react";
+import { CalendarDays } from "lucide-react";
+
 import DashboardAsistencia from "../components/Prefectura/DashboardAsistencia";
+import HorarioGrupoModal from "../components/Prefectura/HorarioGrupoModal";
 
 import "../Styles/InicioPrefectura.css";
 
 export default function InicioPrefectura({
 
-    students=[],
+    students = [],
     setAlumnoSeleccionado,
     cambiarPantalla,
     setModuloPerfil,
     setResumenAsistencia
 
-}){
+}) {
 
-    return(
+    const [
+        mostrarHorario,
+        setMostrarHorario
+    ] = useState(false);
+
+    return (
 
         <div className="inicio-prefectura">
 
             <div className="inicio-header">
 
-                <h2>
+                <div className="inicio-header-texto">
 
-                    Asistencia
+                    <h2>
+                        Asistencia
+                    </h2>
 
-                </h2>
+                    <p>
+                        Resumen del día
+                    </p>
 
-                <p>
+                </div>
 
-                    Resumen del día
+                <button
 
-                </p>
+                    type="button"
+
+                    className="inicio-horario-btn"
+
+                    onClick={() =>
+                        setMostrarHorario(true)
+                    }
+
+                    aria-label="Ver horario de grupos"
+
+                    title="Ver horario"
+
+                >
+
+                    <CalendarDays
+                        size={21}
+                    />
+
+                </button>
 
             </div>
 
@@ -45,6 +76,18 @@ export default function InicioPrefectura({
                 setResumenAsistencia={setResumenAsistencia}
 
             />
+
+            {
+                mostrarHorario
+                &&
+                <HorarioGrupoModal
+
+                    cerrar={() =>
+                        setMostrarHorario(false)
+                    }
+
+                />
+            }
 
         </div>
 

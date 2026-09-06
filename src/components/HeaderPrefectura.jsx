@@ -20,6 +20,9 @@ from "./Prefectura/NotificacionesPrefectura";
 import { supabase }
 from "../services/supabase";
 
+import {
+    sincronizarNotificacionesPrefectura
+} from "../utils/notificacionesPrefectura";
 
 export default function HeaderPrefectura({
 
@@ -53,16 +56,90 @@ export default function HeaderPrefectura({
 
     }, []);
 
+    useEffect(() => {
+
+    cargarContador();
+
+
+    const intervalo =
+        setInterval(
+            () => {
+
+                cargarContador();
+
+            },
+            30000
+        );
+
+
+    function alVolverApp() {
+
+        if (
+            document.visibilityState
+            === "visible"
+        ) {
+
+            cargarContador();
+
+        }
+
+    }
+
+
+    document.addEventListener(
+        "visibilitychange",
+        alVolverApp
+    );
+
+
+    return () => {
+
+        clearInterval(
+            intervalo
+        );
+
+        document.removeEventListener(
+            "visibilitychange",
+            alVolverApp
+        );
+
+    };
+
+}, []);
+
+useEffect(() => {
+
+    function actualizarNotificaciones() {
+
+        cargarContador();
+
+    }
+
+    window.addEventListener(
+        "prefectura-actualizada",
+        actualizarNotificaciones
+    );
+
+    return () => {
+
+        window.removeEventListener(
+            "prefectura-actualizada",
+            actualizarNotificaciones
+        );
+
+    };
+
+}, []);
+
 
     async function cargarContador() {
 
-    const hoy = new Date();
+    /*
+    Primero revisa si deben aparecer
+    alertas nuevas este mes.
+    */
 
-    const mesActual =
-        hoy.getMonth() + 1;
-
-    const anioActual =
-        hoy.getFullYear();
+    await sincronizarNotificacionesPrefectura();
 
 
     const {
@@ -70,27 +147,31 @@ export default function HeaderPrefectura({
         error
     } = await supabase
 
-        .from("notificaciones_prefectura")
+        .from(
+            "notificaciones_prefectura"
+        )
 
         .select(
-            "*",
+            "id",
             {
-                count: "exact",
-                head: true
+                count:
+                    "exact",
+
+                head:
+                    true
             }
         )
 
-        .eq("vista", false)
-
-        .eq("mes", mesActual)
-
-        .eq("anio", anioActual);
+        .eq(
+            "atendida",
+            false
+        );
 
 
     if (error) {
 
         console.log(
-            "Error cargando contador de notificaciones:",
+            "Error contador notificaciones:",
             error
         );
 

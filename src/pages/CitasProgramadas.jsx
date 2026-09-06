@@ -7,14 +7,29 @@ import {
     House,
     Plus,
     Pencil,
-    Trash2
+    Trash2,
+    CalendarDays
 } from "lucide-react";
 
-import { useEffect, useState } from "react";
+import {
+    useEffect,
+    useState
+} from "react";
+
 import { supabase } from "../services/supabase";
-import ModalNuevaCita from "../components/Psicologia/ModalNuevaCita";
-import fondoPsicologia from "../assets/fondo-psicologia.jpg";
-import VistaDetalleCita from "../components/Psicologia/VistaDetalleCita";
+
+import ModalNuevaCita
+from "../components/Psicologia/ModalNuevaCita";
+
+import VistaDetalleCita
+from "../components/Psicologia/VistaDetalleCita";
+
+import HorarioGrupoModal
+from "../components/Prefectura/HorarioGrupoModal";
+
+import fondoPsicologia
+from "../assets/fondo-psicologia.jpg";
+
 
 export default function CitasProgramadas({
 
@@ -28,17 +43,56 @@ export default function CitasProgramadas({
 
 }){
 
-    const [citaVista,setCitaVista]=useState(null);
-    
-    const [modal,setModal]=useState(false);
 
-    const [indiceEditar,setIndiceEditar]=useState(null);
+    const [
+        citaVista,
+        setCitaVista
+    ] = useState(null);
 
-    const [mostrarEliminar,setMostrarEliminar]=useState(false);
 
-    const [citaEliminar,setCitaEliminar]=useState(null);
+    const [
+        modal,
+        setModal
+    ] = useState(false);
 
-    const [citas,setCitas]=useState([]);
+
+    const [
+        indiceEditar,
+        setIndiceEditar
+    ] = useState(null);
+
+
+    const [
+        mostrarEliminar,
+        setMostrarEliminar
+    ] = useState(false);
+
+
+    const [
+        citaEliminar,
+        setCitaEliminar
+    ] = useState(null);
+
+
+    const [
+        citas,
+        setCitas
+    ] = useState([]);
+
+
+    /*=========================================
+    MODAL HORARIO
+    =========================================*/
+
+    const [
+        mostrarHorario,
+        setMostrarHorario
+    ] = useState(false);
+
+
+    /*=========================================
+    CARGAR CITAS
+    =========================================*/
 
     useEffect(()=>{
 
@@ -46,77 +100,134 @@ export default function CitasProgramadas({
 
     },[]);
 
+
     async function cargarCitas(){
 
-        const {data,error}=await supabase
+        const {
+            data,
+            error
+        } = await supabase
 
-        .from("citas_programadas")
+            .from(
+                "citas_programadas"
+            )
 
-        .select("*")
+            .select("*")
 
-        .order("fecha",{ascending:true})
+            .order(
+                "fecha",
+                {
+                    ascending:true
+                }
+            )
 
-        .order("hora",{ascending:true});
+            .order(
+                "hora",
+                {
+                    ascending:true
+                }
+            );
+
 
         if(error){
 
-            console.log(error);
+            console.log(
+                error
+            );
 
             return;
 
         }
 
-        setCitas(data || []);
+
+        setCitas(
+            data || []
+        );
 
     }
 
-    async function guardarCita(datos){
 
-        if(!datos.alumno_id){
+    /*=========================================
+    GUARDAR CITA
+    =========================================*/
 
-            alert("Debes seleccionar un alumno.");
+    async function guardarCita(
+        datos
+    ){
 
-            return;
+        if(
+            !datos.alumno_id
+        ){
 
-        }
-
-        if(!datos.fecha){
-
-            alert("Debes seleccionar una fecha.");
-
-            return;
-
-        }
-
-        if(!datos.hora){
-
-            alert("Debes seleccionar una hora.");
+            alert(
+                "Debes seleccionar un alumno."
+            );
 
             return;
 
         }
 
-        if(indiceEditar===null){
 
-            const {error}=await supabase
+        if(
+            !datos.fecha
+        ){
 
-            .from("citas_programadas")
+            alert(
+                "Debes seleccionar una fecha."
+            );
 
-            .insert({
+            return;
 
-                alumno_id:datos.alumno_id,
+        }
 
-                fecha:datos.fecha,
 
-                hora:datos.hora,
+        if(
+            !datos.hora
+        ){
 
-                tipo:datos.tipo
+            alert(
+                "Debes seleccionar una hora."
+            );
 
-            })
+            return;
+
+        }
+
+
+        if(
+            indiceEditar === null
+        ){
+
+            const {
+                error
+            } = await supabase
+
+                .from(
+                    "citas_programadas"
+                )
+
+                .insert({
+
+                    alumno_id:
+                        datos.alumno_id,
+
+                    fecha:
+                        datos.fecha,
+
+                    hora:
+                        datos.hora,
+
+                    tipo:
+                        datos.tipo
+
+                });
+
 
             if(error){
 
-                alert(error.message);
+                alert(
+                    error.message
+                );
 
                 return;
 
@@ -124,27 +235,42 @@ export default function CitasProgramadas({
 
         }else{
 
-            const {error}=await supabase
 
-            .from("citas_programadas")
+            const {
+                error
+            } = await supabase
 
-            .update({
+                .from(
+                    "citas_programadas"
+                )
 
-                alumno_id:datos.alumno_id,
+                .update({
 
-                fecha:datos.fecha,
+                    alumno_id:
+                        datos.alumno_id,
 
-                hora:datos.hora,
+                    fecha:
+                        datos.fecha,
 
-                tipo:datos.tipo
+                    hora:
+                        datos.hora,
 
-            })
+                    tipo:
+                        datos.tipo
 
-            .eq("id",indiceEditar);
+                })
+
+                .eq(
+                    "id",
+                    indiceEditar
+                );
+
 
             if(error){
 
-                alert(error.message);
+                alert(
+                    error.message
+                );
 
                 return;
 
@@ -152,122 +278,268 @@ export default function CitasProgramadas({
 
         }
 
-        setIndiceEditar(null);
 
-        setModal(false);
+        setIndiceEditar(
+            null
+        );
+
+        setModal(
+            false
+        );
 
         cargarCitas();
 
     }
 
+
+    /*=========================================
+    ELIMINAR CITA
+    =========================================*/
+
     async function eliminarCita(){
 
-        const {error}=await supabase
+        const {
+            error
+        } = await supabase
 
-        .from("citas_programadas")
+            .from(
+                "citas_programadas"
+            )
 
-        .delete()
+            .delete()
 
-        .eq("id",citaEliminar.id);
+            .eq(
+                "id",
+                citaEliminar.id
+            );
+
 
         if(error){
 
-            alert(error.message);
+            alert(
+                error.message
+            );
 
             return;
 
         }
 
-        setMostrarEliminar(false);
 
-        setCitaEliminar(null);
+        setMostrarEliminar(
+            false
+        );
+
+        setCitaEliminar(
+            null
+        );
 
         cargarCitas();
 
     }
 
-    const citasAgrupadas=citas.reduce((acc,cita)=>{
 
-        const fecha=cita.fecha;
+    /*=========================================
+    AGRUPAR CITAS POR FECHA
+    =========================================*/
 
-        if(!acc[fecha]){
+    const citasAgrupadas =
+        citas.reduce(
+            (
+                acc,
+                cita
+            )=>{
 
-            acc[fecha]=[];
+                const fecha =
+                    cita.fecha;
 
-        }
 
-        acc[fecha].push(cita);
+                if(
+                    !acc[
+                        fecha
+                    ]
+                ){
 
-        return acc;
+                    acc[
+                        fecha
+                    ] = [];
 
-    },{});
+                }
 
-    function obtenerTituloFecha(fecha){
 
-        const hoy=new Date();
+                acc[
+                    fecha
+                ].push(
+                    cita
+                );
 
-        const manana=new Date();
 
-        manana.setDate(hoy.getDate()+1);
+                return acc;
 
-        const [anio,mes,dia]=fecha.split("-");
+            },
+            {}
+        );
 
-        const f=new Date(anio,mes-1,dia);
 
-        const hoyTexto=`${hoy.getFullYear()}-${String(hoy.getMonth()+1).padStart(2,"0")}-${String(hoy.getDate()).padStart(2,"0")}`;
+    /*=========================================
+    TÍTULO DE FECHA
+    =========================================*/
 
-        const mananaTexto=`${manana.getFullYear()}-${String(manana.getMonth()+1).padStart(2,"0")}-${String(manana.getDate()).padStart(2,"0")}`;
+    function obtenerTituloFecha(
+        fecha
+    ){
 
-        if(fecha===hoyTexto){
+        const hoy =
+            new Date();
+
+
+        const manana =
+            new Date();
+
+
+        manana.setDate(
+            hoy.getDate() + 1
+        );
+
+
+        const [
+            anio,
+            mes,
+            dia
+        ] = fecha.split("-");
+
+
+        const f =
+            new Date(
+                anio,
+                mes - 1,
+                dia
+            );
+
+
+        const hoyTexto =
+            `${hoy.getFullYear()}-${String(
+                hoy.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            )}-${String(
+                hoy.getDate()
+            ).padStart(
+                2,
+                "0"
+            )}`;
+
+
+        const mananaTexto =
+            `${manana.getFullYear()}-${String(
+                manana.getMonth() + 1
+            ).padStart(
+                2,
+                "0"
+            )}-${String(
+                manana.getDate()
+            ).padStart(
+                2,
+                "0"
+            )}`;
+
+
+        if(
+            fecha === hoyTexto
+        ){
 
             return "Hoy:";
 
         }
 
-        if(fecha===mananaTexto){
+
+        if(
+            fecha === mananaTexto
+        ){
 
             return "Mañana:";
 
         }
 
-        return f.toLocaleDateString("es-MX",{
 
-            weekday:"long",
+        return f.toLocaleDateString(
+            "es-MX",
+            {
 
-            day:"numeric",
+                weekday:
+                    "long",
 
-            month:"long"
+                day:
+                    "numeric",
 
-        });
+                month:
+                    "long"
+
+            }
+        );
 
     }
 
-    const contenido=(
+
+    /*=========================================
+    CONTENIDO
+    =========================================*/
+
+    const contenido = (
 
         <>
 
+
             {
-                !embebido && (
+                !embebido
+                &&
+                (
 
                     <div className="sticky-header">
 
                         <div className="page-top">
 
+
                             <button
+
                                 className="back-btn"
-                                onClick={volverPantalla}
+
+                                onClick={
+                                    volverPantalla
+                                }
+
                             >
-                                <ArrowLeft size={22}/>
+
+                                <ArrowLeft
+                                    size={22}
+                                />
+
                             </button>
 
-                            <h1>Agenda</h1>
+
+                            <h1>
+                                Agenda
+                            </h1>
+
 
                             <button
+
                                 className="home-btn"
-                                onClick={()=>cambiarPantalla("psicologia")}
+
+                                onClick={() =>
+                                    cambiarPantalla(
+                                        "psicologia"
+                                    )
+                                }
+
                             >
-                                <House size={20}/>
+
+                                <House
+                                    size={20}
+                                />
+
                             </button>
+
 
                         </div>
 
@@ -275,262 +547,512 @@ export default function CitasProgramadas({
 
                 )
             }
+
+
+            {/*=========================================
+            NUEVA CITA + HORARIO
+            =========================================*/}
 
             <div className="agenda-toolbar">
 
+
                 <button
+
+                    type="button"
+
                     className="agenda-add"
-                    onClick={()=>setModal(true)}
+
+                    onClick={() =>
+                        setModal(
+                            true
+                        )
+                    }
+
                 >
-                    <Plus size={18}/>
+
+                    <Plus
+                        size={18}
+                    />
+
                     Nueva cita
+
                 </button>
+
+
+                <button
+
+                    type="button"
+
+                    className="agenda-horario"
+
+                    onClick={() =>
+                        setMostrarHorario(
+                            true
+                        )
+                    }
+
+                    aria-label="Ver horario escolar"
+
+                    title="Ver horario"
+
+                >
+
+                    <CalendarDays
+                        size={20}
+                    />
+
+                </button>
+
 
             </div>
 
+
+            {/*=========================================
+            LISTA DE CITAS
+            =========================================*/}
+
             <div className="agenda-lista">
 
-                            {
 
-                Object.keys(citasAgrupadas).length===0
+                {
 
-                ?
+                    Object.keys(
+                        citasAgrupadas
+                    ).length === 0
 
+                    ?
+
+                    (
+
+                        <div className="agenda-vacia">
+
+                            No existen citas programadas.
+
+                        </div>
+
+                    )
+
+                    :
+
+                    Object.entries(
+                        citasAgrupadas
+                    ).map(
+                        (
+                            [
+                                fecha,
+                                lista
+                            ]
+                        ) => (
+
+                            <div
+
+                                key={
+                                    fecha
+                                }
+
+                                className="agenda-dia"
+
+                            >
+
+
+                                <div className="agenda-fecha">
+
+                                    {
+                                        obtenerTituloFecha(
+                                            fecha
+                                        )
+                                    }
+
+                                </div>
+
+
+                                {
+
+                                    lista.map(
+                                        cita => {
+
+
+                                            const alumno =
+                                                (
+                                                    students
+                                                    ||
+                                                    []
+                                                )
+                                                .find(
+                                                    a =>
+                                                        a.id
+                                                        ===
+                                                        cita.alumno_id
+                                                );
+
+
+                                            return (
+
+                                                <div
+
+                                                    key={
+                                                        cita.id
+                                                    }
+
+                                                    className="agenda-item"
+
+                                                    onClick={
+                                                        e => {
+
+                                                            if(
+                                                                e.target.closest(
+                                                                    ".agenda-acciones"
+                                                                )
+                                                            ){
+
+                                                                return;
+
+                                                            }
+
+
+                                                            setCitaVista(
+                                                                cita
+                                                            );
+
+                                                        }
+                                                    }
+
+                                                >
+
+
+                                                    <div className="agenda-hora">
+
+                                                        {
+                                                            cita.hora
+                                                                ?.slice(
+                                                                    0,
+                                                                    5
+                                                                )
+                                                        }
+
+                                                    </div>
+
+
+                                                    <div className="agenda-info">
+
+
+                                                        <h3>
+
+                                                            {
+                                                                alumno?.nombre
+                                                            }
+
+                                                            {" "}
+
+                                                            {
+                                                                alumno?.apellido_paterno
+                                                            }
+
+                                                        </h3>
+
+
+                                                        <p>
+
+                                                            {
+                                                                alumno?.grupo
+                                                            }
+
+                                                        </p>
+
+
+                                                        <p>
+
+                                                            {
+                                                                cita.tipo
+                                                            }
+
+                                                        </p>
+
+
+                                                    </div>
+
+
+                                                    <div className="agenda-acciones">
+
+
+                                                        <button
+
+                                                            type="button"
+
+                                                            className="agenda-icon editar"
+
+                                                            onClick={() => {
+
+                                                                setIndiceEditar(
+                                                                    cita.id
+                                                                );
+
+                                                                setModal(
+                                                                    true
+                                                                );
+
+                                                            }}
+
+                                                        >
+
+                                                            <Pencil
+                                                                size={15}
+                                                            />
+
+                                                        </button>
+
+
+                                                        <button
+
+                                                            type="button"
+
+                                                            className="agenda-icon eliminar"
+
+                                                            onClick={() => {
+
+                                                                setCitaEliminar(
+                                                                    cita
+                                                                );
+
+                                                                setMostrarEliminar(
+                                                                    true
+                                                                );
+
+                                                            }}
+
+                                                        >
+
+                                                            <Trash2
+                                                                size={15}
+                                                            />
+
+                                                        </button>
+
+
+                                                    </div>
+
+
+                                                </div>
+
+                                            );
+
+                                        }
+                                    )
+
+                                }
+
+
+                            </div>
+
+                        )
+                    )
+
+                }
+
+
+            </div>
+
+
+            {/*=========================================
+            NUEVA / EDITAR CITA
+            =========================================*/}
+
+            <ModalNuevaCita
+
+                abierto={
+                    modal
+                }
+
+                cerrar={() => {
+
+                    setIndiceEditar(
+                        null
+                    );
+
+                    setModal(
+                        false
+                    );
+
+                }}
+
+                guardar={
+                    guardarCita
+                }
+
+                students={
+                    students
+                }
+
+                citaActual={
+
+                    indiceEditar === null
+
+                    ?
+
+                    null
+
+                    :
+
+                    citas.find(
+                        c =>
+                            c.id
+                            ===
+                            indiceEditar
+                    )
+
+                }
+
+            />
+
+
+            {/*=========================================
+            ELIMINAR
+            =========================================*/}
+
+            {
+
+                mostrarEliminar
+                &&
                 (
 
-                    <div className="agenda-vacia">
+                    <div className="modal-overlay">
 
-                        No existen citas programadas.
+                        <div className="modal-nee">
+
+
+                            <h2>
+                                Eliminar cita
+                            </h2>
+
+
+                            <p>
+
+                                ¿Deseas eliminar esta cita programada?
+
+                            </p>
+
+
+                            <div className="eliminar-botones">
+
+
+                                <button
+
+                                    className="btn-cancelar"
+
+                                    onClick={() => {
+
+                                        setMostrarEliminar(
+                                            false
+                                        );
+
+                                        setCitaEliminar(
+                                            null
+                                        );
+
+                                    }}
+
+                                >
+
+                                    Cancelar
+
+                                </button>
+
+
+                                <button
+
+                                    className="btn-eliminar"
+
+                                    onClick={
+                                        eliminarCita
+                                    }
+
+                                >
+
+                                    Eliminar
+
+                                </button>
+
+
+                            </div>
+
+
+                        </div>
 
                     </div>
 
                 )
 
-                :
+            }
 
-                Object.entries(citasAgrupadas).map(([fecha,lista])=>(
 
-                    <div
+            {/*=========================================
+            DETALLE CITA
+            =========================================*/}
 
-                        key={fecha}
+            <VistaDetalleCita
 
-                        className="agenda-dia"
+                abierta={
+                    citaVista !== null
+                }
 
-                    >
+                cita={
+                    citaVista
+                }
 
-                        <div className="agenda-fecha">
+                students={
+                    students
+                }
 
-                            {obtenerTituloFecha(fecha)}
+                cerrar={() =>
+                    setCitaVista(
+                        null
+                    )
+                }
 
-                        </div>
+                editar={() => {
 
-                        {
+                    setCitaVista(
+                        null
+                    );
 
-                            lista.map(cita=>{
+                    setModal(
+                        true
+                    );
 
-                                const alumno=(students||[]).find(
+                }}
 
-                                    a=>a.id===cita.alumno_id
+            />
 
-                                );
 
-                                return(
+            {/*=========================================
+            HORARIO ESCOLAR
+            =========================================*/}
 
-                                    <div
+            {
 
-                                        key={cita.id}
+                mostrarHorario
+                &&
+                <HorarioGrupoModal
 
-                                        className="agenda-item"
+                    cerrar={() =>
+                        setMostrarHorario(
+                            false
+                        )
+                    }
 
-                                        onClick={(e)=>{
-
-                                            if(e.target.closest(".agenda-acciones")){
-
-                                                return;
-
-                                            }
-
-                                            setCitaVista(cita);
-
-                                        }}
-
-                                    >
-
-                                        <div className="agenda-hora">
-
-                                            {cita.hora.slice(0,5)}
-
-                                        </div>
-
-                                        <div className="agenda-info">
-
-                                            <h3>
-
-                                                {alumno?.nombre} {alumno?.apellido_paterno}
-
-                                            </h3>
-
-                                            <p>
-
-                                                {alumno?.grupo}
-
-                                            </p>
-
-                                            <p>
-
-                                                {cita.tipo}
-
-                                            </p>
-
-                                        </div>
-
-                                        <div className="agenda-acciones">
-
-                                            <button
-
-                                                className="agenda-icon editar"
-
-                                                onClick={()=>{
-
-                                                    setIndiceEditar(cita.id);
-
-                                                    setModal(true);
-
-                                                }}
-
-                                            >
-
-                                                <Pencil size={15}/>
-
-                                            </button>
-
-                                            <button
-
-                                                className="agenda-icon eliminar"
-
-                                                onClick={()=>{
-
-                                                    setCitaEliminar(cita);
-
-                                                    setMostrarEliminar(true);
-
-                                                }}
-
-                                            >
-
-                                                <Trash2 size={15}/>
-
-                                            </button>
-
-                                        </div>
-
-                                    </div>
-
-                                );
-
-                            })
-
-                        }
-
-                    </div>
-
-                ))
+                />
 
             }
 
-        </div>
 
-        <ModalNuevaCita
-
-            abierto={modal}
-
-            cerrar={()=>{
-
-                setIndiceEditar(null);
-
-                setModal(false);
-
-            }}
-
-            guardar={guardarCita}
-
-            students={students}
-
-            citaActual={
-
-                indiceEditar===null
-
-                ? null
-
-                : citas.find(c=>c.id===indiceEditar)
-
-            }
-
-        />
-
-        {
-    mostrarEliminar && (
-
-        <div className="modal-overlay">
-            <div className="modal-nee">
-
-                <h2>Eliminar cita</h2>
-
-                <p>
-                    ¿Deseas eliminar esta cita programada?
-                </p>
-
-                <div className="eliminar-botones">
-
-                    <button
-                        className="btn-cancelar"
-                        onClick={()=>{
-                            setMostrarEliminar(false);
-                            setCitaEliminar(null);
-                        }}
-                    >
-                        Cancelar
-                    </button>
-
-                    <button
-                        className="btn-eliminar"
-                        onClick={eliminarCita}
-                    >
-                        Eliminar
-                    </button>
-
-                </div>
-
-            </div>
-        </div>
-
-    )
-}
-
-<VistaDetalleCita
-
-    abierta={citaVista!==null}
-
-    cita={citaVista}
-
-    students={students}
-
-    cerrar={()=>setCitaVista(null)}
-
-    editar={(cita)=>{
-
-        setCitaVista(null);
-
-        
-
-        setModal(true);
-
-    }}
-
-    />
-                </>
+        </>
 
     );
+
+
+    /*=========================================
+    RENDER
+    =========================================*/
 
     return (
 
@@ -554,17 +1076,21 @@ export default function CitasProgramadas({
 
                         style={{
 
-                            backgroundImage:`url(${fondoPsicologia})`
+                            backgroundImage:
+                                `url(${fondoPsicologia})`
 
                         }}
 
                     />
 
+
                     <div className="ps-app">
 
                         <div className="ps-container">
 
-                            {contenido}
+                            {
+                                contenido
+                            }
 
                         </div>
 

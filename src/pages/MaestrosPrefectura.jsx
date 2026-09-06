@@ -3,6 +3,8 @@ import {
     useState
 } from "react";
 
+import { createPortal } from "react-dom";
+
 import {
     UserRound,
     CheckCircle2,
@@ -22,7 +24,7 @@ import "../Styles/MaestrosPrefectura.css";
 export default function MaestrosPrefectura() {
 
     /*==================================================
-    ESTADOS GENERALES
+    ESTADOS
     ==================================================*/
 
     const [vista, setVista] =
@@ -31,60 +33,43 @@ export default function MaestrosPrefectura() {
     const [maestros, setMaestros] =
         useState([]);
 
+    const [guardiasHorarioHoy, setGuardiasHorarioHoy] =
+        useState([]);
+
+    const [maestrosRecreoHoy, setMaestrosRecreoHoy] =
+        useState([]);
+
+    const [maestrosSalidaHoy, setMaestrosSalidaHoy] =
+        useState([]);
+
+    const [asistencia, setAsistencia] =
+        useState({});
+
+    const [recreo, setRecreo] =
+        useState({});
+
+    const [salida, setSalida] =
+        useState({});
+
     const [cargando, setCargando] =
         useState(true);
 
     const [guardando, setGuardando] =
         useState(false);
 
-
-    /*==================================================
-    ASISTENCIA
-
-    {
-        maestroId: {
-            estatus: "presente" | "tardanza" | "falta",
-            suplente: ""
-        }
-    }
-    ==================================================*/
-
-    const [asistencia, setAsistencia] =
-        useState({});
+    const [mensajeGuardado, setMensajeGuardado] =
+        useState(false);
 
 
     /*==================================================
-    GUARDIA RECREO
-
-    {
-        maestroId: {
-            cumplio: true | false | null,
-            relevo: ""
-        }
-    }
-    ==================================================*/
-
-    const [recreo, setRecreo] =
-        useState({});
-
-
-    /*==================================================
-    GUARDIA SALIDA
-    ==================================================*/
-
-    const [salida, setSalida] =
-        useState({});
-
-
-    /*==================================================
-    FECHA LOCAL
+    FECHA Y DÍA
     ==================================================*/
 
     function obtenerFechaLocal() {
 
         const hoy = new Date();
 
-        const año =
+        const anio =
             hoy.getFullYear();
 
         const mes =
@@ -97,8 +82,245 @@ export default function MaestrosPrefectura() {
                 hoy.getDate()
             ).padStart(2, "0");
 
+        return `${anio}-${mes}-${dia}`;
 
-        return `${año}-${mes}-${dia}`;
+    }
+
+
+    function obtenerDiaSemanaActual() {
+
+        const dias = [
+            "domingo",
+            "lunes",
+            "martes",
+            "miercoles",
+            "jueves",
+            "viernes",
+            "sabado"
+        ];
+
+        return dias[
+            new Date().getDay()
+        ];
+
+    }
+
+
+    function nombreCompleto(
+        maestro
+    ) {
+
+        return [
+            maestro?.nombre,
+            maestro?.apellido_paterno,
+            maestro?.apellido_materno
+        ]
+            .filter(Boolean)
+            .join(" ");
+
+    }
+
+
+    function mostrarGuardado() {
+
+        setMensajeGuardado(true);
+
+        setTimeout(
+            () => {
+                setMensajeGuardado(false);
+            },
+            2000
+        );
+
+    }
+
+
+    /*==================================================
+    HORARIO DE GUARDIAS DEL DÍA
+    ==================================================*/
+
+    async function cargarHorarioGuardiasHoy(
+        listaMaestros
+    ) {
+
+        const dia =
+            obtenerDiaSemanaActual();
+
+
+        if (
+            dia === "sabado"
+            ||
+            dia === "domingo"
+        ) {
+
+            setGuardiasHorarioHoy([]);
+            setMaestrosRecreoHoy([]);
+            setMaestrosSalidaHoy([]);
+
+            return [];
+
+        }
+
+
+        const {
+            data,
+            error
+        } = await supabase
+
+            .from(
+                "guardias_horario"
+            )
+
+            .select(`
+                id,
+                maestro_id,
+                dia_semana,
+                tipo_guardia,
+                lugar,
+                activo
+            `)
+
+            .eq(
+                "dia_semana",
+                dia
+            )
+
+            .eq(
+                "activo",
+                true
+            );
+
+
+        if (error) {
+
+            console.log(
+                "Error cargando horario de guardias:",
+                error
+            );
+
+            setGuardiasHorarioHoy([]);
+            setMaestrosRecreoHoy([]);
+            setMaestrosSalidaHoy([]);
+
+            return [];
+
+        }
+
+
+        const horarios =
+            data || [];
+
+
+        setGuardiasHorarioHoy(
+            horarios
+        );
+
+
+        const idsRecreo =
+            new Set(
+                horarios
+
+                    .filter(
+                        guardia =>
+                            guardia.tipo_guardia
+                            === "recreo"
+                    )
+
+                    .map(
+                        guardia =>
+                            String(
+                                guardia.maestro_id
+                            )
+                    )
+            );
+
+
+        const idsSalida =
+            new Set(
+                horarios
+
+                    .filter(
+                        guardia =>
+                            guardia.tipo_guardia
+                            === "salida"
+                    )
+
+                    .map(
+                        guardia =>
+                            String(
+                                guardia.maestro_id
+                            )
+                    )
+            );
+
+
+        const listaRecreo =
+            (listaMaestros || [])
+                .filter(
+                    maestro =>
+                        idsRecreo.has(
+                            String(
+                                maestro.id
+                            )
+                        )
+                );
+
+
+        const listaSalida =
+            (listaMaestros || [])
+                .filter(
+                    maestro =>
+                        idsSalida.has(
+                            String(
+                                maestro.id
+                            )
+                        )
+                );
+
+
+        setMaestrosRecreoHoy(
+            listaRecreo
+        );
+
+        setMaestrosSalidaHoy(
+            listaSalida
+        );
+
+
+        return horarios;
+
+    }
+
+
+    function obtenerLugarGuardia(
+        maestroId,
+        tipo
+    ) {
+
+        return guardiasHorarioHoy
+
+            .filter(
+                guardia =>
+                    String(
+                        guardia.maestro_id
+                    )
+                    ===
+                    String(
+                        maestroId
+                    )
+                    &&
+                    guardia.tipo_guardia
+                    === tipo
+            )
+
+            .map(
+                guardia =>
+                    guardia.lugar
+            )
+
+            .filter(Boolean)
+
+            .join(" · ");
 
     }
 
@@ -107,16 +329,20 @@ export default function MaestrosPrefectura() {
     CARGA INICIAL
     ==================================================*/
 
-    useEffect(() => {
+    useEffect(
+        () => {
 
-        cargarTodo();
+            cargarTodo();
 
-    }, []);
+        },
+        []
+    );
 
 
     async function cargarTodo() {
 
         setCargando(true);
+
 
         const fecha =
             obtenerFechaLocal();
@@ -135,10 +361,29 @@ export default function MaestrosPrefectura() {
 
             .select("*")
 
-            .eq("activo", true)
+            .eq(
+                "activo",
+                true
+            )
 
             .order(
                 "apellido_paterno",
+                {
+                    ascending: true,
+                    nullsFirst: false
+                }
+            )
+
+            .order(
+                "apellido_materno",
+                {
+                    ascending: true,
+                    nullsFirst: false
+                }
+            )
+
+            .order(
+                "nombre",
                 {
                     ascending: true
                 }
@@ -168,6 +413,50 @@ export default function MaestrosPrefectura() {
         );
 
 
+        const horariosHoy =
+            await cargarHorarioGuardiasHoy(
+                listaMaestros
+            );
+
+
+        const idsRecreoHoy =
+            new Set(
+                (horariosHoy || [])
+
+                    .filter(
+                        guardia =>
+                            guardia.tipo_guardia
+                            === "recreo"
+                    )
+
+                    .map(
+                        guardia =>
+                            String(
+                                guardia.maestro_id
+                            )
+                    )
+            );
+
+
+        const idsSalidaHoy =
+            new Set(
+                (horariosHoy || [])
+
+                    .filter(
+                        guardia =>
+                            guardia.tipo_guardia
+                            === "salida"
+                    )
+
+                    .map(
+                        guardia =>
+                            String(
+                                guardia.maestro_id
+                            )
+                    )
+            );
+
+
         /*==============================================
         ASISTENCIA DE HOY
         ==============================================*/
@@ -177,11 +466,16 @@ export default function MaestrosPrefectura() {
             error: asistenciaError
         } = await supabase
 
-            .from("asistencia_maestros")
+            .from(
+                "asistencia_maestros"
+            )
 
             .select("*")
 
-            .eq("fecha", fecha);
+            .eq(
+                "fecha",
+                fecha
+            );
 
 
         if (asistenciaError) {
@@ -195,7 +489,7 @@ export default function MaestrosPrefectura() {
 
 
         /*==============================================
-        GUARDIAS DE HOY
+        GUARDIAS REGISTRADAS HOY
         ==============================================*/
 
         const {
@@ -203,11 +497,16 @@ export default function MaestrosPrefectura() {
             error: guardiasError
         } = await supabase
 
-            .from("guardias_maestros")
+            .from(
+                "guardias_maestros"
+            )
 
             .select("*")
 
-            .eq("fecha", fecha);
+            .eq(
+                "fecha",
+                fecha
+            );
 
 
         if (guardiasError) {
@@ -271,7 +570,7 @@ export default function MaestrosPrefectura() {
 
 
         /*==============================================
-        DATOS YA GUARDADOS
+        DATOS YA GUARDADOS DE ASISTENCIA
         ==============================================*/
 
         (asistenciaData || [])
@@ -286,57 +585,166 @@ export default function MaestrosPrefectura() {
                             registro.estatus,
 
                         suplente:
-                            registro.suplente || ""
+                            registro.suplente
+                            || ""
 
                     };
 
                 }
             );
 
+
         /*==============================================
-        SI EL MAESTRO FALTÓ,
-        LO MARCAMOS COMO AUSENTE
-        EN SUS GUARDIAS
+        DATOS YA GUARDADOS DE GUARDIAS
         ==============================================*/
 
-        (asistenciaData || [])
+        (guardiasData || [])
+            .forEach(
+                registro => {
+
+                    if (
+                        registro.guardia_recreo
+                        !== null
+                    ) {
+
+                        recreoInicial[
+                            registro.maestro_id
+                        ] = {
+
+                            cumplio:
+                                registro.guardia_recreo,
+
+                            relevo:
+                                registro.relevo_recreo
+                                || ""
+
+                        };
+
+                    }
+
+
+                    if (
+                        registro.guardia_salida
+                        !== null
+                    ) {
+
+                        salidaInicial[
+                            registro.maestro_id
+                        ] = {
+
+                            cumplio:
+                                registro.guardia_salida,
+
+                            relevo:
+                                registro.relevo_salida
+                                || ""
+
+                        };
+
+                    }
+
+                }
+            );
+
+
+        /*==============================================
+SI FALTÓ, SOLO MARCAMOS "NO ESTÁ"
+EN LAS GUARDIAS QUE REALMENTE TIENE HOY
+
+autoPorFalta nos permite distinguir
+entre:
+- No está porque faltó todo el día.
+- No está porque incumplió la guardia.
+==============================================*/
+
+(asistenciaData || [])
     .forEach(
         registro => {
 
-            asistenciaInicial[
-                registro.maestro_id
-            ] = {
+            if (
+                registro.estatus
+                !== "falta"
+            ) {
 
-                estatus:
-                    registro.estatus,
+                return;
 
-                suplente:
-                    registro.suplente || ""
+            }
 
-            };
 
+            const maestroId =
+                String(
+                    registro.maestro_id
+                );
+
+
+            /*==========================================
+            RECREO
+            ==========================================*/
 
             if (
-                registro.estatus === "falta"
+                idsRecreoHoy.has(
+                    maestroId
+                )
+                &&
+                recreoInicial[
+                    registro.maestro_id
+                ]?.cumplio
+                === null
             ) {
 
                 recreoInicial[
                     registro.maestro_id
                 ] = {
 
-                    cumplio: false,
+                    ...recreoInicial[
+                        registro.maestro_id
+                    ],
 
-                    relevo: ""
+                    cumplio:
+                        false,
+
+                    relevo:
+                        "",
+
+                    autoPorFalta:
+                        true
 
                 };
+
+            }
+
+
+            /*==========================================
+            SALIDA
+            ==========================================*/
+
+            if (
+                idsSalidaHoy.has(
+                    maestroId
+                )
+                &&
+                salidaInicial[
+                    registro.maestro_id
+                ]?.cumplio
+                === null
+            ) {
 
                 salidaInicial[
                     registro.maestro_id
                 ] = {
 
-                    cumplio: false,
+                    ...salidaInicial[
+                        registro.maestro_id
+                    ],
 
-                    relevo: ""
+                    cumplio:
+                        false,
+
+                    relevo:
+                        "",
+
+                    autoPorFalta:
+                        true
 
                 };
 
@@ -345,40 +753,6 @@ export default function MaestrosPrefectura() {
         }
     );
 
-
-    (guardiasData || [])
-        .forEach(
-            registro => {
-
-                recreoInicial[
-                    registro.maestro_id
-                ] = {
-
-                    cumplio:
-                        registro.guardia_recreo,
-
-                    relevo:
-                        registro.relevo_recreo
-                        || ""
-
-                };
-
-
-                salidaInicial[
-                    registro.maestro_id
-                ] = {
-
-                    cumplio:
-                        registro.guardia_salida,
-
-                    relevo:
-                        registro.relevo_salida
-                        || ""
-
-                };
-
-            }
-        );
 
         setAsistencia(
             asistenciaInicial
@@ -399,13 +773,17 @@ export default function MaestrosPrefectura() {
 
 
     /*==================================================
-    CAMBIAR ASISTENCIA
+    ASISTENCIA
     ==================================================*/
 
     function cambiarAsistencia(
     maestroId,
     estatus
 ) {
+
+    /*==================================================
+    ACTUALIZAR ASISTENCIA
+    ==================================================*/
 
     setAsistencia(
         actual => ({
@@ -414,16 +792,20 @@ export default function MaestrosPrefectura() {
 
             [maestroId]: {
 
-                ...actual[maestroId],
+                ...actual[
+                    maestroId
+                ],
 
                 estatus,
 
                 suplente:
-                    estatus === "falta"
+                    estatus
+                    === "falta"
                     ?
                     actual[
                         maestroId
-                    ]?.suplente || ""
+                    ]?.suplente
+                    || ""
                     :
                     ""
 
@@ -433,46 +815,231 @@ export default function MaestrosPrefectura() {
     );
 
 
-    /*=========================================
-    SI FALTÓ, AUTOMÁTICAMENTE
-    NO ESTÁ EN SUS GUARDIAS
-    =========================================*/
+    /*==================================================
+    SABER QUÉ GUARDIAS TIENE HOY
+    ==================================================*/
+
+    const tieneRecreoHoy =
+        guardiasHorarioHoy.some(
+            guardia =>
+                String(
+                    guardia.maestro_id
+                )
+                ===
+                String(
+                    maestroId
+                )
+                &&
+                guardia.tipo_guardia
+                === "recreo"
+        );
+
+
+    const tieneSalidaHoy =
+        guardiasHorarioHoy.some(
+            guardia =>
+                String(
+                    guardia.maestro_id
+                )
+                ===
+                String(
+                    maestroId
+                )
+                &&
+                guardia.tipo_guardia
+                === "salida"
+        );
+
+
+    /*==================================================
+    SI MARCAMOS FALTA
+
+    Solo afectamos las guardias que realmente
+    le corresponden hoy.
+    ==================================================*/
 
     if (
         estatus === "falta"
     ) {
 
+        if (
+            tieneRecreoHoy
+        ) {
+
+            setRecreo(
+                actual => ({
+
+                    ...actual,
+
+                    [maestroId]: {
+
+                        ...actual[
+                            maestroId
+                        ],
+
+                        cumplio:
+                            false,
+
+                        relevo:
+                            "",
+
+                        autoPorFalta:
+                            true
+
+                    }
+
+                })
+            );
+
+        }
+
+
+        if (
+            tieneSalidaHoy
+        ) {
+
+            setSalida(
+                actual => ({
+
+                    ...actual,
+
+                    [maestroId]: {
+
+                        ...actual[
+                            maestroId
+                        ],
+
+                        cumplio:
+                            false,
+
+                        relevo:
+                            "",
+
+                        autoPorFalta:
+                            true
+
+                    }
+
+                })
+            );
+
+        }
+
+
+        return;
+
+    }
+
+
+    /*==================================================
+    SI CORREGIMOS LA FALTA
+
+    Ejemplo:
+    Faltó → Vino
+    Faltó → Tarde
+
+    Solo quitamos el "No está" si había sido
+    puesto automáticamente por la falta.
+
+    Si Prefectura había registrado manualmente
+    un incumplimiento, NO lo tocamos.
+    ==================================================*/
+
+    if (
+        tieneRecreoHoy
+    ) {
+
         setRecreo(
-            actual => ({
+            actual => {
 
-                ...actual,
+                const registro =
+                    actual[
+                        maestroId
+                    ];
 
-                [maestroId]: {
 
-                    ...actual[maestroId],
+                if (
+                    !registro
+                    ?.autoPorFalta
+                ) {
 
-                    cumplio: false
+                    return actual;
 
                 }
 
-            })
+
+                return {
+
+                    ...actual,
+
+                    [maestroId]: {
+
+                        ...registro,
+
+                        cumplio:
+                            null,
+
+                        relevo:
+                            "",
+
+                        autoPorFalta:
+                            false
+
+                    }
+
+                };
+
+            }
         );
 
+    }
+
+
+    if (
+        tieneSalidaHoy
+    ) {
 
         setSalida(
-            actual => ({
+            actual => {
 
-                ...actual,
+                const registro =
+                    actual[
+                        maestroId
+                    ];
 
-                [maestroId]: {
 
-                    ...actual[maestroId],
+                if (
+                    !registro
+                    ?.autoPorFalta
+                ) {
 
-                    cumplio: false
+                    return actual;
 
                 }
 
-            })
+
+                return {
+
+                    ...actual,
+
+                    [maestroId]: {
+
+                        ...registro,
+
+                        cumplio:
+                            null,
+
+                        relevo:
+                            "",
+
+                        autoPorFalta:
+                            false
+
+                    }
+
+                };
+
+            }
         );
 
     }
@@ -492,9 +1059,12 @@ export default function MaestrosPrefectura() {
 
                 [maestroId]: {
 
-                    ...actual[maestroId],
+                    ...actual[
+                        maestroId
+                    ],
 
-                    suplente: valor
+                    suplente:
+                        valor
 
                 }
 
@@ -505,7 +1075,7 @@ export default function MaestrosPrefectura() {
 
 
     /*==================================================
-    CAMBIAR RECREO
+    RECREO
     ==================================================*/
 
     function cambiarRecreo(
@@ -520,7 +1090,9 @@ export default function MaestrosPrefectura() {
 
                 [maestroId]: {
 
-                    ...actual[maestroId],
+                    ...actual[
+                        maestroId
+                    ],
 
                     cumplio,
 
@@ -529,7 +1101,8 @@ export default function MaestrosPrefectura() {
                         ?
                         actual[
                             maestroId
-                        ]?.relevo || ""
+                        ]?.relevo
+                        || ""
                         :
                         ""
 
@@ -553,9 +1126,12 @@ export default function MaestrosPrefectura() {
 
                 [maestroId]: {
 
-                    ...actual[maestroId],
+                    ...actual[
+                        maestroId
+                    ],
 
-                    relevo: valor
+                    relevo:
+                        valor
 
                 }
 
@@ -566,7 +1142,7 @@ export default function MaestrosPrefectura() {
 
 
     /*==================================================
-    CAMBIAR SALIDA
+    SALIDA
     ==================================================*/
 
     function cambiarSalida(
@@ -581,7 +1157,9 @@ export default function MaestrosPrefectura() {
 
                 [maestroId]: {
 
-                    ...actual[maestroId],
+                    ...actual[
+                        maestroId
+                    ],
 
                     cumplio,
 
@@ -590,7 +1168,8 @@ export default function MaestrosPrefectura() {
                         ?
                         actual[
                             maestroId
-                        ]?.relevo || ""
+                        ]?.relevo
+                        || ""
                         :
                         ""
 
@@ -614,9 +1193,12 @@ export default function MaestrosPrefectura() {
 
                 [maestroId]: {
 
-                    ...actual[maestroId],
+                    ...actual[
+                        maestroId
+                    ],
 
-                    relevo: valor
+                    relevo:
+                        valor
 
                 }
 
@@ -638,13 +1220,10 @@ export default function MaestrosPrefectura() {
 
         const incompletos =
             maestros.filter(
-                maestro => {
-
-                    return !asistencia[
+                maestro =>
+                    !asistencia[
                         maestro.id
-                    ]?.estatus;
-
-                }
+                    ]?.estatus
             );
 
 
@@ -669,6 +1248,7 @@ export default function MaestrosPrefectura() {
                         asistencia[
                             maestro.id
                         ];
+
 
                     return (
                         registro?.estatus
@@ -766,563 +1346,418 @@ export default function MaestrosPrefectura() {
         }
 
 
-        alert(
-            "Asistencia de maestros guardada."
-        );
+        mostrarGuardado();
 
     }
 
 
     /*==================================================
-    GUARDAR RECREO
+    GUARDAR UNA GUARDIA
     ==================================================*/
+
+    async function guardarGuardia(
+        tipo,
+        listaMaestros,
+        mapaGuardia
+    ) {
+
+        if (
+            listaMaestros.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        const fecha =
+            obtenerFechaLocal();
+
+
+        const incompletos =
+            listaMaestros.filter(
+                maestro =>
+                    mapaGuardia[
+                        maestro.id
+                    ]?.cumplio
+                    === null
+            );
+
+
+        if (
+            incompletos.length > 0
+        ) {
+
+            alert(
+                `Falta registrar la guardia de ${tipo} de ${incompletos.length} maestro(s).`
+            );
+
+            return;
+
+        }
+
+
+        const sinRelevo =
+            listaMaestros.filter(
+                maestro => {
+
+                    const registro =
+                        mapaGuardia[
+                            maestro.id
+                        ];
+
+
+                    return (
+                        registro?.cumplio
+                        === false
+                        &&
+                        !registro
+                            ?.relevo
+                            ?.trim()
+                    );
+
+                }
+            );
+
+
+        if (
+            sinRelevo.length > 0
+        ) {
+
+            alert(
+                "Cuando un maestro no está en su guardia debes indicar quién lo relevó."
+            );
+
+            return;
+
+        }
+
+
+        setGuardando(true);
+
+
+        for (
+            const maestro
+            of listaMaestros
+        ) {
+
+            const registro =
+                mapaGuardia[
+                    maestro.id
+                ];
+
+
+            const {
+                data: existente,
+                error: errorBuscar
+            } = await supabase
+
+                .from(
+                    "guardias_maestros"
+                )
+
+                .select("id")
+
+                .eq(
+                    "maestro_id",
+                    maestro.id
+                )
+
+                .eq(
+                    "fecha",
+                    fecha
+                )
+
+                .maybeSingle();
+
+
+            if (
+                errorBuscar
+            ) {
+
+                setGuardando(false);
+
+                alert(
+                    errorBuscar.message
+                );
+
+                return;
+
+            }
+
+
+            const datos =
+                tipo === "recreo"
+                ?
+                {
+                    guardia_recreo:
+                        registro.cumplio,
+
+                    relevo_recreo:
+                        registro.cumplio
+                        === false
+                        ?
+                        registro
+                            .relevo
+                            .trim()
+                        :
+                        null
+                }
+                :
+                {
+                    guardia_salida:
+                        registro.cumplio,
+
+                    relevo_salida:
+                        registro.cumplio
+                        === false
+                        ?
+                        registro
+                            .relevo
+                            .trim()
+                        :
+                        null
+                };
+
+
+            let errorGuardar;
+
+
+            if (
+                existente
+            ) {
+
+                const {
+                    error
+                } = await supabase
+
+                    .from(
+                        "guardias_maestros"
+                    )
+
+                    .update(
+                        datos
+                    )
+
+                    .eq(
+                        "id",
+                        existente.id
+                    );
+
+
+                errorGuardar =
+                    error;
+
+            }
+
+            else {
+
+                const {
+                    error
+                } = await supabase
+
+                    .from(
+                        "guardias_maestros"
+                    )
+
+                    .insert({
+
+                        maestro_id:
+                            maestro.id,
+
+                        fecha,
+
+                        ...datos
+
+                    });
+
+
+                errorGuardar =
+                    error;
+
+            }
+
+
+            if (
+                errorGuardar
+            ) {
+
+                setGuardando(false);
+
+                alert(
+                    errorGuardar.message
+                );
+
+                return;
+
+            }
+
+        }
+
+
+        setGuardando(false);
+
+        mostrarGuardado();
+
+    }
+
 
     async function guardarRecreo() {
 
-        const fecha =
-            obtenerFechaLocal();
-
-
-        const incompletos =
-            maestros.filter(
-                maestro => {
-
-                    return (
-                        recreo[
-                            maestro.id
-                        ]?.cumplio
-                        === null
-                    );
-
-                }
-            );
-
-
-        if (
-            incompletos.length > 0
-        ) {
-
-            alert(
-                `Falta registrar la guardia de recreo de ${incompletos.length} maestro(s).`
-            );
-
-            return;
-
-        }
-
-
-        const sinRelevo =
-            maestros.filter(
-                maestro => {
-
-                    const registro =
-                        recreo[
-                            maestro.id
-                        ];
-
-                    return (
-                        registro?.cumplio
-                        === false
-                        &&
-                        !registro
-                            ?.relevo
-                            ?.trim()
-                    );
-
-                }
-            );
-
-
-        if (
-            sinRelevo.length > 0
-        ) {
-
-            alert(
-                "Cuando un maestro no está en su guardia debes indicar quién lo relevó."
-            );
-
-            return;
-
-        }
-
-
-        setGuardando(true);
-
-
-        for (
-            const maestro
-            of maestros
-        ) {
-
-            const registro =
-                recreo[
-                    maestro.id
-                ];
-
-
-            const {
-                data: existente
-            } = await supabase
-
-                .from(
-                    "guardias_maestros"
-                )
-
-                .select("id")
-
-                .eq(
-                    "maestro_id",
-                    maestro.id
-                )
-
-                .eq(
-                    "fecha",
-                    fecha
-                )
-
-                .maybeSingle();
-
-
-            if (existente) {
-
-                const {
-                    error
-                } = await supabase
-
-                    .from(
-                        "guardias_maestros"
-                    )
-
-                    .update({
-
-                        guardia_recreo:
-                            registro.cumplio,
-
-                        relevo_recreo:
-                            registro.cumplio
-                            === false
-                            ?
-                            registro
-                                .relevo
-                                .trim()
-                            :
-                            null
-
-                    })
-
-                    .eq(
-                        "id",
-                        existente.id
-                    );
-
-
-                if (error) {
-
-                    setGuardando(false);
-
-                    alert(
-                        error.message
-                    );
-
-                    return;
-
-                }
-
-            }
-
-            else {
-
-                const {
-                    error
-                } = await supabase
-
-                    .from(
-                        "guardias_maestros"
-                    )
-
-                    .insert({
-
-                        maestro_id:
-                            maestro.id,
-
-                        fecha,
-
-                        guardia_recreo:
-                            registro.cumplio,
-
-                        relevo_recreo:
-                            registro.cumplio
-                            === false
-                            ?
-                            registro
-                                .relevo
-                                .trim()
-                            :
-                            null
-
-                    });
-
-
-                if (error) {
-
-                    setGuardando(false);
-
-                    alert(
-                        error.message
-                    );
-
-                    return;
-
-                }
-
-            }
-
-        }
-
-
-        setGuardando(false);
-
-
-        alert(
-            "Guardia de recreo guardada."
+        await guardarGuardia(
+            "recreo",
+            maestrosRecreoHoy,
+            recreo
         );
 
     }
 
-
-    /*==================================================
-    GUARDAR SALIDA
-    ==================================================*/
 
     async function guardarSalida() {
 
-        const fecha =
-            obtenerFechaLocal();
-
-
-        const incompletos =
-            maestros.filter(
-                maestro => {
-
-                    return (
-                        salida[
-                            maestro.id
-                        ]?.cumplio
-                        === null
-                    );
-
-                }
-            );
-
-
-        if (
-            incompletos.length > 0
-        ) {
-
-            alert(
-                `Falta registrar la guardia de salida de ${incompletos.length} maestro(s).`
-            );
-
-            return;
-
-        }
-
-
-        const sinRelevo =
-            maestros.filter(
-                maestro => {
-
-                    const registro =
-                        salida[
-                            maestro.id
-                        ];
-
-                    return (
-                        registro?.cumplio
-                        === false
-                        &&
-                        !registro
-                            ?.relevo
-                            ?.trim()
-                    );
-
-                }
-            );
-
-
-        if (
-            sinRelevo.length > 0
-        ) {
-
-            alert(
-                "Cuando un maestro no está en su guardia debes indicar quién lo relevó."
-            );
-
-            return;
-
-        }
-
-
-        setGuardando(true);
-
-
-        for (
-            const maestro
-            of maestros
-        ) {
-
-            const registro =
-                salida[
-                    maestro.id
-                ];
-
-
-            const {
-                data: existente
-            } = await supabase
-
-                .from(
-                    "guardias_maestros"
-                )
-
-                .select("id")
-
-                .eq(
-                    "maestro_id",
-                    maestro.id
-                )
-
-                .eq(
-                    "fecha",
-                    fecha
-                )
-
-                .maybeSingle();
-
-
-            if (existente) {
-
-                const {
-                    error
-                } = await supabase
-
-                    .from(
-                        "guardias_maestros"
-                    )
-
-                    .update({
-
-                        guardia_salida:
-                            registro.cumplio,
-
-                        relevo_salida:
-                            registro.cumplio
-                            === false
-                            ?
-                            registro
-                                .relevo
-                                .trim()
-                            :
-                            null
-
-                    })
-
-                    .eq(
-                        "id",
-                        existente.id
-                    );
-
-
-                if (error) {
-
-                    setGuardando(false);
-
-                    alert(
-                        error.message
-                    );
-
-                    return;
-
-                }
-
-            }
-
-            else {
-
-                const {
-                    error
-                } = await supabase
-
-                    .from(
-                        "guardias_maestros"
-                    )
-
-                    .insert({
-
-                        maestro_id:
-                            maestro.id,
-
-                        fecha,
-
-                        guardia_salida:
-                            registro.cumplio,
-
-                        relevo_salida:
-                            registro.cumplio
-                            === false
-                            ?
-                            registro
-                                .relevo
-                                .trim()
-                            :
-                            null
-
-                    });
-
-
-                if (error) {
-
-                    setGuardando(false);
-
-                    alert(
-                        error.message
-                    );
-
-                    return;
-
-                }
-
-            }
-
-        }
-
-
-        setGuardando(false);
-
-
-        alert(
-            "Guardia de salida guardada."
+        await guardarGuardia(
+            "salida",
+            maestrosSalidaHoy,
+            salida
         );
 
     }
 
+
     /*==================================================
-    TODOS PRESENTES
+    ACCIONES RÁPIDAS
     ==================================================*/
 
     function marcarTodosPresentes() {
 
         const nuevo = {};
 
-        maestros.forEach(maestro => {
 
-            nuevo[maestro.id] = {
+        maestros.forEach(
+            maestro => {
 
-                estatus: "presente",
+                nuevo[
+                    maestro.id
+                ] = {
 
-                suplente: ""
+                    estatus:
+                        "presente",
 
-            };
+                    suplente:
+                        ""
 
-        });
+                };
 
-        setAsistencia(nuevo);
+            }
+        );
+
+
+        setAsistencia(
+            nuevo
+        );
 
     }
 
-
-    /*==================================================
-    TODOS EN GUARDIA DE RECREO
-    ==================================================*/
 
     function marcarTodosRecreo() {
 
-        const nuevo = {};
-
-        maestros.forEach(maestro => {
-
-            /*
-            Si el maestro fue marcado como falta,
-            mantenemos automáticamente No está.
-            */
-
-            const falto =
-
-                asistencia[
-                    maestro.id
-                ]?.estatus === "falta";
+        const nuevo = {
+            ...recreo
+        };
 
 
-            nuevo[maestro.id] = {
+        maestrosRecreoHoy.forEach(
+            maestro => {
 
-                cumplio:
-                    falto
-                    ?
-                    false
-                    :
-                    true,
-
-                relevo:
-                    recreo[
+                const falto =
+                    asistencia[
                         maestro.id
-                    ]?.relevo || ""
+                    ]?.estatus
+                    === "falta";
 
-            };
 
-        });
+                nuevo[
+                    maestro.id
+                ] = {
 
-        setRecreo(nuevo);
+                    cumplio:
+                        falto
+                        ?
+                        false
+                        :
+                        true,
+
+                    relevo:
+                        recreo[
+                            maestro.id
+                        ]?.relevo
+                        || ""
+
+                };
+
+            }
+        );
+
+
+        setRecreo(
+            nuevo
+        );
 
     }
 
-
-    /*==================================================
-    TODOS EN GUARDIA DE SALIDA
-    ==================================================*/
 
     function marcarTodosSalida() {
 
-        const nuevo = {};
-
-        maestros.forEach(maestro => {
-
-            const falto =
-
-                asistencia[
-                    maestro.id
-                ]?.estatus === "falta";
+        const nuevo = {
+            ...salida
+        };
 
 
-            nuevo[maestro.id] = {
+        maestrosSalidaHoy.forEach(
+            maestro => {
 
-                cumplio:
-                    falto
-                    ?
-                    false
-                    :
-                    true,
-
-                relevo:
-                    salida[
+                const falto =
+                    asistencia[
                         maestro.id
-                    ]?.relevo || ""
+                    ]?.estatus
+                    === "falta";
 
-            };
 
-        });
+                nuevo[
+                    maestro.id
+                ] = {
 
-        setSalida(nuevo);
+                    cumplio:
+                        falto
+                        ?
+                        false
+                        :
+                        true,
+
+                    relevo:
+                        salida[
+                            maestro.id
+                        ]?.relevo
+                        || ""
+
+                };
+
+            }
+        );
+
+
+        setSalida(
+            nuevo
+        );
 
     }
 
 
-    /*==================================================
-    GUARDAR SEGÚN PESTAÑA
-    ==================================================*/
-
     function guardarActual() {
 
-        if (vista === "lista") {
+        if (
+            vista === "lista"
+        ) {
 
             guardarLista();
 
@@ -1331,7 +1766,9 @@ export default function MaestrosPrefectura() {
         }
 
 
-        if (vista === "recreo") {
+        if (
+            vista === "recreo"
+        ) {
 
             guardarRecreo();
 
@@ -1345,881 +1782,799 @@ export default function MaestrosPrefectura() {
     }
 
 
+    function obtenerCantidadVistaActual() {
+
+        if (
+            vista === "lista"
+        ) {
+
+            return maestros.length;
+
+        }
+
+
+        if (
+            vista === "recreo"
+        ) {
+
+            return maestrosRecreoHoy.length;
+
+        }
+
+
+        return maestrosSalidaHoy.length;
+
+    }
+
+
+    function obtenerTextoVacioActual() {
+
+        if (
+            vista === "recreo"
+        ) {
+
+            return "No hay maestros con guardia de recreo asignada para hoy.";
+
+        }
+
+
+        if (
+            vista === "salida"
+        ) {
+
+            return "No hay maestros con guardia de salida asignada para hoy.";
+
+        }
+
+
+        return "No existen maestros registrados.";
+
+    }
+
+
+    /*==================================================
+    TARJETA DE ASISTENCIA
+    ==================================================*/
+
+    function renderTarjetaLista(
+        maestro
+    ) {
+
+        const registro =
+            asistencia[
+                maestro.id
+            ] || {};
+
+
+        return (
+
+            <div
+                key={maestro.id}
+                className="mp-card"
+            >
+
+                <div className="mp-maestro">
+
+                    <div className="mp-avatar">
+
+                        <UserRound
+                            size={20}
+                        />
+
+                    </div>
+
+                    <div className="mp-info">
+
+                        <strong>
+                            {nombreCompleto(maestro)}
+                        </strong>
+
+                        <span>
+                            {
+                                maestro.grupo
+                                ||
+                                "Sin grupo"
+                            }
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div className="mp-opciones mp-opciones-3">
+
+                    <button
+
+                        className={
+                            registro.estatus
+                            === "presente"
+                            ?
+                            "mp-btn presente activo"
+                            :
+                            "mp-btn presente"
+                        }
+
+                        onClick={() =>
+                            cambiarAsistencia(
+                                maestro.id,
+                                "presente"
+                            )
+                        }
+
+                    >
+
+                        <CheckCircle2
+                            size={17}
+                        />
+
+                        Vino
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            registro.estatus
+                            === "tardanza"
+                            ?
+                            "mp-btn tardanza activo"
+                            :
+                            "mp-btn tardanza"
+                        }
+
+                        onClick={() =>
+                            cambiarAsistencia(
+                                maestro.id,
+                                "tardanza"
+                            )
+                        }
+
+                    >
+
+                        <Clock3
+                            size={17}
+                        />
+
+                        Tarde
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            registro.estatus
+                            === "falta"
+                            ?
+                            "mp-btn falta activo"
+                            :
+                            "mp-btn falta"
+                        }
+
+                        onClick={() =>
+                            cambiarAsistencia(
+                                maestro.id,
+                                "falta"
+                            )
+                        }
+
+                    >
+
+                        <CircleX
+                            size={17}
+                        />
+
+                        Faltó
+
+                    </button>
+
+                </div>
+
+
+                {
+                    registro.estatus
+                    === "falta"
+                    &&
+
+                    <div className="mp-relevo">
+
+                        <label>
+                            Maestro suplente
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            placeholder="Nombre del suplente"
+
+                            value={
+                                registro.suplente
+                                || ""
+                            }
+
+                            onChange={
+                                e =>
+                                    cambiarSuplente(
+                                        maestro.id,
+                                        e.target.value
+                                    )
+                            }
+
+                        />
+
+                    </div>
+                }
+
+            </div>
+
+        );
+
+    }
+
+
+    /*==================================================
+    TARJETA DE GUARDIA
+    ==================================================*/
+
+    function renderTarjetaGuardia(
+        maestro,
+        tipo
+    ) {
+
+        const esRecreo =
+            tipo === "recreo";
+
+
+        const registro =
+            esRecreo
+            ?
+            recreo[
+                maestro.id
+            ] || {}
+            :
+            salida[
+                maestro.id
+            ] || {};
+
+
+        const lugar =
+            obtenerLugarGuardia(
+                maestro.id,
+                tipo
+            );
+
+
+        return (
+
+            <div
+                key={`${tipo}-${maestro.id}`}
+                className="mp-card"
+            >
+
+                <div className="mp-maestro">
+
+                    <div className="mp-avatar">
+
+                        <UserRound
+                            size={20}
+                        />
+
+                    </div>
+
+                    <div className="mp-info">
+
+                        <strong>
+                            {nombreCompleto(maestro)}
+                        </strong>
+
+                        <span>
+
+                            {
+                                esRecreo
+                                ?
+                                "Guardia de recreo"
+                                :
+                                "Guardia de salida"
+                            }
+
+                            {
+                                lugar
+                                &&
+                                <>
+                                    {" · "}
+                                    {lugar}
+                                </>
+                            }
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div className="mp-opciones mp-opciones-2">
+
+                    <button
+
+                        className={
+                            registro.cumplio
+                            === true
+                            ?
+                            "mp-btn presente activo"
+                            :
+                            "mp-btn presente"
+                        }
+
+                        onClick={() => {
+
+                            if (
+                                esRecreo
+                            ) {
+
+                                cambiarRecreo(
+                                    maestro.id,
+                                    true
+                                );
+
+                            }
+                            else {
+
+                                cambiarSalida(
+                                    maestro.id,
+                                    true
+                                );
+
+                            }
+
+                        }}
+
+                    >
+
+                        <CheckCircle2
+                            size={17}
+                        />
+
+                        En guardia
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            registro.cumplio
+                            === false
+                            ?
+                            "mp-btn falta activo"
+                            :
+                            "mp-btn falta"
+                        }
+
+                        onClick={() => {
+
+                            if (
+                                esRecreo
+                            ) {
+
+                                cambiarRecreo(
+                                    maestro.id,
+                                    false
+                                );
+
+                            }
+                            else {
+
+                                cambiarSalida(
+                                    maestro.id,
+                                    false
+                                );
+
+                            }
+
+                        }}
+
+                    >
+
+                        <CircleX
+                            size={17}
+                        />
+
+                        No está
+
+                    </button>
+
+                </div>
+
+
+                {
+                    registro.cumplio
+                    === false
+                    &&
+
+                    <div className="mp-relevo">
+
+                        <label>
+                            Maestro de relevo
+                        </label>
+
+                        <input
+
+                            type="text"
+
+                            placeholder="¿Quién cubrió la guardia?"
+
+                            value={
+                                registro.relevo
+                                || ""
+                            }
+
+                            onChange={
+                                e => {
+
+                                    if (
+                                        esRecreo
+                                    ) {
+
+                                        cambiarRelevoRecreo(
+                                            maestro.id,
+                                            e.target.value
+                                        );
+
+                                    }
+                                    else {
+
+                                        cambiarRelevoSalida(
+                                            maestro.id,
+                                            e.target.value
+                                        );
+
+                                    }
+
+                                }
+                            }
+
+                        />
+
+                    </div>
+                }
+
+            </div>
+
+        );
+
+    }
+
+
     /*==================================================
     JSX
     ==================================================*/
 
     return (
+        <>
 
-        <div className="mp-container">
+            <div className="mp-container">
 
 
-            {/*=========================================
-            HEADER
-            =========================================*/}
+                {/*=========================================
+                HEADER
+                =========================================*/}
 
-            <div className="mp-header">
+                <div className="mp-header">
 
-                <div>
+                    <div>
 
-                    <h2>
-                        Maestros
-                    </h2>
+                        <h2>
+                            Maestros
+                        </h2>
 
-                    <p>
-                        Control diario
-                    </p>
+                        <p>
+                            Control diario
+                        </p>
+
+                    </div>
+
+
+                    <div className="mp-fecha">
+
+                        {
+                            new Date()
+                                .toLocaleDateString(
+                                    "es-MX",
+                                    {
+                                        day:
+                                            "2-digit",
+
+                                        month:
+                                            "short"
+                                    }
+                                )
+                        }
+
+                    </div>
 
                 </div>
 
 
-                <div className="mp-fecha">
+                {/*=========================================
+                TABS
+                =========================================*/}
 
-                    {
-                        new Date()
-                            .toLocaleDateString(
-                                "es-MX",
-                                {
-                                    day: "2-digit",
-                                    month: "short"
-                                }
+                <div className="mp-tabs">
+
+                    <button
+
+                        className={
+                            vista === "lista"
+                            ?
+                            "activo"
+                            :
+                            ""
+                        }
+
+                        onClick={() =>
+                            setVista(
+                                "lista"
                             )
-                    }
+                        }
+
+                    >
+
+                        <UsersRound
+                            size={17}
+                        />
+
+                        Lista
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            vista === "recreo"
+                            ?
+                            "activo"
+                            :
+                            ""
+                        }
+
+                        onClick={() =>
+                            setVista(
+                                "recreo"
+                            )
+                        }
+
+                    >
+
+                        <Coffee
+                            size={17}
+                        />
+
+                        Recreo
+
+                    </button>
+
+
+                    <button
+
+                        className={
+                            vista === "salida"
+                            ?
+                            "activo"
+                            :
+                            ""
+                        }
+
+                        onClick={() =>
+                            setVista(
+                                "salida"
+                            )
+                        }
+
+                    >
+
+                        <LogOut
+                            size={17}
+                        />
+
+                        Salida
+
+                    </button>
 
                 </div>
 
+
+                {/*=========================================
+                ACCIONES RÁPIDAS
+                =========================================*/}
+
+                {
+                    !cargando
+                    &&
+                    obtenerCantidadVistaActual()
+                    > 0
+                    &&
+
+                    <div className="mp-acciones-superiores">
+
+                        <button
+
+                            className="mp-marcar-todos"
+
+                            onClick={() => {
+
+                                if (
+                                    vista === "lista"
+                                ) {
+
+                                    marcarTodosPresentes();
+
+                                }
+                                else if (
+                                    vista === "recreo"
+                                ) {
+
+                                    marcarTodosRecreo();
+
+                                }
+                                else {
+
+                                    marcarTodosSalida();
+
+                                }
+
+                            }}
+
+                        >
+
+                            <CheckCircle2
+                                size={18}
+                            />
+
+                            {
+                                vista === "lista"
+                                ?
+                                "Todos presentes"
+                                :
+                                vista === "recreo"
+                                ?
+                                "Todos en recreo"
+                                :
+                                "Todos en salida"
+                            }
+
+                        </button>
+
+
+                        <button
+
+                            className="mp-guardar-superior"
+
+                            disabled={
+                                guardando
+                            }
+
+                            onClick={
+                                guardarActual
+                            }
+
+                        >
+
+                            <Save
+                                size={18}
+                            />
+
+                            {
+                                guardando
+                                ?
+                                "Guardando..."
+                                :
+                                "Guardar"
+                            }
+
+                        </button>
+
+                    </div>
+                }
+
+
+                {/*=========================================
+                CONTENIDO
+                =========================================*/}
+
+                {
+                    cargando
+                    ?
+
+                    <div className="mp-vacio">
+                        Cargando maestros...
+                    </div>
+
+                    :
+
+                    obtenerCantidadVistaActual()
+                    === 0
+                    ?
+
+                    <div className="mp-vacio">
+                        {obtenerTextoVacioActual()}
+                    </div>
+
+                    :
+
+                    <div className="mp-lista">
+
+                        {
+                            vista === "lista"
+                            &&
+                            maestros.map(
+                                renderTarjetaLista
+                            )
+                        }
+
+
+                        {
+                            vista === "recreo"
+                            &&
+                            maestrosRecreoHoy.map(
+                                maestro =>
+                                    renderTarjetaGuardia(
+                                        maestro,
+                                        "recreo"
+                                    )
+                            )
+                        }
+
+
+                        {
+                            vista === "salida"
+                            &&
+                            maestrosSalidaHoy.map(
+                                maestro =>
+                                    renderTarjetaGuardia(
+                                        maestro,
+                                        "salida"
+                                    )
+                            )
+                        }
+
+                    </div>
+                }
+
             </div>
 
-
-            {/*=========================================
-            TABS
-            =========================================*/}
-
-            <div className="mp-tabs">
-
-
-                <button
-
-                    className={
-                        vista === "lista"
-                        ?
-                        "activo"
-                        :
-                        ""
-                    }
-
-                    onClick={() =>
-                        setVista("lista")
-                    }
-
-                >
-
-                    <UsersRound size={17}/>
-
-                    Lista
-
-                </button>
-
-
-                <button
-
-                    className={
-                        vista === "recreo"
-                        ?
-                        "activo"
-                        :
-                        ""
-                    }
-
-                    onClick={() =>
-                        setVista("recreo")
-                    }
-
-                >
-
-                    <Coffee size={17}/>
-
-                    Recreo
-
-                </button>
-
-
-                <button
-
-                    className={
-                        vista === "salida"
-                        ?
-                        "activo"
-                        :
-                        ""
-                    }
-
-                    onClick={() =>
-                        setVista("salida")
-                    }
-
-                >
-
-                    <LogOut size={17}/>
-
-                    Salida
-
-                </button>
-
-
-            </div>
-
-            {/*=========================================
-            ACCIÓN RÁPIDA
-            =========================================*/}
 
             {
-            !cargando
-            &&
-            maestros.length > 0
-            &&
+                mensajeGuardado
+                &&
+                createPortal(
 
-            <div className="mp-acciones-superiores">
+                    <div className="mp-toast-overlay">
 
-                <button
-                    className="mp-marcar-todos"
-                    onClick={() => {
+                        <div className="mp-toast-exito">
 
-                        if (vista === "lista") {
+                            <CheckCircle2
+                                size={21}
+                            />
 
-                            marcarTodosPresentes();
+                            <span>
+                                Guardado con éxito
+                            </span>
 
-                        }
-                        else if (vista === "recreo") {
+                        </div>
 
-                            marcarTodosRecreo();
+                    </div>,
 
-                        }
-                        else {
+                    document.body
 
-                            marcarTodosSalida();
-
-                        }
-
-                    }}
-                >
-
-                    <CheckCircle2 size={18}/>
-
-                    {
-                        vista === "lista"
-                        ?
-                        "Todos presentes"
-                        :
-                        vista === "recreo"
-                        ?
-                        "Todos en recreo"
-                        :
-                        "Todos en salida"
-                    }
-
-                </button>
-
-
-                <button
-                    className="mp-guardar-superior"
-                    disabled={guardando}
-                    onClick={guardarActual}
-                >
-
-                    <Save size={18}/>
-
-                    {
-                        guardando
-                        ?
-                        "Guardando..."
-                        :
-                        "Guardar"
-                    }
-
-                </button>
-
-            </div>
-        }
-
-
-            {/*=========================================
-            CARGANDO
-            =========================================*/}
-
-            {
-
-                cargando
-
-                ?
-
-                <div className="mp-vacio">
-
-                    Cargando maestros...
-
-                </div>
-
-                :
-
-                maestros.length === 0
-
-                ?
-
-                <div className="mp-vacio">
-
-                    No existen maestros registrados.
-
-                </div>
-
-                :
-
-                <div className="mp-lista">
-
-
-                    {/*=================================
-                    LISTA
-                    =================================*/}
-
-                    {
-
-                        vista === "lista"
-                        &&
-
-                        maestros.map(
-                            maestro => {
-
-                                const registro =
-                                    asistencia[
-                                        maestro.id
-                                    ] || {};
-
-
-                                return (
-
-                                    <div
-
-                                        key={
-                                            maestro.id
-                                        }
-
-                                        className="mp-card"
-
-                                    >
-
-
-                                        <div className="mp-maestro">
-
-
-                                            <div className="mp-avatar">
-
-                                                <UserRound
-                                                    size={20}
-                                                />
-
-                                            </div>
-
-
-                                            <div className="mp-info">
-
-                                                <strong>
-
-                                                    {
-                                                        maestro.nombre
-                                                    }{" "}
-
-                                                    {
-                                                        maestro.apellido_paterno
-                                                    }{" "}
-
-                                                    {
-                                                        maestro.apellido_materno
-                                                    }
-
-                                                </strong>
-
-
-                                                <span>
-
-                                                    {
-                                                        maestro.grupo
-                                                        ||
-                                                        "Sin grupo"
-                                                    }
-
-                                                </span>
-
-                                            </div>
-
-
-                                        </div>
-
-
-                                        <div className="mp-opciones mp-opciones-3">
-
-
-                                            <button
-
-                                                className={
-
-                                                    registro.estatus
-                                                    === "presente"
-
-                                                    ?
-
-                                                    "mp-btn presente activo"
-
-                                                    :
-
-                                                    "mp-btn presente"
-
-                                                }
-
-                                                onClick={() =>
-                                                    cambiarAsistencia(
-                                                        maestro.id,
-                                                        "presente"
-                                                    )
-                                                }
-
-                                            >
-
-                                                <CheckCircle2
-                                                    size={17}
-                                                />
-
-                                                Vino
-
-                                            </button>
-
-
-                                            <button
-
-                                                className={
-
-                                                    registro.estatus
-                                                    === "tardanza"
-
-                                                    ?
-
-                                                    "mp-btn tardanza activo"
-
-                                                    :
-
-                                                    "mp-btn tardanza"
-
-                                                }
-
-                                                onClick={() =>
-                                                    cambiarAsistencia(
-                                                        maestro.id,
-                                                        "tardanza"
-                                                    )
-                                                }
-
-                                            >
-
-                                                <Clock3
-                                                    size={17}
-                                                />
-
-                                                Tarde
-
-                                            </button>
-
-
-                                            <button
-
-                                                className={
-
-                                                    registro.estatus
-                                                    === "falta"
-
-                                                    ?
-
-                                                    "mp-btn falta activo"
-
-                                                    :
-
-                                                    "mp-btn falta"
-
-                                                }
-
-                                                onClick={() =>
-                                                    cambiarAsistencia(
-                                                        maestro.id,
-                                                        "falta"
-                                                    )
-                                                }
-
-                                            >
-
-                                                <CircleX
-                                                    size={17}
-                                                />
-
-                                                Faltó
-
-                                            </button>
-
-
-                                        </div>
-
-
-                                        {
-
-                                            registro.estatus
-                                            === "falta"
-                                            &&
-
-                                            <div className="mp-relevo">
-
-                                                <label>
-
-                                                    Maestro suplente
-
-                                                </label>
-
-                                                <input
-
-                                                    type="text"
-
-                                                    placeholder="Nombre del suplente"
-
-                                                    value={
-                                                        registro
-                                                            .suplente
-                                                        || ""
-                                                    }
-
-                                                    onChange={
-                                                        e =>
-                                                        cambiarSuplente(
-                                                            maestro.id,
-                                                            e.target.value
-                                                        )
-                                                    }
-
-                                                />
-
-                                            </div>
-
-                                        }
-
-
-                                    </div>
-
-                                );
-
-                            }
-                        )
-
-                    }
-
-
-                    {/*=================================
-                    GUARDIA RECREO
-                    =================================*/}
-
-                    {
-
-                        vista === "recreo"
-                        &&
-
-                        maestros.map(
-                            maestro => {
-
-                                const registro =
-                                    recreo[
-                                        maestro.id
-                                    ] || {};
-
-
-                                return (
-
-                                    <div
-
-                                        key={
-                                            maestro.id
-                                        }
-
-                                        className="mp-card"
-
-                                    >
-
-
-                                        <div className="mp-maestro">
-
-
-                                            <div className="mp-avatar">
-
-                                                <UserRound
-                                                    size={20}
-                                                />
-
-                                            </div>
-
-
-                                            <div className="mp-info">
-
-                                                <strong>
-
-                                                    {
-                                                        maestro.nombre
-                                                    }{" "}
-
-                                                    {
-                                                        maestro.apellido_paterno
-                                                    }
-
-                                                </strong>
-
-                                                <span>
-
-                                                    Guardia de recreo
-
-                                                </span>
-
-                                            </div>
-
-
-                                        </div>
-
-
-                                        <div className="mp-opciones mp-opciones-2">
-
-
-                                            <button
-
-                                                className={
-
-                                                    registro.cumplio
-                                                    === true
-
-                                                    ?
-
-                                                    "mp-btn presente activo"
-
-                                                    :
-
-                                                    "mp-btn presente"
-
-                                                }
-
-                                                onClick={() =>
-                                                    cambiarRecreo(
-                                                        maestro.id,
-                                                        true
-                                                    )
-                                                }
-
-                                            >
-
-                                                <CheckCircle2
-                                                    size={17}
-                                                />
-
-                                                En guardia
-
-                                            </button>
-
-
-                                            <button
-
-                                                className={
-
-                                                    registro.cumplio
-                                                    === false
-
-                                                    ?
-
-                                                    "mp-btn falta activo"
-
-                                                    :
-
-                                                    "mp-btn falta"
-
-                                                }
-
-                                                onClick={() =>
-                                                    cambiarRecreo(
-                                                        maestro.id,
-                                                        false
-                                                    )
-                                                }
-
-                                            >
-
-                                                <CircleX
-                                                    size={17}
-                                                />
-
-                                                No está
-
-                                            </button>
-
-
-                                        </div>
-
-
-                                        {
-
-                                            registro.cumplio
-                                            === false
-                                            &&
-
-                                            <div className="mp-relevo">
-
-                                                <label>
-
-                                                    Maestro de relevo
-
-                                                </label>
-
-                                                <input
-
-                                                    type="text"
-
-                                                    placeholder="¿Quién cubrió la guardia?"
-
-                                                    value={
-                                                        registro
-                                                            .relevo
-                                                        || ""
-                                                    }
-
-                                                    onChange={
-                                                        e =>
-                                                        cambiarRelevoRecreo(
-                                                            maestro.id,
-                                                            e.target.value
-                                                        )
-                                                    }
-
-                                                />
-
-                                            </div>
-
-                                        }
-
-
-                                    </div>
-
-                                );
-
-                            }
-                        )
-
-                    }
-
-
-                    {/*=================================
-                    GUARDIA SALIDA
-                    =================================*/}
-
-                    {
-
-                        vista === "salida"
-                        &&
-
-                        maestros.map(
-                            maestro => {
-
-                                const registro =
-                                    salida[
-                                        maestro.id
-                                    ] || {};
-
-
-                                return (
-
-                                    <div
-
-                                        key={
-                                            maestro.id
-                                        }
-
-                                        className="mp-card"
-
-                                    >
-
-
-                                        <div className="mp-maestro">
-
-
-                                            <div className="mp-avatar">
-
-                                                <UserRound
-                                                    size={20}
-                                                />
-
-                                            </div>
-
-
-                                            <div className="mp-info">
-
-                                                <strong>
-
-                                                    {
-                                                        maestro.nombre
-                                                    }{" "}
-
-                                                    {
-                                                        maestro.apellido_paterno
-                                                    }
-
-                                                </strong>
-
-                                                <span>
-
-                                                    Guardia de salida
-
-                                                </span>
-
-                                            </div>
-
-
-                                        </div>
-
-
-                                        <div className="mp-opciones mp-opciones-2">
-
-
-                                            <button
-
-                                                className={
-
-                                                    registro.cumplio
-                                                    === true
-
-                                                    ?
-
-                                                    "mp-btn presente activo"
-
-                                                    :
-
-                                                    "mp-btn presente"
-
-                                                }
-
-                                                onClick={() =>
-                                                    cambiarSalida(
-                                                        maestro.id,
-                                                        true
-                                                    )
-                                                }
-
-                                            >
-
-                                                <CheckCircle2
-                                                    size={17}
-                                                />
-
-                                                En guardia
-
-                                            </button>
-
-
-                                            <button
-
-                                                className={
-
-                                                    registro.cumplio
-                                                    === false
-
-                                                    ?
-
-                                                    "mp-btn falta activo"
-
-                                                    :
-
-                                                    "mp-btn falta"
-
-                                                }
-
-                                                onClick={() =>
-                                                    cambiarSalida(
-                                                        maestro.id,
-                                                        false
-                                                    )
-                                                }
-
-                                            >
-
-                                                <CircleX
-                                                    size={17}
-                                                />
-
-                                                No está
-
-                                            </button>
-
-
-                                        </div>
-
-
-                                        {
-
-                                            registro.cumplio
-                                            === false
-                                            &&
-
-                                            <div className="mp-relevo">
-
-                                                <label>
-
-                                                    Maestro de relevo
-
-                                                </label>
-
-                                                <input
-
-                                                    type="text"
-
-                                                    placeholder="¿Quién cubrió la guardia?"
-
-                                                    value={
-                                                        registro
-                                                            .relevo
-                                                        || ""
-                                                    }
-
-                                                    onChange={
-                                                        e =>
-                                                        cambiarRelevoSalida(
-                                                            maestro.id,
-                                                            e.target.value
-                                                        )
-                                                    }
-
-                                                />
-
-                                            </div>
-
-                                        }
-
-
-                                    </div>
-
-                                );
-
-                            }
-                        )
-
-                    }
-
-
-                </div>
-
+                )
             }
 
-
-            {/*=========================================
-            GUARDAR
-            =========================================*/}
-
-
-        </div>
-
+        </>
     );
 
 }
